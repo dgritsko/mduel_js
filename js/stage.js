@@ -7,6 +7,8 @@ if (typeof Mduel.Stage == 'undefined') {
 
 Mduel.Stage.platformImage = new Image();
 Mduel.Stage.platformImage.src = 'img/main_platform.bmp';
+Mduel.Stage.powerupImage = new Image();
+Mduel.Stage.powerupImage.src = 'img/powerup_spawn.png';
 
 Mduel.Stage.stage = function(spec) {
    var that = {};
@@ -20,6 +22,30 @@ Mduel.Stage.stage = function(spec) {
       ];
    
    that.draw = function(ctx, elapsed) {
+      
+      // Right spawn
+      ctx.save();   
+      
+      ctx.translate(Mduel.Game.width, (Mduel.Game.height / 2) - (Mduel.Stage.platformImage.width / 2));
+      ctx.rotate(90 * (Math.PI / 180));
+      ctx.drawImage(Mduel.Stage.powerupImage, 0, 0);
+      
+      ctx.restore();
+      
+      // Left spawn
+      ctx.save();
+      
+      // 208 is a magic number -- need to figure out the right way to position this image
+      ctx.translate(0, 208); //(Mduel.Game.height / 2) + (Mduel.Stage.platformImage.width / 2));
+      ctx.rotate(270 * (Math.PI / 180));
+      ctx.drawImage(Mduel.Stage.powerupImage, 0, 0);
+      
+      ctx.restore();
+      
+      // Top spawn
+      ctx.drawImage(Mduel.Stage.powerupImage, (Mduel.Game.width / 2) - (Mduel.Stage.platformImage.width / 2), 0);
+   
+      // Main platforms
       for (var i = 0; i < that.levels.length; i++) {
          var currentLevel = that.levels[i];
           
