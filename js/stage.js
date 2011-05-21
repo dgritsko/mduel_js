@@ -17,7 +17,6 @@ Mduel.Stage.stage = function(spec) {
          Mduel.Stage.generateLevel(18),
          Mduel.Stage.generateLevel(18),
          Mduel.Stage.generateLevel(18),
-      	 Mduel.Stage.generateBottomLevel()
       ];
    
    that.draw = function(ctx, elapsed) {
@@ -45,13 +44,6 @@ Mduel.Stage.generateTopLevel = function() {
    level[4] = { width: 2, isPlatform: false };
    
    return Mduel.Stage.convertLevel(level);
-}
-
-Mduel.Stage.generateBottomLevel = function() {
-   var level = new Array();
-   
-   
-   return level;
 }
 
 Mduel.Stage.generateLevel = function(width) {
