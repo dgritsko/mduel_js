@@ -51,7 +51,7 @@ Mduel.Stage.stage = function(spec) {
           
          for (var j = 0; j < currentLevel.length; j++) {
             if (currentLevel[j]) {
-               ctx.drawImage(Mduel.Stage.platformImage, j * 32, (i * 48) + 100);
+               ctx.drawImage(Mduel.Stage.platformImage, j * 32, (i * 64) + 88);
             }
          }
       }
@@ -101,8 +101,8 @@ Mduel.Stage.generateLevel = function(width) {
    
    while (Mduel.Util.sum(level, accum) < width) {
       var index = Math.floor(Math.random() * level.length);
-      
-      if (level[index].isPlatform) {
+            
+      if (level[index].isPlatform && level[index].width < maxPlatformWidth) {
          level[index].width += 1;
       }
    }      
@@ -110,7 +110,7 @@ Mduel.Stage.generateLevel = function(width) {
    while (Mduel.Util.sum(level, accum) > width) {
       var index = Math.floor(Math.random() * level.length);
       
-      if (level[index].isPlatform) {
+      if (level[index].isPlatform && level[index].width > minPlatformWidth) {
          level[index].width -= 1;
       }
    }
