@@ -5,22 +5,56 @@ if (typeof Mduel.Stage == 'undefined') {
    Mduel.Stage = {};
 }
 
-Mduel.Stage.image = new Image();
-Mduel.Stage.image.src = 'img/playerSprite1.gif';
+Mduel.Stage.platformImage = new Image();
+Mduel.Stage.platformImage.src = 'img/main_platform.bmp';
 
 Mduel.Stage.stage = function(spec) {
    var that = {};
    
-   that.data = Mduel.Stage.generateStage();
+   that.levels =
+      [
+         Mduel.Stage.generateTopLevel(),         
+         Mduel.Stage.generateLevel(18),
+         Mduel.Stage.generateLevel(18),
+         Mduel.Stage.generateLevel(18),
+      	 Mduel.Stage.generateBottomLevel()
+      ];
    
    that.draw = function(ctx, elapsed) {
-      ctx.fillText('stage rendering ok', 5, 20);
+      for (var i = 0; i < that.levels.length; i++) {
+         var currentLevel = that.levels[i];
+          
+         for (var j = 0; j < currentLevel.length; j++) {
+            if (currentLevel[j]) {
+               ctx.drawImage(Mduel.Stage.platformImage, j * 32, (i * 48) + 100);
+            }
+         }
+      }
    }
       
    return that;
 }
 
-Mduel.Stage.generateStage = function(width) {
+Mduel.Stage.generateTopLevel = function() {
+   var level = new Array();
+   
+   level[0] = { width: 2, isPlatform: false };
+   level[1] = { width: 4, isPlatform: true };
+   level[2] = { width: 6, isPlatform: false };
+   level[3] = { width: 4, isPlatform: true };
+   level[4] = { width: 2, isPlatform: false };
+   
+   return Mduel.Stage.convertLevel(level);
+}
+
+Mduel.Stage.generateBottomLevel = function() {
+   var level = new Array();
+   
+   
+   return level;
+}
+
+Mduel.Stage.generateLevel = function(width) {
    var maxPlatformWidth = 7;
    var minPlatformWidth = 2;
    var maxGapWidth = 2;
@@ -45,12 +79,35 @@ Mduel.Stage.generateStage = function(width) {
    var lastGapWidth = Math.floor(Math.random() * (maxGapWidth + 1 - minGapWidth)) + minGapWidth;
    level.push({ width: lastGapWidth, isPlatform: false });
    
+   var accum = function(l) { return l.width; };   
    
-   // TODO: Finish conversion of algorithm to generate platforms
+   while (Mduel.Util.sum(level, accum) < width) {
+      var index = Math.floor(Math.random() * level.length);
+      
+      if (level[index].isPlatform) {
+         level[index].width += 1;
+      }
+   }      
    
-   var toggle = Math.floor(Math.random()*2);
+   while (Mduel.Util.sum(level, accum) > width) {
+      var index = Math.floor(Math.random() * level.length);
+      
+      if (level[index].isPlatform) {
+         level[index].width -= 1;
+      }
+   }
+   
+   return Mduel.Stage.convertLevel(level);
+}
 
-   // TODO
+Mduel.Stage.convertLevel = function(rawLevel) {
+   var rval = new Array();
    
-   return {};
+   for (var i = 0, len = rawLevel.length; i < len; i++) {
+      for (var j = 0, currWidth = rawLevel[i].width; j < currWidth; j++) {
+         rval.push(rawLevel[i].isPlatform);
+      }
+   }
+   
+   return rval;
 }
