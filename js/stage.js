@@ -11,11 +11,14 @@ Mduel.Stage.spawnImage = new Image();
 Mduel.Stage.spawnImage.src = 'img/spawn_platform.bmp';
 Mduel.Stage.powerupImage = new Image();
 Mduel.Stage.powerupImage.src = 'img/powerup_spawn.png';
+Mduel.Stage.ropeAnchorImage = new Image();
+Mduel.Stage.ropeAnchorImage.src = 'img/rope_anchor.bmp';
 
 Mduel.Stage.stage = function(spec) {
    var that = {};
    
    that.levels = Mduel.Stage.generateLevels();
+   that.ropes = Mduel.Stage.generateRopes();
    
    that.draw = function(ctx, elapsed) {
       
@@ -41,11 +44,16 @@ Mduel.Stage.stage = function(spec) {
       // Top spawn
       ctx.drawImage(Mduel.Stage.powerupImage, (Mduel.Game.width / 2) - (Mduel.Stage.platformImage.width / 2), 0);
    
-      // Main platforms
+      // Platforms
       for (var i = 0, len = that.levels.length; i < len; i++) {
          var imageToDraw = that.levels[i].isSpawn ? Mduel.Stage.spawnImage : Mduel.Stage.platformImage;
       
          ctx.drawImage(imageToDraw, that.levels[i].x, that.levels[i].y);
+      }
+      
+      // Ropes
+      for (var i = 0, len = that.ropes.length; i < len; i++) {
+         ctx.drawImage(Mduel.Stage.ropeAnchorImage, that.ropes[i].x, that.ropes[i].y);
       }
    }
       
@@ -138,6 +146,15 @@ Mduel.Stage.convertLevel = function(rawLevel) {
          rval.push(rawLevel[i].isPlatform);
       }
    }
+   
+   return rval;
+}
+
+Mduel.Stage.generateRopes = function() {
+   var rval = new Array();
+   
+   // TODO   
+   rval.push({ x: 120, y: 20 });
    
    return rval;
 }
