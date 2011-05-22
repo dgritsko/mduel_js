@@ -7,19 +7,15 @@ if (typeof Mduel.Stage == 'undefined') {
 
 Mduel.Stage.platformImage = new Image();
 Mduel.Stage.platformImage.src = 'img/main_platform.bmp';
+Mduel.Stage.spawnImage = new Image();
+Mduel.Stage.spawnImage.src = 'img/spawn_platform.bmp';
 Mduel.Stage.powerupImage = new Image();
 Mduel.Stage.powerupImage.src = 'img/powerup_spawn.png';
 
 Mduel.Stage.stage = function(spec) {
    var that = {};
    
-   that.levels =
-      [
-         Mduel.Stage.generateTopLevel(),         
-         Mduel.Stage.generateLevel(18),
-         Mduel.Stage.generateLevel(18),
-         Mduel.Stage.generateLevel(18),
-      ];
+   that.levels = Mduel.Stage.generateLevels();
    
    that.draw = function(ctx, elapsed) {
       
@@ -46,18 +42,48 @@ Mduel.Stage.stage = function(spec) {
       ctx.drawImage(Mduel.Stage.powerupImage, (Mduel.Game.width / 2) - (Mduel.Stage.platformImage.width / 2), 0);
    
       // Main platforms
-      for (var i = 0; i < that.levels.length; i++) {
-         var currentLevel = that.levels[i];
-          
-         for (var j = 0; j < currentLevel.length; j++) {
-            if (currentLevel[j]) {
-               ctx.drawImage(Mduel.Stage.platformImage, j * 32, (i * 64) + 88);
-            }
-         }
+      for (var i = 0, len = that.levels.length; i < len; i++) {
+         var imageToDraw = that.levels[i].isSpawn ? Mduel.Stage.spawnImage : Mduel.Stage.platformImage;
+      
+         ctx.drawImage(imageToDraw, that.levels[i].x, that.levels[i].y);
       }
    }
       
    return that;
+}
+
+Mduel.Stage.generateLevels = function() {
+
+   var levels = [
+      Mduel.Stage.generateTopLevel(),         
+      Mduel.Stage.generateLevel(18),
+      Mduel.Stage.generateLevel(18),
+      Mduel.Stage.generateLevel(18)
+   ];      
+     
+   var rval = new Array();
+   
+   var verticalSpacing = 64;
+      
+   for (var i = 0; i < levels.length; i++) {
+      var currentLevel = levels[i];
+          
+      for (var j = 0; j < currentLevel.length; j++) {
+         if (currentLevel[j]) {
+            rval.push({ x: j * 32, y: (i * verticalSpacing) + 88, isSpawn: false });
+         }
+      }
+   }
+   
+   for (var ls = 0; ls < 4; ls++) {
+      rval.push({ x: (32 * ls) + 16, y: (4 * verticalSpacing) + 88, isSpawn: true });
+   }
+   
+   for (var ls = 0; ls < 4; ls++) {
+      rval.push({ x: (32 * (ls + 13)) + 16, y: (4 * verticalSpacing) + 88, isSpawn: true });
+   }
+   
+   return rval;
 }
 
 Mduel.Stage.generateTopLevel = function() {
