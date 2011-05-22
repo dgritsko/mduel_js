@@ -78,44 +78,29 @@ Mduel.Stage.generateLevel = function(width) {
    var maxGapWidth = 2;
    var minGapWidth = 1;
    
-   // Min 2, Max 4
-   var numPlatforms = Math.floor(Math.random() * 3) + 2;
+   var parts = new Array();
+   var isPlatform = false;
    
-   var level = new Array();
+   var accum = function(l) { return l.width; }; 
    
-   for (var i = 0; i < numPlatforms; i++)
-   {
-      // Gap
-      var gapWidth = Math.floor(Math.random() * (maxGapWidth + 1 - minGapWidth)) + minGapWidth;
-      level.push({ width: gapWidth, isPlatform: false });
-
-      // Level
-      var platformWidth = Math.floor(Math.random() * (maxPlatformWidth + 1 - minPlatformWidth)) + minPlatformWidth;
-      level.push({ width: platformWidth, isPlatform: true });
-   }
-   
-   var lastGapWidth = Math.floor(Math.random() * (maxGapWidth + 1 - minGapWidth)) + minGapWidth;
-   level.push({ width: lastGapWidth, isPlatform: false });
-   
-   var accum = function(l) { return l.width; };   
-   
-   while (Mduel.Util.sum(level, accum) < width) {
-      var index = Math.floor(Math.random() * level.length);
-            
-      if (level[index].isPlatform && level[index].width < maxPlatformWidth) {
-         level[index].width += 1;
-      }
-   }      
-   
-   while (Mduel.Util.sum(level, accum) > width) {
-      var index = Math.floor(Math.random() * level.length);
+   while (Mduel.Util.sum(parts, accum) < width) {
+      var minWidth = isPlatform ? minPlatformWidth : minGapWidth;
+      var maxWidth = isPlatform ? maxPlatformWidth : maxGapWidth;
       
-      if (level[index].isPlatform && level[index].width > minPlatformWidth) {
-         level[index].width -= 1;
-      }
+      var newWidth = Math.floor(Math.random() * (maxWidth + 1 - minWidth)) + minWidth;
+   
+      parts.push({ width: newWidth, isPlatform: isPlatform });
+      
+      isPlatform = !isPlatform;
+      
+      var tempSum = Mduel.Util.sum(parts, accum);
+      if (tempSum > width) {
+         parts[parts.length - 1].width -= (tempSum - width);
+         parts[parts.length - 1].isPlatform = false;
+      }   
    }
    
-   return Mduel.Stage.convertLevel(level);
+   return Mduel.Stage.convertLevel(parts);
 }
 
 Mduel.Stage.convertLevel = function(rawLevel) {
