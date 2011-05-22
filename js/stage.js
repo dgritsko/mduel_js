@@ -64,23 +64,24 @@ Mduel.Stage.generateLevels = function() {
    var rval = new Array();
    
    var verticalSpacing = 64;
+   var verticalOffset = 80;
       
    for (var i = 0; i < levels.length; i++) {
       var currentLevel = levels[i];
           
       for (var j = 0; j < currentLevel.length; j++) {
          if (currentLevel[j]) {
-            rval.push({ x: j * 32, y: (i * verticalSpacing) + 88, isSpawn: false });
+            rval.push({ x: (j * 32) + 32, y: (i * verticalSpacing) + verticalOffset, isSpawn: false });
          }
       }
    }
    
    for (var ls = 0; ls < 4; ls++) {
-      rval.push({ x: (32 * ls) + 16, y: (4 * verticalSpacing) + 88, isSpawn: true });
+      rval.push({ x: (32 * ls) + 48, y: (4 * verticalSpacing) + verticalOffset, isSpawn: true });
    }
    
    for (var ls = 0; ls < 4; ls++) {
-      rval.push({ x: (32 * (ls + 13)) + 16, y: (4 * verticalSpacing) + 88, isSpawn: true });
+      rval.push({ x: (32 * (ls + 13)) + 48, y: (4 * verticalSpacing) + verticalOffset, isSpawn: true });
    }
    
    return rval;
@@ -105,7 +106,7 @@ Mduel.Stage.generateLevel = function(width) {
    var minGapWidth = 1;
    
    var parts = new Array();
-   var isPlatform = false;
+   var isPlatform = Math.floor(Math.random() * 2);
    
    var accum = function(l) { return l.width; }; 
    
