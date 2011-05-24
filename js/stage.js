@@ -17,7 +17,9 @@ Mduel.Stage.ropeAnchorImage.src = 'img/rope_anchor.bmp';
 Mduel.Stage.stage = function(spec) {
    var that = {};
    
-   that.levels = Mduel.Stage.generateLevels();
+   var stage = Mduel.Stage.generateStage();
+   
+   that.levels = stage.levels;
    that.ropes = Mduel.Stage.generateRopes();
    
    that.draw = function(ctx, elapsed) {
@@ -60,7 +62,7 @@ Mduel.Stage.stage = function(spec) {
    return that;
 }
 
-Mduel.Stage.generateLevels = function() {
+Mduel.Stage.generateStage = function() {
 
    var levels = [
       Mduel.Stage.generateTopLevel(),         
@@ -74,6 +76,7 @@ Mduel.Stage.generateLevels = function() {
    var verticalSpacing = 64;
    var verticalOffset = 80;
       
+   // Top and Random platforms
    for (var i = 0; i < levels.length; i++) {
       var currentLevel = levels[i];
           
@@ -84,15 +87,19 @@ Mduel.Stage.generateLevels = function() {
       }
    }
    
+   
+   // Left spawn platforms
    for (var ls = 0; ls < 4; ls++) {
       rval.push({ x: (32 * ls) + 48, y: (4 * verticalSpacing) + verticalOffset, isSpawn: true });
    }
    
+   
+   // Right spawn platforms
    for (var ls = 0; ls < 4; ls++) {
       rval.push({ x: (32 * (ls + 13)) + 48, y: (4 * verticalSpacing) + verticalOffset, isSpawn: true });
    }
    
-   return rval;
+   return { levels: rval, ropes: undefined };
 }
 
 Mduel.Stage.generateTopLevel = function() {
