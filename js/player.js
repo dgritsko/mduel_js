@@ -1,6 +1,6 @@
 var PLAYER = {};
 PLAYER.image = new Image();
-PLAYER.image.src = 'img/playerSprite1.gif';
+PLAYER.image.src = 'img/playerSprite1.png';
 
 var player = function(spec) {
    var that = {};

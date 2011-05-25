@@ -24,7 +24,7 @@ Mduel.Game.startGame = function() {
       
    Mduel.Game.players = [
       player({ 
-      	position: { x: 100, y: 100 }
+      	position: { x: 32, y: 280 }
      })
    ];
    

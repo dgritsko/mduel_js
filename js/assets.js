@@ -8,8 +8,8 @@ if (typeof Mduel.Assets == 'undefined') {
 }
 
 Mduel.Assets.Sprites.player = Mduel.Spritesheet.spritesheet({
-   width: 32,
-   height: 32,
+   width: 64,
+   height: 64,
    sprites: [
       { name: 'stand', x:0, y: 0 },
       { name: 'run_1', x: 0, y: 1 },
