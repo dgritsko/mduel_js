@@ -230,7 +230,7 @@ Mduel.Stage.generateRopes = function(levels, width) {
    for (var i = 0, len = rval.length; i < len; i++) {
       var current = rval[i];
    
-      var horizontalOffset = (current.x == 4 || current.x == 14) ? 25 : 9;   
+      var horizontalOffset = (current.x == 4 || current.x == 14) ? 25 : 41;   
    
       current.x = (current.x * 32) + horizontalOffset;
       current.y = (current.y * 64) + verticalOffset;
