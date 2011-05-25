@@ -13,6 +13,8 @@ Mduel.Stage.powerupImage = new Image();
 Mduel.Stage.powerupImage.src = 'img/powerup_spawn.png';
 Mduel.Stage.ropeAnchorImage = new Image();
 Mduel.Stage.ropeAnchorImage.src = 'img/rope_anchor.bmp';
+Mduel.Stage.marshmallowImage = new Image();
+Mduel.Stage.marshmallowImage.src = 'img/marshmallowSprites.gif';
 
 Mduel.Stage.stage = function(spec) {
    var that = {};
@@ -21,6 +23,8 @@ Mduel.Stage.stage = function(spec) {
    
    that.levels = stage.levels;
    that.ropes = stage.ropes;
+   
+   that.pit = [ Mduel.Assets.Animations.pit() ];
    
    that.draw = function(ctx, elapsed) {
       
@@ -67,6 +71,25 @@ Mduel.Stage.stage = function(spec) {
       // Rope color
       ctx.strokeStyle = '#926100';
       ctx.stroke();
+      
+      // Pit
+      for (var i = 0, len = that.pit.length; i < len; i++) {
+         that.pit[i].animate(elapsed);
+         var frame = that.pit[i].getSprite();
+         
+         ctx.drawImage(Mduel.Stage.marshmallowImage, 100, 100, frame.width, frame.height);
+         
+         /*ctx.drawImage(Mduel.Stage.marshmallowImage,
+            // Source X and Y coordinates
+            frame.x, frame.y, 
+            // Source Width and Height
+            frame.width, frame.height, 
+            // Destination X and Y coordinates
+            100, 100,
+            // Destination Width and Height
+            frame.width, frame.height);*/
+         
+      }
    }
       
    return that;

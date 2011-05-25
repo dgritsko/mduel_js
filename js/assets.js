@@ -7,6 +7,8 @@ if (typeof Mduel.Assets == 'undefined') {
    Mduel.Assets.Animations = {};
 }
 
+
+
 Mduel.Assets.Sprites.player = Mduel.Spritesheet.spritesheet({
    width: 64,
    height: 64,
@@ -18,6 +20,31 @@ Mduel.Assets.Sprites.player = Mduel.Spritesheet.spritesheet({
       { name: 'run_4', x: 0, y: 4 }
    ]
 });
+
+Mduel.Assets.Sprites.pit = Mduel.Spritesheet.spritesheet({
+   width: 32,
+   height: 32,
+   sprites: [
+      { name: 'pit0', x:0, y: 0 },
+      { name: 'pit1', x: 0, y: 1 },
+      { name: 'pit2', x: 0, y: 2 },
+      { name: 'pit3', x: 0, y: 3 }
+   ]
+});
+
+Mduel.Assets.Animations.pit = function() {
+   return Mduel.Animation.animation({
+            frames:
+            [
+               { sprite: 'pit0', time: 1000 },
+               { sprite: 'pit1', time: 1000 },
+               { sprite: 'pit2', time: 1000 },
+               { sprite: 'pit3', time: 1000 }
+            ], 
+            data: Mduel.Assets.Sprites.pit
+         });
+
+}
 
 Mduel.Assets.Animations.stand = function() {
 
