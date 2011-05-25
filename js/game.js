@@ -63,8 +63,6 @@ Mduel.Game.draw = function() {
         Mduel.Game.players[i].draw(Mduel.Game.ctx, elapsedTime);
    }
   
-   Mduel.Game.debugText = 'ok';
-  
    if (Mduel.Game.debug) {
        Mduel.Game.ctx.fillStyle = '#f00';
        Mduel.Game.ctx.font = 'arial 30px sans-serif';
