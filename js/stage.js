@@ -171,10 +171,7 @@ Mduel.Stage.convertLevel = function(rawLevel) {
 
 Mduel.Stage.generateRopes = function(levels, width) {
    var rval = new Array();
-   
-   var horizontalOffset = 25;
-   var verticalOffset = 26;
-   
+  
    // Fixed top ropes
    rval.push({ x: 4, y: 0, ropeLength: 5 });
    rval.push({ x: 14, y: 0, ropeLength: 5 });
@@ -227,10 +224,16 @@ Mduel.Stage.generateRopes = function(levels, width) {
       }   
    }
    
+   var verticalOffset = 26;
+   
    // Translate level and columns to x and y coordinates
    for (var i = 0, len = rval.length; i < len; i++) {
-      rval[i].x = (rval[i].x * 32) + horizontalOffset;
-      rval[i].y = (rval[i].y * 64) + verticalOffset;
+      var current = rval[i];
+   
+      var horizontalOffset = (current.x == 4 || current.x == 14) ? 25 : 9;   
+   
+      current.x = (current.x * 32) + horizontalOffset;
+      current.y = (current.y * 64) + verticalOffset;
    }
    
    return rval;
