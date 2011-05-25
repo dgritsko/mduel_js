@@ -20,7 +20,7 @@ Mduel.Stage.stage = function(spec) {
    var stage = Mduel.Stage.generateStage();
    
    that.levels = stage.levels;
-   that.ropes = Mduel.Stage.generateRopes();
+   that.ropes = stage.ropes;
    
    that.draw = function(ctx, elapsed) {
       
@@ -85,8 +85,7 @@ Mduel.Stage.generateStage = function() {
             rval.push({ x: (j * 32) + 32, y: (i * verticalSpacing) + verticalOffset, isSpawn: false });
          }
       }
-   }
-   
+   }   
    
    // Left spawn platforms
    for (var ls = 0; ls < 4; ls++) {
@@ -99,7 +98,10 @@ Mduel.Stage.generateStage = function() {
       rval.push({ x: (32 * (ls + 13)) + 48, y: (4 * verticalSpacing) + verticalOffset, isSpawn: true });
    }
    
-   return { levels: rval, ropes: undefined };
+   // Generate ropes
+   var ropes = Mduel.Stage.generateRopes(levels, 18);
+   
+   return { levels: rval, ropes: ropes };
 }
 
 Mduel.Stage.generateTopLevel = function() {
@@ -157,7 +159,7 @@ Mduel.Stage.convertLevel = function(rawLevel) {
    return rval;
 }
 
-Mduel.Stage.generateRopes = function() {
+Mduel.Stage.generateRopes = function(levels, width) {
    var rval = new Array();
    
    // TODO   
