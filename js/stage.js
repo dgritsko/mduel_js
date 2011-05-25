@@ -165,22 +165,51 @@ Mduel.Stage.generateRopes = function(levels, width) {
    var horizontalOffset = 25;
    var verticalOffset = 26;
    
+   var leftRopes = new Array();
+   var otherRopes = new Array();
+   
    for (var i = 1; i < width; i++) {
       var options = new Array();
    
       if (levels[1][i] && levels[2][i]) {
-         options.push({ x: (i * 32) + horizontalOffset, y: 64 + verticalOffset, length: 3 });
+         options.push({ x: (i * 32) + horizontalOffset, y: 64 + verticalOffset, length: 2 });
       }
       if (levels[2][i] && levels[3][i]) {
-         options.push({ x: (i * 32) + horizontalOffset, y: 128 + verticalOffset, length: 3 });
+         options.push({ x: (i * 32) + horizontalOffset, y: 128 + verticalOffset, length: 2 });
       }   
       if (levels[1][i] && levels[3][i]) {
          options.push({ x: (i * 32) + horizontalOffset, y: 64 + verticalOffset, length: 3 });
       }   
    
-      // TODO
-      for (var j = 0; j < options.length; j++) {
-         rval.push({ x: options[j].x, y: options[j].y });   
+      if (options.length > 0) {
+         // Only take one possibility from each column
+         var index = Math.floor(Math.random() * options.length);
+   
+         var toAdd = options[index];
+         
+         if (i < 4) {
+            leftRopes.push(toAdd);
+         }
+         else if (i > 4 && i != 14) {
+            otherRopes.push(toAdd);
+         }
+      }
+   }
+   
+   if (leftRopes.length > 0) {
+       var index = Math.floor(Math.random() * leftRopes.length);
+       rval.push(leftRopes[index]);
+   }
+   
+   if (otherRopes.length > 0) {
+      // Hard max of other ropes is 4
+      var max = Math.min(otherRopes.length, Math.floor(Math.random() * 3) + 1);
+      var count = 0;
+      while (count < max) {
+         var index = Math.floor(Math.random() * otherRopes.length);
+         rval.push(otherRopes[index]);
+      
+         count++;
       }   
    }
    
