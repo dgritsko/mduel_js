@@ -54,9 +54,19 @@ Mduel.Stage.stage = function(spec) {
       }
       
       // Ropes
+      var verticalAdjustment = Mduel.Stage.ropeAnchorImage.height;
+      var horizontalAdjustment = Mduel.Stage.ropeAnchorImage.width / 2;
+      
       for (var i = 0, len = that.ropes.length; i < len; i++) {
          ctx.drawImage(Mduel.Stage.ropeAnchorImage, that.ropes[i].x, that.ropes[i].y);
+         
+         ctx.moveTo(that.ropes[i].x + horizontalAdjustment, that.ropes[i].y + verticalAdjustment);
+         ctx.lineTo(that.ropes[i].x + horizontalAdjustment, that.ropes[i].y + (that.ropes[i].ropeLength * 64) - (Mduel.Stage.spawnImage.height + 1));
       }
+      
+      // Rope color
+      ctx.strokeStyle = '#926100';
+      ctx.stroke();
    }
       
    return that;
@@ -166,8 +176,8 @@ Mduel.Stage.generateRopes = function(levels, width) {
    var verticalOffset = 26;
    
    // Fixed top ropes
-   rval.push({ x: 4, y: 0, length: 5 });
-   rval.push({ x: 14, y: 0, length: 5 });
+   rval.push({ x: 4, y: 0, ropeLength: 5 });
+   rval.push({ x: 14, y: 0, ropeLength: 5 });
    
    var leftRopes = new Array();
    var otherRopes = new Array();
@@ -176,13 +186,13 @@ Mduel.Stage.generateRopes = function(levels, width) {
       var options = new Array();
    
       if (levels[1][i] && levels[2][i]) {
-         options.push({ x: i, y: 1, length: 2 });
+         options.push({ x: i, y: 1, ropeLength: 2 });
       }
       if (levels[2][i] && levels[3][i]) {
-         options.push({ x: i, y: 2, length: 2 });
+         options.push({ x: i, y: 2, ropeLength: 2 });
       }   
       if (levels[1][i] && levels[3][i]) {
-         options.push({ x: i, y: 1, length: 3 });
+         options.push({ x: i, y: 1, ropeLength: 3 });
       }   
    
       if (options.length > 0) {
