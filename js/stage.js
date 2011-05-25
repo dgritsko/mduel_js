@@ -162,8 +162,27 @@ Mduel.Stage.convertLevel = function(rawLevel) {
 Mduel.Stage.generateRopes = function(levels, width) {
    var rval = new Array();
    
-   // TODO   
-   rval.push({ x: 120, y: 20 });
+   var horizontalOffset = 25;
+   var verticalOffset = 26;
+   
+   for (var i = 1; i < width; i++) {
+      var options = new Array();
+   
+      if (levels[1][i] && levels[2][i]) {
+         options.push({ x: (i * 32) + horizontalOffset, y: 64 + verticalOffset, length: 3 });
+      }
+      if (levels[2][i] && levels[3][i]) {
+         options.push({ x: (i * 32) + horizontalOffset, y: 128 + verticalOffset, length: 3 });
+      }   
+      if (levels[1][i] && levels[3][i]) {
+         options.push({ x: (i * 32) + horizontalOffset, y: 64 + verticalOffset, length: 3 });
+      }   
+   
+      // TODO
+      for (var j = 0; j < options.length; j++) {
+         rval.push({ x: options[j].x, y: options[j].y });   
+      }   
+   }
    
    return rval;
 }
