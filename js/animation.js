@@ -12,7 +12,7 @@ Mduel.Animation.animation = function(spec) {
    that.sprites = spec.data;
    
    that.frameDuration = spec.frames[0].time;   
-   that.frameIndex = 0;
+   that.frameIndex = spec.startFrame || 0;
    
    that.animate = function(deltaTime) {
       that.frameDuration -= deltaTime;

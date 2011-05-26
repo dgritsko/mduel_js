@@ -24,7 +24,12 @@ Mduel.Stage.stage = function(spec) {
    that.levels = stage.levels;
    that.ropes = stage.ropes;
    
-   that.pit = [ Mduel.Assets.Animations.pit() ];
+   that.pit = [
+      Mduel.Assets.Animations.pit(0),
+      Mduel.Assets.Animations.pit(1),
+      Mduel.Assets.Animations.pit(2),
+      Mduel.Assets.Animations.pit(3)
+   ];
    
    that.draw = function(ctx, elapsed) {
       
@@ -75,20 +80,17 @@ Mduel.Stage.stage = function(spec) {
       // Pit
       for (var i = 0, len = that.pit.length; i < len; i++) {
          that.pit[i].animate(elapsed);
-         var frame = that.pit[i].getSprite();
-         
-         ctx.drawImage(Mduel.Stage.marshmallowImage, 100, 100, frame.width, frame.height);
-         
-         /*ctx.drawImage(Mduel.Stage.marshmallowImage,
-            // Source X and Y coordinates
-            frame.x, frame.y, 
-            // Source Width and Height
-            frame.width, frame.height, 
-            // Destination X and Y coordinates
-            100, 100,
-            // Destination Width and Height
-            frame.width, frame.height);*/
-         
+      }   
+      
+      for (var i = 0, w = Mduel.Game.canvas.width; i < w; i += (32 * that.pit.length)) {
+         for (var j = 0, len = that.pit.length; j < len; j++) {
+            var frame = that.pit[j].getSprite();
+
+            ctx.drawImage(Mduel.Stage.marshmallowImage,
+               frame.x, frame.y, frame.width, frame.height,
+               i + (j * frame.width), Mduel.Game.canvas.height - frame.height,
+               frame.width, frame.height);
+         }      
       }
    }
       

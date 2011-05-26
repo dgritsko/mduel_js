@@ -19,7 +19,7 @@ Mduel.Spritesheet.spritesheet = function(spec) {
          if (sprite.name == spriteName) {
             return {
                x: (sprite.x || 0),
-               y: (i * that.height) + (sprite.y || 0),  
+               y: ((sprite.y || 0) * that.height),
                width: that.width,
                height: that.height               
             };
