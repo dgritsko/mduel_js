@@ -4,7 +4,10 @@ PLAYER.image.src = 'img/playerSprite1.png';
 
 var player = function(spec) {
    var that = {};
+  
+   that.velocity = { x: 0, y: 0 };
 
+   that.location = 'platform';
    that.state = 'stand';  
    that.animation = Mduel.Assets.Animations.stand();
    that.flip = false;
@@ -44,46 +47,42 @@ var player = function(spec) {
       }
    }
    
-   that.processInput = function(keyboard) {
+   that.update = function(elapsed) {
       var pos = that.getPosition();
       
-      if (keyboard.up) {
-         pos.y -= 1;
-      }
-      
-      if (keyboard.down) {
-         pos.y += 1;
-      }
-      
-      if (keyboard.left) {
-         pos.x -= 1;
-         
-         
-         if (that.state == 'stand') {
-           that.setState('run');
-           that.flip = true;
-         }
-      }
-      else if (that.state != 'stand' && !keyboard.right) {
-         that.setState('stand');
-      }
-      
-      if (keyboard.right) {
-         pos.x += 1;
-         
-         if (that.state == 'stand') {
-            that.setState('run');
-            that.flip = false;
-         }
-      }
-      else if (that.state != 'stand' && !keyboard.left) {
-         that.setState('stand');
-      }      
+      pos.x += that.velocity.x;
+      pos.y += that.velocity.y;
+            
    }
-   
+      
+   that.keyUp = function(keyName) {
+      if (keyName == 'left' || keyName == 'right') {
+         that.velocity.x = 0;
+         that.setState('stand');
+      }
+   }
+      
+   that.keyDown = function(keyName) {
+      if (keyName == 'left') {
+         that.velocity.x = -2.5;
+         that.flip = true;
+         that.setState('run');
+      }
+      if (keyName == 'right') {
+         that.velocity.x = 2.5;   
+         that.flip = false;
+         that.setState('run');
+      }
+      if (keyName == 'up') {
+         
+      }
+   }
+      
    that.setState = function(state) {
-      that.animation = Mduel.Assets.Animations[state]();
-      that.state = state;
+      if (state != that.state) {   
+         that.animation = Mduel.Assets.Animations[state]();
+         that.state = state;
+      }
    }
    
    return that;

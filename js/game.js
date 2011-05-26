@@ -37,24 +37,24 @@ Mduel.Game.startGame = function() {
 }
 
 Mduel.Game.gameLoop = function() {
-   Mduel.Game.update();
-   Mduel.Game.draw();
-}
-
-
-Mduel.Game.update = function() {
-   for (var i = 0, len = Mduel.Game.players.length; i < len; i++) {
-      Mduel.Game.players[i].processInput(Mduel.Keyboard.KeyStates);
-   }
-}
-
-Mduel.Game.draw = function() {
-   Mduel.Game.ctx.clearRect(0, 0, Mduel.Game.width, Mduel.Game.height);
-
    var renderTime = new Date().valueOf();
    var elapsedTime = renderTime - Mduel.Game.lastFrameDrawn;
    Mduel.Game.lastFrameDrawn = renderTime;
-   
+
+   Mduel.Game.update(elapsedTime);
+   Mduel.Game.draw(elapsedTime);
+}
+
+
+Mduel.Game.update = function(elapsedTime) {
+   for (var i = 0, len = Mduel.Game.players.length; i < len; i++) {
+      Mduel.Game.players[i].update(elapsedTime);
+   }
+}
+
+Mduel.Game.draw = function(elapsedTime) {
+   Mduel.Game.ctx.clearRect(0, 0, Mduel.Game.width, Mduel.Game.height);
+
    // Stage
    Mduel.Game.stage.draw(Mduel.Game.ctx, elapsedTime);
    
