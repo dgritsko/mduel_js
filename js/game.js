@@ -26,7 +26,13 @@ Mduel.Game.startGame = function() {
       
    Mduel.Game.players = [
       Mduel.Player.player({ 
-      	position: { x: 32, y: 280 }
+      	position: { x: 32, y: 280 },
+      	spriteImage: Mduel.Images.player1
+     }),
+     Mduel.Player.player({ 
+           	position: { x: 544, y: 280 },
+           	spriteImage: Mduel.Images.player2,
+           	flip: true
      })
    ];
    

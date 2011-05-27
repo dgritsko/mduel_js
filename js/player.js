@@ -14,7 +14,8 @@ Mduel.Player.player = function(spec) {
    that.location = 'platform';
    that.state = 'stand';  
    that.animation = Mduel.Assets.Animations.stand();
-   that.flip = false;
+   that.flip = spec.flip;
+   that.spriteImage = spec.spriteImage;
   
    that.getPosition = function() {
       return spec.position;
@@ -36,7 +37,7 @@ Mduel.Player.player = function(spec) {
          ctx.transform(-1, 0, 0, 1, 0, 0);
       }      
       
-      ctx.drawImage(Mduel.Images.player, 
+      ctx.drawImage(that.spriteImage, 
          // Source X and Y coordinates
          frame.x, frame.y, 
          // Source Width and Height

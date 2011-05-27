@@ -5,8 +5,12 @@ if (typeof Mduel.Images == 'undefined') {
    Mduel.Images = {};
 }
 
-Mduel.Images.player = new Image();
-Mduel.Images.player.src = 'img/playerSprite1.png';
+Mduel.Images.player1 = new Image();
+Mduel.Images.player1.src = 'img/playerSprite1.png';
+Mduel.Images.player2 = new Image();
+Mduel.Images.player2.src = 'img/playerSprite2.png';
+
+
 Mduel.Images.platform = new Image();
 Mduel.Images.platform.src = 'img/main_platform.bmp';
 Mduel.Images.spawn = new Image();
