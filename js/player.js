@@ -1,4 +1,12 @@
-var player = function(spec) {
+if (typeof Mduel == 'undefined') {
+   var Mduel = {};
+}
+if (typeof Mduel.Player == 'undefined') {
+   Mduel.Player = {};
+}
+
+
+Mduel.Player.player = function(spec) {
    var that = {};
   
    that.velocity = { x: 0, y: 0 };

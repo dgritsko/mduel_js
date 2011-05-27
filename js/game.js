@@ -23,7 +23,7 @@ Mduel.Game.startGame = function() {
    Mduel.Game.lastFrameDrawn = new Date().valueOf();
       
    Mduel.Game.players = [
-      player({ 
+      Mduel.Player.player({ 
       	position: { x: 32, y: 280 }
      })
    ];
