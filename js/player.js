@@ -58,20 +58,43 @@ Mduel.Player.player = function(spec) {
       
       pos.x += that.velocity.x;
       pos.y += that.velocity.y;
-            
+      
+      if (that.animation.isFinished()) 
+      {
+         if (that.state == 'uncrouch')
+         {
+            that.setState('stand');
+         }
+      }
    }
       
    that.keyUp = function(keyState) {
-      if (!keyState.left.pressed && !keyState.right.pressed) {
+      if (!keyState.left.pressed && !keyState.right.pressed) 
+      {
          that.velocity.x = 0;
-         that.setState('stand');
-      } else if (!keyState.left.pressed && keyState.right.pressed) {
+         
+         if (keyState.lastKey.name == 'down') 
+         {
+	    if ((that.state == 'roll' || that.state == 'crouch' || that.state == 'crouched') && that.animation.isFinished()) 
+	    {
+	       that.setState('uncrouch');
+	    }
+         } 
+         else 
+         {
+            that.setState('stand');
+         }
+      } 
+      else if (!keyState.left.pressed && keyState.right.pressed) 
+      {
          that.velocity.x = that.constants.runSpeed;
          that.flip = false;
-      } else if (keyState.left.pressed && !keyState.right.pressed) {
+      } 
+      else if (keyState.left.pressed && !keyState.right.pressed) 
+      {
          that.velocity.x = -that.constants.runSpeed;
          that.flip = true;
-      }
+      }      
    }
       
    that.keyDown = function(keyState) {
@@ -89,6 +112,11 @@ Mduel.Player.player = function(spec) {
          } else {
             that.setState('crouch');
          }
+         
+         if (that.animation.finished) {
+            that.velocity.x = 0;
+         }
+         
       } else if (keyState.up.pressed) {
          
       }
