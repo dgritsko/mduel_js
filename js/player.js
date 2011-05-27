@@ -13,7 +13,7 @@ Mduel.Player.player = function(spec) {
 
    that.location = 'platform';
    that.state = 'stand';  
-   that.animation = Mduel.Assets.Animations.stand();
+   that.animation = Mduel.Animations.stand();
    that.flip = spec.flip;
    that.spriteImage = spec.spriteImage;
    that.constants = Mduel.Player.Constants;
@@ -124,7 +124,7 @@ Mduel.Player.player = function(spec) {
       
    that.setState = function(state) {
       if (state != that.state) {   
-         that.animation = Mduel.Assets.Animations[state]();
+         that.animation = Mduel.Animations[state]();
          that.state = state;
       }
    }

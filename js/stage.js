@@ -14,10 +14,10 @@ Mduel.Stage.stage = function(spec) {
    that.ropes = stage.ropes;
    
    that.pit = [
-      Mduel.Assets.Animations.pit(0),
-      Mduel.Assets.Animations.pit(1),
-      Mduel.Assets.Animations.pit(2),
-      Mduel.Assets.Animations.pit(3)
+      Mduel.Animations.pit(0),
+      Mduel.Animations.pit(1),
+      Mduel.Animations.pit(2),
+      Mduel.Animations.pit(3)
    ];
    
    that.draw = function(ctx, elapsed) {

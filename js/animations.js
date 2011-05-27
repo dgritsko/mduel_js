@@ -1,12 +1,11 @@
 if (typeof Mduel == 'undefined') {
    var Mduel = {};
 }
-if (typeof Mduel.Assets == 'undefined') {
-   Mduel.Assets = {};
-   Mduel.Assets.Animations = {};
+if (typeof Mduel.Animations == 'undefined') {
+   Mduel.Animations = {};
 }
 
-Mduel.Assets.Animations.pit = function(startFrame) {
+Mduel.Animations.pit = function(startFrame) {
    return Mduel.Animation.animation({
             frames:
             [
@@ -22,7 +21,7 @@ Mduel.Assets.Animations.pit = function(startFrame) {
 
 }
 
-Mduel.Assets.Animations.stand = function() {
+Mduel.Animations.stand = function() {
 
    return Mduel.Animation.animation({
             frames:
@@ -33,7 +32,7 @@ Mduel.Assets.Animations.stand = function() {
          });
 }
 
-Mduel.Assets.Animations.run = function() {
+Mduel.Animations.run = function() {
 
    return Mduel.Animation.animation({
             frames:
@@ -48,7 +47,7 @@ Mduel.Assets.Animations.run = function() {
          });
 }
 
-Mduel.Assets.Animations.roll = function() {
+Mduel.Animations.roll = function() {
 
    return Mduel.Animation.animation({
             frames:
@@ -64,7 +63,7 @@ Mduel.Assets.Animations.roll = function() {
          });
 }
 
-Mduel.Assets.Animations.crouch = function() {
+Mduel.Animations.crouch = function() {
 
    return Mduel.Animation.animation({
             frames:
@@ -76,7 +75,7 @@ Mduel.Assets.Animations.crouch = function() {
          });
 }
 
-Mduel.Assets.Animations.crouched = function() {
+Mduel.Animations.crouched = function() {
 
    return Mduel.Animation.animation({
             frames:
@@ -87,7 +86,7 @@ Mduel.Assets.Animations.crouched = function() {
          });
 }
 
-Mduel.Assets.Animations.uncrouch = function() {
+Mduel.Animations.uncrouch = function() {
 
    return Mduel.Animation.animation({
             frames:
