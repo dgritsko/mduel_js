@@ -7,8 +7,6 @@ if (typeof Mduel.Assets == 'undefined') {
    Mduel.Assets.Animations = {};
 }
 
-
-
 Mduel.Assets.Sprites.player = Mduel.Spritesheet.spritesheet({
    width: 64,
    height: 64,

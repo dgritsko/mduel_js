@@ -5,17 +5,6 @@ if (typeof Mduel.Stage == 'undefined') {
    Mduel.Stage = {};
 }
 
-Mduel.Stage.platformImage = new Image();
-Mduel.Stage.platformImage.src = 'img/main_platform.bmp';
-Mduel.Stage.spawnImage = new Image();
-Mduel.Stage.spawnImage.src = 'img/spawn_platform.bmp';
-Mduel.Stage.powerupImage = new Image();
-Mduel.Stage.powerupImage.src = 'img/powerup_spawn.png';
-Mduel.Stage.ropeAnchorImage = new Image();
-Mduel.Stage.ropeAnchorImage.src = 'img/rope_anchor.bmp';
-Mduel.Stage.marshmallowImage = new Image();
-Mduel.Stage.marshmallowImage.src = 'img/marshmallowSprites.gif';
-
 Mduel.Stage.stage = function(spec) {
    var that = {};
    
@@ -36,9 +25,9 @@ Mduel.Stage.stage = function(spec) {
       // Right spawn
       ctx.save();   
       
-      ctx.translate(Mduel.Game.width, (Mduel.Game.height / 2) - (Mduel.Stage.platformImage.width / 2));
+      ctx.translate(Mduel.Game.width, (Mduel.Game.height / 2) - (Mduel.Images.platform.width / 2));
       ctx.rotate(90 * (Math.PI / 180));
-      ctx.drawImage(Mduel.Stage.powerupImage, 0, 0);
+      ctx.drawImage(Mduel.Images.powerup, 0, 0);
       
       ctx.restore();
       
@@ -48,29 +37,29 @@ Mduel.Stage.stage = function(spec) {
       // 208 is a magic number -- need to figure out the right way to position this image
       ctx.translate(0, 208); //(Mduel.Game.height / 2) + (Mduel.Stage.platformImage.width / 2));
       ctx.rotate(270 * (Math.PI / 180));
-      ctx.drawImage(Mduel.Stage.powerupImage, 0, 0);
+      ctx.drawImage(Mduel.Images.powerup, 0, 0);
       
       ctx.restore();
       
       // Top spawn
-      ctx.drawImage(Mduel.Stage.powerupImage, (Mduel.Game.width / 2) - (Mduel.Stage.platformImage.width / 2), 0);
+      ctx.drawImage(Mduel.Images.powerup, (Mduel.Game.width / 2) - (Mduel.Images.platform.width / 2), 0);
    
       // Platforms
       for (var i = 0, len = that.levels.length; i < len; i++) {
-         var imageToDraw = that.levels[i].isSpawn ? Mduel.Stage.spawnImage : Mduel.Stage.platformImage;
+         var imageToDraw = that.levels[i].isSpawn ? Mduel.Images.spawn : Mduel.Images.platform;
       
          ctx.drawImage(imageToDraw, that.levels[i].x, that.levels[i].y);
       }
       
       // Ropes
-      var verticalAdjustment = Mduel.Stage.ropeAnchorImage.height;
-      var horizontalAdjustment = Mduel.Stage.ropeAnchorImage.width / 2;
+      var verticalAdjustment = Mduel.Images.ropeAnchor.height;
+      var horizontalAdjustment = Mduel.Images.ropeAnchor.width / 2;
       
       for (var i = 0, len = that.ropes.length; i < len; i++) {
-         ctx.drawImage(Mduel.Stage.ropeAnchorImage, that.ropes[i].x, that.ropes[i].y);
+         ctx.drawImage(Mduel.Images.ropeAnchor, that.ropes[i].x, that.ropes[i].y);
          
          ctx.moveTo(that.ropes[i].x + horizontalAdjustment, that.ropes[i].y + verticalAdjustment);
-         ctx.lineTo(that.ropes[i].x + horizontalAdjustment, that.ropes[i].y + (that.ropes[i].ropeLength * 64) - (Mduel.Stage.spawnImage.height + 1));
+         ctx.lineTo(that.ropes[i].x + horizontalAdjustment, that.ropes[i].y + (that.ropes[i].ropeLength * 64) - (Mduel.Images.spawn.height + 1));
       }
       
       // Rope color
@@ -86,7 +75,7 @@ Mduel.Stage.stage = function(spec) {
          for (var j = 0, len = that.pit.length; j < len; j++) {
             var frame = that.pit[j].getSprite();
 
-            ctx.drawImage(Mduel.Stage.marshmallowImage,
+            ctx.drawImage(Mduel.Images.mallow,
                frame.x, frame.y, frame.width, frame.height,
                i + (j * frame.width), Mduel.Game.canvas.height - frame.height,
                frame.width, frame.height);

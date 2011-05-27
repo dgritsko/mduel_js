@@ -1,7 +1,3 @@
-var PLAYER = {};
-PLAYER.image = new Image();
-PLAYER.image.src = 'img/playerSprite1.png';
-
 var player = function(spec) {
    var that = {};
   
@@ -32,7 +28,7 @@ var player = function(spec) {
          ctx.transform(-1, 0, 0, 1, 0, 0);
       }      
       
-      ctx.drawImage(PLAYER.image, 
+      ctx.drawImage(Mduel.Images.player, 
          // Source X and Y coordinates
          frame.x, frame.y, 
          // Source Width and Height
