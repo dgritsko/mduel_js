@@ -13,4 +13,17 @@ Mduel.Util.sum = function(arr, accum) {
    }   
    
    return sum;
+};
+
+Mduel.Util.where = function(arr, pred) {
+   var rval = new Array();
+
+   for (var i = 0, len = arr.length; i < len; i++) {
+      if (pred(arr[i]))
+      {
+         rval.push(arr[i]);
+      }
+   }
+   
+   return rval;
 }

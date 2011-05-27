@@ -10,7 +10,7 @@ Mduel.Stage.stage = function(spec) {
    
    var stage = Mduel.Stage.generateStage();
    
-   that.levels = stage.levels;
+   that.platforms = stage.platforms;
    that.ropes = stage.ropes;
    
    that.pit = [
@@ -45,10 +45,10 @@ Mduel.Stage.stage = function(spec) {
       ctx.drawImage(Mduel.Images.powerup, (Mduel.Game.width / 2) - (Mduel.Images.platform.width / 2), 0);
    
       // Platforms
-      for (var i = 0, len = that.levels.length; i < len; i++) {
-         var imageToDraw = that.levels[i].isSpawn ? Mduel.Images.spawn : Mduel.Images.platform;
+      for (var i = 0, len = that.platforms.length; i < len; i++) {
+         var imageToDraw = that.platforms[i].isSpawn ? Mduel.Images.spawn : Mduel.Images.platform;
       
-         ctx.drawImage(imageToDraw, that.levels[i].x, that.levels[i].y);
+         ctx.drawImage(imageToDraw, that.platforms[i].x, that.platforms[i].y);
       }
       
       // Ropes
@@ -125,7 +125,7 @@ Mduel.Stage.generateStage = function() {
    // Generate ropes
    var ropes = Mduel.Stage.generateRopes(levels, 18);
    
-   return { levels: rval, ropes: ropes };
+   return { platforms: rval, ropes: ropes };
 }
 
 Mduel.Stage.generateTopLevel = function() {

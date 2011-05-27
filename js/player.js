@@ -66,6 +66,8 @@ Mduel.Player.player = function(spec) {
             that.setState('stand');
          }
       }
+      
+      that.updateLocation();
    }
       
    that.keyUp = function(keyState) {
@@ -129,9 +131,37 @@ Mduel.Player.player = function(spec) {
       }
    }
    
+   that.updateLocation = function() {
+      // Possible Values: air, pit, platform, rope
+      if (that.location == 'platform') {
+         
+         if (Mduel.Player.isOnPlatform(that))
+         {
+         }
+         else
+         {
+         
+         }         
+      }
+   }
+   
    return that;
 }
 
 Mduel.Player.Constants = {
    runSpeed: 2.5
+};
+
+Mduel.Player.isOnPlatform = function(player) {
+   var rval = true;
+   
+   var pos = player.getPosition();
+   
+   var pred = function(p) {
+      return pos.x > p.x && pos.x < p.x + 32;
+   };
+   
+   var platforms = Mduel.Util.where(Mduel.Game.stage.platforms, pred);
+   
+   return rval;
 };
