@@ -8,23 +8,26 @@ if (typeof Mduel.Keyboard == 'undefined') {
 Mduel.Keyboard.keyDown = function(e) {
    var keyName = Mduel.Keyboard.getKeyName(e.keyCode);
    if (keyName) {
-      for (var i = 0, len = Mduel.Keyboard.playerKeys.length; i < len; i++) {
-         if (Mduel.Keyboard.playerKeys[i][keyName]) {
-            var mapping = Mduel.Keyboard.playerKeys[i][keyName];
-            
-            var eventTime = new Date().valueOf();
-        
-            Mduel.Keyboard.playerKeyStates[i][mapping].pressed = true;
-            Mduel.Keyboard.playerKeyStates[i][mapping].eventTime = eventTime;
-            Mduel.Keyboard.playerKeyStates[i].lastKey.name = mapping;
-            Mduel.Keyboard.playerKeyStates[i].lastKey.pressed = true;
-            Mduel.Keyboard.playerKeyStates[i].lastKey.eventTime = eventTime;
-         }
-      }
    
-      for (var i = 0, len = Mduel.Game.players.length; i < len; i++) {
-         if (Mduel.Game.players[i].keyDown) {
-            Mduel.Game.players[i].keyDown(keyName);
+      if (Mduel.Game.state == 'game') {   
+         for (var i = 0, len = Mduel.Keyboard.playerKeys.length; i < len; i++) {
+            if (Mduel.Keyboard.playerKeys[i][keyName]) {
+               var mapping = Mduel.Keyboard.playerKeys[i][keyName];
+            
+               var eventTime = new Date().valueOf();
+        
+               Mduel.Keyboard.playerKeyStates[i][mapping].pressed = true;
+               Mduel.Keyboard.playerKeyStates[i][mapping].eventTime = eventTime;
+               Mduel.Keyboard.playerKeyStates[i].lastKey.name = mapping;
+               Mduel.Keyboard.playerKeyStates[i].lastKey.pressed = true;
+               Mduel.Keyboard.playerKeyStates[i].lastKey.eventTime = eventTime;
+            }
+         }
+   
+         for (var i = 0, len = Mduel.Game.players.length; i < len; i++) {
+            if (Mduel.Game.players[i].keyDown) {
+               Mduel.Game.players[i].keyDown(keyName);
+            }
          }
       }
    }
@@ -33,24 +36,27 @@ Mduel.Keyboard.keyDown = function(e) {
 Mduel.Keyboard.keyUp = function(e) {
    var keyName = Mduel.Keyboard.getKeyName(e.keyCode);
    if (keyName) {
-      for (var i = 0, len = Mduel.Keyboard.playerKeys.length; i < len; i++) {
-         if (Mduel.Keyboard.playerKeys[i][keyName]) {
-            var mapping = Mduel.Keyboard.playerKeys[i][keyName];
-            
-            var eventTime = new Date().valueOf();
-         
-            Mduel.Keyboard.playerKeyStates[i][mapping].pressed = false;
-            Mduel.Keyboard.playerKeyStates[i][mapping].eventTime = eventTime;
-            Mduel.Keyboard.playerKeyStates[i].lastKey.name = mapping;
-            Mduel.Keyboard.playerKeyStates[i].lastKey.pressed = false;
-            Mduel.Keyboard.playerKeyStates[i].lastKey.eventTime = eventTime;
-         }
-      }
    
-      // TODO
-      for (var i = 0, len = Mduel.Game.players.length; i < len; i++) {
-         if (Mduel.Game.players[i].keyUp) {
-            Mduel.Game.players[i].keyUp(keyName);
+      if (Mduel.Game.state == 'game') {   
+         for (var i = 0, len = Mduel.Keyboard.playerKeys.length; i < len; i++) {
+            if (Mduel.Keyboard.playerKeys[i][keyName]) {
+               var mapping = Mduel.Keyboard.playerKeys[i][keyName];
+            
+               var eventTime = new Date().valueOf();
+         
+               Mduel.Keyboard.playerKeyStates[i][mapping].pressed = false;
+               Mduel.Keyboard.playerKeyStates[i][mapping].eventTime = eventTime;
+               Mduel.Keyboard.playerKeyStates[i].lastKey.name = mapping;
+               Mduel.Keyboard.playerKeyStates[i].lastKey.pressed = false;
+               Mduel.Keyboard.playerKeyStates[i].lastKey.eventTime = eventTime;
+            }
+         }
+   
+         // TODO
+         for (var i = 0, len = Mduel.Game.players.length; i < len; i++) {
+            if (Mduel.Game.players[i].keyUp) {
+               Mduel.Game.players[i].keyUp(keyName);
+            }
          }
       }
    }

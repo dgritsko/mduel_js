@@ -21,6 +21,8 @@ Mduel.Game.startGame = function() {
    Mduel.Game.framerate = 30;
    
    Mduel.Game.lastFrameDrawn = new Date().valueOf();
+   
+   Mduel.Game.state = 'game';
       
    Mduel.Game.players = [
       Mduel.Player.player({ 
@@ -55,14 +57,16 @@ Mduel.Game.update = function(elapsedTime) {
 Mduel.Game.draw = function(elapsedTime) {
    Mduel.Game.ctx.clearRect(0, 0, Mduel.Game.width, Mduel.Game.height);
 
-   // Stage
-   Mduel.Game.stage.draw(Mduel.Game.ctx, elapsedTime);
+   if (Mduel.Game.state == 'game') {
+      // Stage
+      Mduel.Game.stage.draw(Mduel.Game.ctx, elapsedTime);
    
-   // Players
-   for (var i = 0, len = Mduel.Game.players.length; i < len; i++) {
-        Mduel.Game.players[i].draw(Mduel.Game.ctx, elapsedTime);
+      // Players
+      for (var i = 0, len = Mduel.Game.players.length; i < len; i++) {
+           Mduel.Game.players[i].draw(Mduel.Game.ctx, elapsedTime);
+      }
    }
-  
+   
    if (Mduel.Game.debug) {
        Mduel.Game.ctx.fillStyle = '#f00';
        Mduel.Game.ctx.font = 'arial 30px sans-serif';
