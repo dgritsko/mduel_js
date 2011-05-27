@@ -26,7 +26,7 @@ Mduel.Keyboard.keyDown = function(e) {
    
          for (var i = 0, len = Mduel.Game.players.length; i < len; i++) {
             if (Mduel.Game.players[i].keyDown) {
-               Mduel.Game.players[i].keyDown(keyName);
+               Mduel.Game.players[i].keyDown(Mduel.Keyboard.playerKeyStates[i]);
             }
          }
       }
@@ -52,10 +52,9 @@ Mduel.Keyboard.keyUp = function(e) {
             }
          }
    
-         // TODO
          for (var i = 0, len = Mduel.Game.players.length; i < len; i++) {
             if (Mduel.Game.players[i].keyUp) {
-               Mduel.Game.players[i].keyUp(keyName);
+               Mduel.Game.players[i].keyUp(Mduel.Keyboard.playerKeyStates[i]);
             }
          }
       }
