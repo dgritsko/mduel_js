@@ -16,6 +16,7 @@ Mduel.Player.player = function(spec) {
    that.animation = Mduel.Assets.Animations.stand();
    that.flip = spec.flip;
    that.spriteImage = spec.spriteImage;
+   that.constants = Mduel.Player.Constants;
   
    that.getPosition = function() {
       return spec.position;
@@ -65,22 +66,22 @@ Mduel.Player.player = function(spec) {
          that.velocity.x = 0;
          that.setState('stand');
       } else if (!keyState.left.pressed && keyState.right.pressed) {
-         that.velocity.x = 2.5;
+         that.velocity.x = that.constants.runSpeed;
          that.flip = false;
       } else if (keyState.left.pressed && !keyState.right.pressed) {
-         that.velocity.x = -2.5;
+         that.velocity.x = -that.constants.runSpeed;
          that.flip = true;
       }
    }
       
    that.keyDown = function(keyState) {
       if (keyState.left.pressed && !keyState.right.pressed) {
-         that.velocity.x = -2.5;
+         that.velocity.x = -that.constants.runSpeed;
          that.flip = true;
          that.setState('run');
       }
       if (keyState.right.pressed && !keyState.left.pressed) {
-         that.velocity.x = 2.5;   
+         that.velocity.x = that.constants.runSpeed;
          that.flip = false;
          that.setState('run');
       }
@@ -98,3 +99,7 @@ Mduel.Player.player = function(spec) {
    
    return that;
 }
+
+Mduel.Player.Constants = {
+   runSpeed: 2.5
+};
