@@ -27,25 +27,28 @@ Mduel.Keyboard.keyUp = function(e) {
    }
 }
 
+Mduel.Keyboard.keyNames = {
+      '37' : 'left',
+      '38' : 'up',
+      '39' : 'right',
+      '40' : 'down',
+      '65' : 'a',
+      '83' : 's',
+      '68' : 'd',
+      '87' : 'w',
+      '13' : 'enter',
+      '73' : 'i',
+      '74' : 'j',
+      '75' : 'k',
+      '76' : 'l',
+      '85' : 'u'      
+};
+
 Mduel.Keyboard.getKeyName = function(keyCode) {
    var rval = null;
-      
-   switch (keyCode)
-   {
-      case 37:
-         rval = 'left';
-         break;
-      case 38:
-         rval = 'up';
-         break;
-      case 39:
-         rval = 'right';
-         break;
-      case 40: 
-         rval = 'down';
-         break;
-      default:
-         break;
+  
+   if (Mduel.Keyboard.keyNames['' + keyCode]) {
+      rval = Mduel.Keyboard.keyNames['' + keyCode];
    }
    
    return rval;
