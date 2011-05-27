@@ -15,7 +15,13 @@ Mduel.Assets.Sprites.player = Mduel.Spritesheet.spritesheet({
       { name: 'run_1', x: 0, y: 1 },
       { name: 'run_2', x: 0, y: 2 },
       { name: 'run_3', x: 0, y: 3 },
-      { name: 'run_4', x: 0, y: 4 }
+      { name: 'run_4', x: 0, y: 4 },
+      { name: 'crouched', x: 0, y: 5 },
+      { name: 'crouching', x: 0, y: 6 },
+      { name: 'roll_1', x: 0, y: 7 },
+      { name: 'roll_2', x: 0, y: 8 },
+      { name: 'roll_3', x: 0, y: 9 },
+      { name: 'roll_4', x: 0, y: 10 },
    ]
 });
 
@@ -65,6 +71,34 @@ Mduel.Assets.Animations.run = function() {
                { sprite: 'run_2', time: 75 },
                { sprite: 'run_3', time: 75 },
                { sprite: 'run_4', time: 75 }
+            ], 
+            data: Mduel.Assets.Sprites.player
+         });
+}
+
+Mduel.Assets.Animations.roll = function() {
+
+   return Mduel.Animation.animation({
+            frames:
+            [
+               { sprite: 'crouching', time: 75 },
+               { sprite: 'roll_1', time: 75 },
+               { sprite: 'roll_2', time: 75 },
+               { sprite: 'roll_3', time: 75 },
+               { sprite: 'roll_4', time: 75 },
+               { sprite: 'crouched', time: 10000 }
+            ], 
+            data: Mduel.Assets.Sprites.player
+         });
+}
+
+Mduel.Assets.Animations.crouch = function() {
+
+   return Mduel.Animation.animation({
+            frames:
+            [
+               { sprite: 'crouching', time: 75 },
+               { sprite: 'crouched', time: 10000 }
             ], 
             data: Mduel.Assets.Sprites.player
          });

@@ -75,17 +75,21 @@ Mduel.Player.player = function(spec) {
    }
       
    that.keyDown = function(keyState) {
-      if (keyState.left.pressed && !keyState.right.pressed) {
+      if (keyState.lastKey.name == 'left' && keyState.left.pressed && !keyState.right.pressed) {
          that.velocity.x = -that.constants.runSpeed;
          that.flip = true;
          that.setState('run');
-      }
-      if (keyState.right.pressed && !keyState.left.pressed) {
+      } else if (keyState.lastKey.name == 'right' && keyState.right.pressed && !keyState.left.pressed) {
          that.velocity.x = that.constants.runSpeed;
          that.flip = false;
          that.setState('run');
-      }
-      if (keyState.up.pressed) {
+      } else if (keyState.lastKey.name == 'down') {
+         if (keyState.left.pressed || keyState.right.pressed) {
+            that.setState('roll');
+         } else {
+            that.setState('crouch');
+         }
+      } else if (keyState.up.pressed) {
          
       }
    }
