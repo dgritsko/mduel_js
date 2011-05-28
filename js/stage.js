@@ -77,8 +77,10 @@ Mduel.Stage.stage = function(spec) {
 
             ctx.drawImage(Mduel.Images.mallow,
                frame.x, frame.y, frame.width, frame.height,
-               i + (j * frame.width), Mduel.Game.canvas.height - frame.height,
+               i + (j * frame.width), Mduel.Game.canvas.height - (frame.height + 22),
                frame.width, frame.height);
+               
+            ctx.drawImage(Mduel.Images.mallowFiller, i + (j * 32), Mduel.Game.canvas.height - frame.height);
          }      
       }
    }
@@ -114,8 +116,7 @@ Mduel.Stage.generateStage = function() {
    // Left spawn platforms
    for (var ls = 0; ls < 4; ls++) {
       rval.push({ x: (32 * ls) + 48, y: (4 * verticalSpacing) + verticalOffset, isSpawn: true });
-   }
-   
+   }   
    
    // Right spawn platforms
    for (var ls = 0; ls < 4; ls++) {

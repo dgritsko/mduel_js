@@ -21,3 +21,5 @@ Mduel.Images.ropeAnchor = new Image();
 Mduel.Images.ropeAnchor.src = 'img/rope_anchor.bmp';
 Mduel.Images.mallow = new Image();
 Mduel.Images.mallow.src = 'img/marshmallowSprites.gif';
+Mduel.Images.mallowFiller = new Image();
+Mduel.Images.mallowFiller.src = 'img/mallow.png';
