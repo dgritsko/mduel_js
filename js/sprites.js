@@ -90,3 +90,38 @@ Mduel.Sprites.pit = Mduel.Spritesheet.spritesheet({
       { name: 'pit3', x: 0, y: 3 }
    ]
 });
+
+Mduel.Sprites.pickups = Mduel.Spritesheet.spritesheet({
+   width: 32,
+   height: 32,
+   sprites: [
+      { name: 'bubble1', x: 0, y: 0 },
+      { name: 'bubble2', x: 0, y: 1 },
+      { name: 'bubble3', x: 0, y: 2 },
+      { name: 'skull', x: 0, y: 3 },
+      { name: 'lightning', x: 0, y: 4 },
+      { name: 'invisibility', x: 0, y: 5 },
+      { name: 'mine', x: 0, y: 6 },
+      { name: 'gun', x: 0, y: 7 },
+      { name: 'explode', x: 0, y: 8 },
+      { name: 'boot', x: 0, y: 9 },
+      { name: 'grenade', x: 0, y: 10 },
+      { name: 'puck', x: 0, y: 11 },
+      { name: 'parachute', x: 0, y: 12 },
+      { name: 'unknown_1', x: 0, y: 13 },
+      { name: 'unknown_2', x: 0, y: 14 },
+      { name: 'magnet', x: 0, y: 15 },
+      { name: 'unknown_3', x: 0, y: 16 },
+      { name: 'shield', x: 0, y: 17 },
+      { name: 'drop', x: 0, y: 18 },
+      { name: 'unknown_4', x: 0, y: 19 },
+      { name: 'corner_tl', x: 0, y: 20 },
+      { name: 'corner_tr', x: 0, y: 21 },
+      { name: 'corner_br', x: 0, y: 22 },
+      { name: 'puck_1', x: 0, y: 23 },
+      { name: 'puck_2', x: 0, y: 24 },
+      { name: 'grenade_1', x: 0, y: 25 },
+      { name: 'grenade_2', x: 0, y: 26 },
+      { name: 'bigdrop', x: 0, y: 27 }
+   ]
+});

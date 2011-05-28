@@ -23,3 +23,5 @@ Mduel.Images.mallow = new Image();
 Mduel.Images.mallow.src = 'img/marshmallowSprites.gif';
 Mduel.Images.mallowFiller = new Image();
 Mduel.Images.mallowFiller.src = 'img/mallow.png';
+Mduel.Images.pickups = new Image();
+Mduel.Images.pickups.src = 'img/pickupSprites.png';
