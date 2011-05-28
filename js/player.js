@@ -55,9 +55,15 @@ Mduel.Player.player = function(spec) {
    
    that.update = function(elapsed) {
       var pos = that.getPosition();
-      
+
+      // Update position      
       pos.x += that.velocity.x;
       pos.y += that.velocity.y;
+
+      // Update location
+      that.updateLocation();
+      
+      // TODO: Call update on the current state object
       
       if (that.animation.isFinished()) 
       {
@@ -66,8 +72,6 @@ Mduel.Player.player = function(spec) {
             that.setState('stand');
          }
       }
-      
-      that.updateLocation();
    }
       
    that.keyUp = function(keyState) {
@@ -133,35 +137,50 @@ Mduel.Player.player = function(spec) {
    
    that.updateLocation = function() {
       // Possible Values: air, pit, platform, rope
-      if (that.location == 'platform') {
-         
-         if (Mduel.Player.isOnPlatform(that))
+      if (that.location == 'platform') 
+      {         
+         if (that.isOnPlatform())
          {
          }
          else
          {
-         
+            that.location = 'air';
+            that.velocity.y = Mduel.Player.Constants.maxFallSpeed;
          }         
       }
+      else if (that.location == 'air') 
+      {
+         if (that.getPosition().y > 320) 
+         {
+            that.velocity.y = 0;
+         }
+      }
    }
+   
+   that.isOnPlatform = function() {
+      var pos = that.getPosition();
+      var x = pos.x + 32;
+   
+      var predX = function(p) {
+         return x >= p.x && x <= (p.x + 32);
+      };
+   
+      var columnPlatforms = Mduel.Util.where(Mduel.Game.stage.platforms, predX);
+      
+      var predY = function(p) {
+         var diff = p.y - pos.y;
+         return diff <= 56 && diff > 0;
+      }
+   
+      var platform = Mduel.Util.where(columnPlatforms, predY);
+      
+      return platform.length > 0;
+   };
    
    return that;
 }
 
 Mduel.Player.Constants = {
-   runSpeed: 2.5
-};
-
-Mduel.Player.isOnPlatform = function(player) {
-   var rval = true;
-   
-   var pos = player.getPosition();
-   
-   var pred = function(p) {
-      return pos.x > p.x && pos.x < p.x + 32;
-   };
-   
-   var platforms = Mduel.Util.where(Mduel.Game.stage.platforms, pred);
-   
-   return rval;
+   runSpeed: 3,
+   maxFallSpeed: 7.5
 };
