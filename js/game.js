@@ -36,6 +36,7 @@ Mduel.Game.startGame = function() {
      })
    ];
    
+   Mduel.Game.pickups = Mduel.Pickups.pickups();
    Mduel.Game.stage = Mduel.Stage.stage();
 
    window.onkeydown = Mduel.Keyboard.keyDown;
@@ -55,9 +56,11 @@ Mduel.Game.gameLoop = function() {
 
 
 Mduel.Game.update = function(elapsedTime) {
+   Mduel.Game.pickups.update(elapsedTime);
+
    for (var i = 0, len = Mduel.Game.players.length; i < len; i++) {
       Mduel.Game.players[i].update(elapsedTime);
-   }
+   }   
 }
 
 Mduel.Game.draw = function(elapsedTime) {
@@ -66,6 +69,9 @@ Mduel.Game.draw = function(elapsedTime) {
    if (Mduel.Game.state == 'game') {
       // Stage
       Mduel.Game.stage.draw(Mduel.Game.ctx, elapsedTime);
+
+      // Pickups
+      Mduel.Game.pickups.draw(Mduel.Game.ctx, elapsedTime);
    
       // Players
       for (var i = 0, len = Mduel.Game.players.length; i < len; i++) {
