@@ -180,6 +180,22 @@ Mduel.Player.player = function(spec) {
    return that;
 }
 
+Mduel.Player.initializePlayers = function() {
+   var rval = [
+      Mduel.Player.player({ 
+      	position: { x: 32, y: 280 },
+      	spriteImage: Mduel.Images.player1
+     }),
+     Mduel.Player.player({ 
+           	position: { x: 544, y: 280 },
+           	spriteImage: Mduel.Images.player2,
+           	flip: true
+     })
+   ];
+   
+   return rval;
+};
+
 Mduel.Player.Constants = {
    runSpeed: 3,
    maxFallSpeed: 7.5

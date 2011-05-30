@@ -20,6 +20,10 @@ Mduel.Stage.stage = function(spec) {
       Mduel.Animations.pit(3)
    ];
    
+   that.update = function(elapsed) {
+      // TODO
+   }
+   
    that.draw = function(ctx, elapsed) {
       
       // Right spawn

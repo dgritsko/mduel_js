@@ -23,21 +23,15 @@ Mduel.Game.startGame = function() {
    Mduel.Game.lastFrameDrawn = new Date().valueOf();
    
    Mduel.Game.state = 'game';
-      
-   Mduel.Game.players = [
-      Mduel.Player.player({ 
-      	position: { x: 32, y: 280 },
-      	spriteImage: Mduel.Images.player1
-     }),
-     Mduel.Player.player({ 
-           	position: { x: 544, y: 280 },
-           	spriteImage: Mduel.Images.player2,
-           	flip: true
-     })
-   ];
    
+   Mduel.Game.players = Mduel.Player.initializePlayers();
    Mduel.Game.pickups = Mduel.Pickups.pickups();
    Mduel.Game.stage = Mduel.Stage.stage();
+   
+   Mduel.Game.objects = [];
+   Mduel.Game.objects = Mduel.Game.objects.concat(Mduel.Game.players);
+   Mduel.Game.objects.push(Mduel.Game.pickups);
+   Mduel.Game.objects.push(Mduel.Game.stage);
 
    window.onkeydown = Mduel.Keyboard.keyDown;
    window.onkeyup = Mduel.Keyboard.keyUp;
@@ -56,10 +50,8 @@ Mduel.Game.gameLoop = function() {
 
 
 Mduel.Game.update = function(elapsedTime) {
-   Mduel.Game.pickups.update(elapsedTime);
-
-   for (var i = 0, len = Mduel.Game.players.length; i < len; i++) {
-      Mduel.Game.players[i].update(elapsedTime);
+   for (var i = 0, len = Mduel.Game.objects.length; i < len; i++) {
+      Mduel.Game.objects[i].update(elapsedTime);
    }   
 }
 
@@ -67,15 +59,8 @@ Mduel.Game.draw = function(elapsedTime) {
    Mduel.Game.ctx.clearRect(0, 0, Mduel.Game.width, Mduel.Game.height);
 
    if (Mduel.Game.state == 'game') {
-      // Stage
-      Mduel.Game.stage.draw(Mduel.Game.ctx, elapsedTime);
-
-      // Pickups
-      Mduel.Game.pickups.draw(Mduel.Game.ctx, elapsedTime);
-   
-      // Players
-      for (var i = 0, len = Mduel.Game.players.length; i < len; i++) {
-           Mduel.Game.players[i].draw(Mduel.Game.ctx, elapsedTime);
+      for (var i = 0, len = Mduel.Game.objects.length; i < len; i++) {
+         Mduel.Game.objects[i].draw(Mduel.Game.ctx, elapsedTime);
       }
    }
    
