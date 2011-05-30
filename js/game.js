@@ -29,9 +29,9 @@ Mduel.Game.startGame = function() {
    Mduel.Game.stage = Mduel.Stage.stage();
    
    Mduel.Game.objects = [];
-   Mduel.Game.objects = Mduel.Game.objects.concat(Mduel.Game.players);
-   Mduel.Game.objects.push(Mduel.Game.pickups);
    Mduel.Game.objects.push(Mduel.Game.stage);
+   Mduel.Game.objects.push(Mduel.Game.pickups);
+   Mduel.Game.objects = Mduel.Game.objects.concat(Mduel.Game.players);
 
    window.onkeydown = Mduel.Keyboard.keyDown;
    window.onkeyup = Mduel.Keyboard.keyUp;
