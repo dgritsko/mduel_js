@@ -14,7 +14,7 @@ Mduel.Player.player = function(spec) {
    that.location = 'platform';
    that.state = 'stand';  
    
-   that.playerState = Mduel.PlayerState.playerState();
+   that.playerState = Mduel.PlayerState.playerState({ player: that });
    
    that.animation = Mduel.Animations.stand();
    that.flip = spec.flip;
