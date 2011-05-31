@@ -63,7 +63,7 @@ Mduel.Animations.roll = function() {
          });
 }
 
-Mduel.Animations.crouch = function() {
+Mduel.Animations.crouching = function() {
 
    return Mduel.Animation.animation({
             frames:
@@ -75,18 +75,18 @@ Mduel.Animations.crouch = function() {
          });
 }
 
-Mduel.Animations.crouched = function() {
+Mduel.Animations.crouch = function() {
 
    return Mduel.Animation.animation({
             frames:
             [
-               { sprite: 'crouched', time: 10000 }
+               { sprite: 'crouched', time: 1 }
             ], 
             data: Mduel.Sprites.player
          });
 }
 
-Mduel.Animations.uncrouch = function() {
+Mduel.Animations.uncrouching = function() {
 
    return Mduel.Animation.animation({
             frames:

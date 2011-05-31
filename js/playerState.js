@@ -21,10 +21,14 @@ Mduel.PlayerState.playerState = function(spec) {
                that.player.velocity.x = -that.player.constants.runSpeed;
                that.player.flip = true;
                that.setState('run');
-            } else if (keyState.lastKey.name == 'right' && keyState.right.pressed && !keyState.left.pressed) {
+            } 
+            else if (keyState.lastKey.name == 'right' && keyState.right.pressed && !keyState.left.pressed) {
                that.player.velocity.x = that.player.constants.runSpeed;
                that.player.flip = false;
                that.setState('run');
+            }
+            else if (keyState.lastKey.name == 'down' && !keyState.right.pressed && !keyState.right.pressed) {
+               that.setState('crouching');
             }
          }
       },
@@ -56,6 +60,14 @@ Mduel.PlayerState.playerState = function(spec) {
                }
             }
          }      
+      },
+      crouching : {
+         animation : 'crouching',
+         update : function(elapsed) {
+            if (that.currentAnimation.isFinished()) {
+               that.setState('crouch');
+            }
+         }
       },
       crouch : {
          animation : 'crouch',
@@ -89,8 +101,13 @@ Mduel.PlayerState.playerState = function(spec) {
    };
     
    that.setState = function(state) {
-      that.currentState = that.states[state];
-      that.currentAnimation = Mduel.Animations[that.currentState.animation]();
+      if (that.states[state]) {   
+         that.currentState = that.states[state];
+         that.currentAnimation = Mduel.Animations[that.currentState.animation]();
+      }
+      else {
+         Mduel.Game.debugText = 'Player state not found: ' + state;
+      }
    }
    
    that.update = function(elapsed) {
