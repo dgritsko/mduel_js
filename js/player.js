@@ -12,15 +12,13 @@ Mduel.Player.player = function(spec) {
    that.velocity = { x: 0, y: 0 };
 
    that.location = 'platform';
-   that.state = 'stand';  
    
    that.playerState = Mduel.PlayerState.playerState({ player: that });
    
-   that.animation = Mduel.Animations.stand();
    that.flip = spec.flip;
    that.spriteImage = spec.spriteImage;
    that.constants = Mduel.Player.Constants;
-  
+   
    that.getPosition = function() {
       return spec.position;
    }
@@ -29,9 +27,9 @@ Mduel.Player.player = function(spec) {
       var pos = that.getPosition();
       var posNew = { x: pos.x, y: pos.y };
       
-      that.animation.animate(elapsed);
+      that.playerState.currentAnimation.animate(elapsed);
       
-      var frame = that.animation.getSprite();
+      var frame = that.playerState.currentAnimation.getSprite();
 
       if (that.flip) {
          ctx.save();
@@ -66,78 +64,21 @@ Mduel.Player.player = function(spec) {
       // Update location
       that.updateLocation();
       
-      // TODO: Call update on the current state object
-      
-      if (that.animation.isFinished()) 
-      {
-         if (that.state == 'uncrouch')
-         {
-            that.setState('stand');
-         }
-      }
+      that.playerState.update(elapsed);
    }
       
    that.keyUp = function(keyState) {
-      if (!keyState.left.pressed && !keyState.right.pressed) 
-      {
-         that.velocity.x = 0;
-         
-         if (keyState.lastKey.name == 'down') 
-         {
-	    if ((that.state == 'roll' || that.state == 'crouch' || that.state == 'crouched') && that.animation.isFinished()) 
-	    {
-	       that.setState('uncrouch');
-	    }
-         } 
-         else 
-         {
-            that.setState('stand');
-         }
-      } 
-      else if (!keyState.left.pressed && keyState.right.pressed) 
-      {
-         that.velocity.x = that.constants.runSpeed;
-         that.flip = false;
-      } 
-      else if (keyState.left.pressed && !keyState.right.pressed) 
-      {
-         that.velocity.x = -that.constants.runSpeed;
-         that.flip = true;
-      }      
+      if (that.playerState.currentState.keyUp) {
+         that.playerState.currentState.keyUp(keyState);
+      }   
    }
       
    that.keyDown = function(keyState) {
-      if (keyState.lastKey.name == 'left' && keyState.left.pressed && !keyState.right.pressed) {
-         that.velocity.x = -that.constants.runSpeed;
-         that.flip = true;
-         that.setState('run');
-      } else if (keyState.lastKey.name == 'right' && keyState.right.pressed && !keyState.left.pressed) {
-         that.velocity.x = that.constants.runSpeed;
-         that.flip = false;
-         that.setState('run');
-      } else if (keyState.lastKey.name == 'down') {
-         if (keyState.left.pressed || keyState.right.pressed) {
-            that.setState('roll');
-         } else {
-            that.setState('crouch');
-         }
-         
-         if (that.animation.finished) {
-            that.velocity.x = 0;
-         }
-         
-      } else if (keyState.up.pressed) {
-         
+      if (that.playerState.currentState.keyDown) {
+         that.playerState.currentState.keyDown(keyState);
       }
    }
-      
-   that.setState = function(state) {
-      if (state != that.state) {   
-         that.animation = Mduel.Animations[state]();
-         that.state = state;
-      }
-   }
-   
+  
    that.updateLocation = function() {
       // Possible Values: air, pit, platform, rope
       if (that.location == 'platform') 
