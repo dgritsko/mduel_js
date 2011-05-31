@@ -13,6 +13,9 @@ Mduel.Player.player = function(spec) {
 
    that.location = 'platform';
    that.state = 'stand';  
+   
+   that.playerState = Mduel.PlayerState.playerState();
+   
    that.animation = Mduel.Animations.stand();
    that.flip = spec.flip;
    that.spriteImage = spec.spriteImage;
