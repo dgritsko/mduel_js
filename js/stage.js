@@ -56,14 +56,11 @@ Mduel.Stage.stage = function(spec) {
       }
       
       // Ropes
-      var verticalAdjustment = Mduel.Images.ropeAnchor.height;
-      var horizontalAdjustment = Mduel.Images.ropeAnchor.width / 2;
-      
       for (var i = 0, len = that.ropes.length; i < len; i++) {
-         ctx.drawImage(Mduel.Images.ropeAnchor, that.ropes[i].x, that.ropes[i].y);
-         
-         ctx.moveTo(that.ropes[i].x + horizontalAdjustment, that.ropes[i].y + verticalAdjustment);
-         ctx.lineTo(that.ropes[i].x + horizontalAdjustment, that.ropes[i].y + (that.ropes[i].ropeLength * 64) - (Mduel.Images.spawn.height + 1));
+         var currentRope = that.ropes[i];
+         ctx.drawImage(Mduel.Images.ropeAnchor, currentRope.anchor.x, currentRope.anchor.y);
+         ctx.moveTo(currentRope.ropeStart.x, currentRope.ropeStart.y);
+         ctx.lineTo(currentRope.ropeEnd.x, currentRope.ropeEnd.y);
       }
       
       // Rope color
@@ -189,11 +186,11 @@ Mduel.Stage.convertLevel = function(rawLevel) {
 }
 
 Mduel.Stage.generateRopes = function(levels, width) {
-   var rval = new Array();
+   var anchors = new Array();
   
    // Fixed top ropes
-   rval.push({ x: 4, y: 0, ropeLength: 5 });
-   rval.push({ x: 14, y: 0, ropeLength: 5 });
+   anchors.push({ x: 4, y: 0, ropeLength: 5 });
+   anchors.push({ x: 14, y: 0, ropeLength: 5 });
    
    var leftRopes = new Array();
    var otherRopes = new Array();
@@ -228,7 +225,7 @@ Mduel.Stage.generateRopes = function(levels, width) {
    
    if (leftRopes.length > 0) {
        var index = Math.floor(Math.random() * leftRopes.length);
-       rval.push(leftRopes[index]);
+       anchors.push(leftRopes[index]);
    }
    
    if (otherRopes.length > 0) {
@@ -237,7 +234,7 @@ Mduel.Stage.generateRopes = function(levels, width) {
       var count = 0;
       while (count < max) {
          var index = Math.floor(Math.random() * otherRopes.length);
-         rval.push(otherRopes[index]);
+         anchors.push(otherRopes[index]);
       
          count++;
       }   
@@ -245,14 +242,23 @@ Mduel.Stage.generateRopes = function(levels, width) {
    
    var verticalOffset = 26;
    
-   // Translate level and columns to x and y coordinates
-   for (var i = 0, len = rval.length; i < len; i++) {
-      var current = rval[i];
+   var rval = new Array();
+   
+   var verticalAdjustment = Mduel.Images.ropeAnchor.height;
+   var horizontalAdjustment = Mduel.Images.ropeAnchor.width / 2;
+   
+   // Translate level and columns to x and y coordinates, calculate start and end points of ropes
+   for (var i = 0, len = anchors.length; i < len; i++) {
+      var current = anchors[i];
    
       var horizontalOffset = (current.x == 4 || current.x == 14) ? 25 : 41;   
    
       current.x = (current.x * 32) + horizontalOffset;
       current.y = (current.y * 64) + verticalOffset;
+      
+      rval.push({ anchor : { x : current.x, y : current.y },
+                  ropeStart : { x : current.x + horizontalAdjustment, y : current.y + verticalAdjustment },
+                  ropeEnd : { x : current.x + horizontalAdjustment, y : current.y + (current.ropeLength * 64) - (Mduel.Images.spawn.height + 1) } });
    }
    
    return rval;
