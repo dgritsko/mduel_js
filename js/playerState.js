@@ -28,7 +28,7 @@ Mduel.PlayerState.playerState = function(spec) {
                that.setState('run');
             }
             else if (keyState.lastKey.name == 'down' && !keyState.right.pressed && !keyState.right.pressed) {
-               if (true) {
+               if (that.player.isOnRope()) {
 	          that.player.velocity.y = 1;
 	          that.setState('climbing');
                }
@@ -37,7 +37,7 @@ Mduel.PlayerState.playerState = function(spec) {
                }
             }
             else if (keyState.lastKey.name == 'up' && !keyState.right.pressed && !keyState.right.pressed) {
-               if (true) {
+               if (that.player.isOnRope()) {
                   that.player.velocity.y = -1;
                   that.setState('climbing');
                }
@@ -89,7 +89,7 @@ Mduel.PlayerState.playerState = function(spec) {
                that.player.velocity.y = 0;
             }
             else if (!that.player.isOnPlatform()) {
-               that.player.velocity.y += 2;
+               that.player.velocity.y += 0.1 * (elapsed / 1000);
             }
          }
       },

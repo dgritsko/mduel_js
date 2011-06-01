@@ -108,7 +108,7 @@ Mduel.Player.player = function(spec) {
       var predX = function(p) {
          return x >= p.x && x <= (p.x + 32);
       };
-   
+         
       var columnPlatforms = Mduel.Util.where(Mduel.Game.stage.platforms, predX);
       
       var predY = function(p) {
@@ -119,7 +119,26 @@ Mduel.Player.player = function(spec) {
       var platform = Mduel.Util.where(columnPlatforms, predY);
       
       return platform.length > 0;
-   };
+   }
+   
+   that.isOnRope = function() {
+      var rval = false;
+
+      var pos = that.getPosition();
+      var x = pos.x + 32;
+   
+      var predX = function(p) {
+         return x >= (p.ropeStart.x - 2) && x <= (p.ropeStart.x + 2);
+      };
+      
+      var ropes = Mduel.Util.where(Mduel.Game.stage.ropes, predX);
+      
+      if (ropes.length == 1 && ropes[0].ropeEnd.y >= (pos.y + 48) && ropes[0].ropeStart.y <= (pos.y - 16)) {
+         rval = true;
+      }
+      
+      return rval;
+   }
    
    return that;
 }
