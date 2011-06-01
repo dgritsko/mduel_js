@@ -44,6 +44,7 @@ Mduel.Game.gameLoop = function() {
    var elapsedTime = renderTime - Mduel.Game.lastFrameDrawn;
    Mduel.Game.lastFrameDrawn = renderTime;
 
+   Mduel.Game.handleCollisions(elapsedTime);
    Mduel.Game.update(elapsedTime);
    Mduel.Game.draw(elapsedTime);
 }
@@ -69,5 +70,19 @@ Mduel.Game.draw = function(elapsedTime) {
        Mduel.Game.ctx.font = 'arial 30px sans-serif';
        
        Mduel.Game.ctx.fillText(Mduel.Game.debugText || '', 5, 10);
+   }
+}
+
+Mduel.Game.handleCollisions = function(elapsedTime) {
+   for (var i = 0, len = Mduel.Game.players.length; i < len; i++) {
+      var player = Mduel.Game.players[i];
+    
+      var pos = player.getPosition();
+      
+      // Handle collisions with left and right walls
+      if (pos.x + 16 < 0 || pos.x + 48 > Mduel.Game.canvas.width) {
+         player.flip = !player.flip;
+         player.velocity.x = -1 * player.velocity.x;
+      }
    }
 }
