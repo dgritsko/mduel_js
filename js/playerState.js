@@ -82,7 +82,7 @@ Mduel.PlayerState.playerState = function(spec) {
          }      
       },
       standJump : {
-         animation : 'roll', // TODO
+         animation : 'standJump',
          update : function(elapsed) {
             if (that.player.velocity.y >= 10) {
                that.player.velocity.y = 0;
