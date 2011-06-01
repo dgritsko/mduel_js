@@ -114,6 +114,19 @@ Mduel.Animations.standJump = function() {
          });
 }
 
+Mduel.Animations.runJump = function() {
+
+   return Mduel.Animation.animation({
+            frames:
+            [
+               { sprite: 'run_jump_1', time: 150 },
+               { sprite: 'run_jump_2', time: 150 },
+               { sprite: 'run_jump_3', time: 150 }
+            ], 
+            data: Mduel.Sprites.player
+         });
+}
+
 Mduel.Animations.climbing = function() {
 
    return Mduel.Animation.animation({

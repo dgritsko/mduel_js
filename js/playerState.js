@@ -94,7 +94,7 @@ Mduel.PlayerState.playerState = function(spec) {
          }
       },
       runJump : {
-         animation : 'roll', // TODO
+         animation : 'runJump',
          update : function(elapsed) {
             if (that.player.velocity.y >= 10) {
                that.player.velocity.y = 0;
@@ -173,10 +173,10 @@ Mduel.PlayerState.playerState = function(spec) {
          animation : 'stand'
       },
       fall : {
-         animation : 'stand'
+         animation : 'stand_fall'
       },
       dead : {
-         animation : 'stand'
+         animation : 'empty'
       }
    };
     
