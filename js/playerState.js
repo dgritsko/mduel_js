@@ -28,7 +28,23 @@ Mduel.PlayerState.playerState = function(spec) {
                that.setState('run');
             }
             else if (keyState.lastKey.name == 'down' && !keyState.right.pressed && !keyState.right.pressed) {
-               that.setState('crouching');
+               if (true) {
+	          that.player.velocity.y = 1;
+	          that.setState('climbing');
+               }
+               else {
+                  that.setState('crouching');
+               }
+            }
+            else if (keyState.lastKey.name == 'up' && !keyState.right.pressed && !keyState.right.pressed) {
+               if (true) {
+                  that.player.velocity.y = -1;
+                  that.setState('climbing');
+               }
+               else {
+                  that.player.velocity.y = -10;
+                  that.setState('standJump');
+               }
             }
          }
       },
@@ -61,6 +77,18 @@ Mduel.PlayerState.playerState = function(spec) {
             }
          }      
       },
+      standJump : {
+         animation : 'roll', // TODO
+         update : function(elapsed) {
+            if (that.currentAnimation.isFinished()) {
+               that.setState('stand');
+               that.player.velocity.y = 0;
+            }
+            else if (!that.player.isOnPlatform()) {
+               that.player.velocity.y += 2;
+            }
+         }
+      },
       crouching : {
          animation : 'crouching',
          update : function(elapsed) {
@@ -85,25 +113,56 @@ Mduel.PlayerState.playerState = function(spec) {
             }
          },
          keyUp : function(keyState) {
-	             if (!keyState.down.pressed) {
-	                that.setState('uncrouching');
-	             }
+	    if (!keyState.down.pressed) {
+	       that.setState('uncrouching');
+	    }
          }
       },
       uncrouching : {
-         animation : 'uncrouch',
+         animation : 'uncrouching',
          update : function(elapsed) {
             if (that.currentAnimation.isFinished()) {
                that.setState('stand');
             }
          }
-      }
+      },
+      climbing : {
+         animation : 'roll',
+         keyUp : function(keyState) {
+            if (!keyState.up.pressed && !keyState.down.pressed) {
+               that.player.velocity.y = 0;
+               that.setState('rope');
+            }
+         },
+         keyDown : function(keyState) {
+         
+         }
+      },
+      rope : {
+         animation : 'stand',
+         keyUp : function(keyState) {
+         },
+         keyDown : function(keyState) {
+            if (keyState.lastKey.name == 'up') {
+               that.player.velocity.y = -1;
+               that.setState('climbing');            
+            }
+            else if (keyState.lastKey.name == 'down') {
+               that.player.velocity.y = 1;
+               that.setState('climbing');
+            }
+         }
+      }      
    };
     
    that.setState = function(state) {
       if (that.states[state]) {   
          that.currentState = that.states[state];
          that.currentAnimation = Mduel.Animations[that.currentState.animation]();
+         
+         if (Mduel.Game.debug) {
+            Mduel.Game.debugText = 'State: ' + state;
+         }
       }
       else {
          Mduel.Game.debugText = 'Player state not found: ' + state;
@@ -116,7 +175,7 @@ Mduel.PlayerState.playerState = function(spec) {
       }       
    }   
    
-   that.setState('stand'); //that.currentState = that.states.stand;
- 
+   that.setState('stand'); 
+   
    return that;
  }
