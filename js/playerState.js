@@ -99,7 +99,6 @@ Mduel.PlayerState.playerState = function(spec) {
             if (that.player.velocity.y >= 10) {
                that.player.velocity.y = 0;
                
-               console.log(that.player.id);
                var keyState = Mduel.Keyboard.playerKeyStates[that.player.id];
                if (!keyState.right.pressed && !keyState.left.pressed) {
                   that.player.velocity.x = 0;
@@ -141,12 +140,16 @@ Mduel.PlayerState.playerState = function(spec) {
          update : function(elapsed) {
             if (that.currentAnimation.isFinished()) {
                that.player.velocity.x = 0;
+               
+               var keyState = Mduel.Keyboard.playerKeyStates[that.player.id];
+               
+               if (keyState.down.pressed) {
+                  that.setState('crouch');
+               }
+               else {
+                  that.setState('uncrouching');
+               }
             }
-         },
-         keyUp : function(keyState) {
-	    if (!keyState.down.pressed) {
-	       that.setState('uncrouching');
-	    }
          }
       },
       uncrouching : {
