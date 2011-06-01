@@ -21,12 +21,10 @@ Mduel.Keyboard.keyDown = function(e) {
                Mduel.Keyboard.playerKeyStates[i].lastKey.name = mapping;
                Mduel.Keyboard.playerKeyStates[i].lastKey.pressed = true;
                Mduel.Keyboard.playerKeyStates[i].lastKey.eventTime = eventTime;
-            }
-         }
-   
-         for (var i = 0, len = Mduel.Game.players.length; i < len; i++) {
-            if (Mduel.Game.players[i].keyDown) {
-               Mduel.Game.players[i].keyDown(Mduel.Keyboard.playerKeyStates[i]);
+               
+               if (Mduel.Game.players[i].keyDown) {
+                  Mduel.Game.players[i].keyDown(Mduel.Keyboard.playerKeyStates[i]);
+               }               
             }
          }
       }
@@ -49,12 +47,10 @@ Mduel.Keyboard.keyUp = function(e) {
                Mduel.Keyboard.playerKeyStates[i].lastKey.name = mapping;
                Mduel.Keyboard.playerKeyStates[i].lastKey.pressed = false;
                Mduel.Keyboard.playerKeyStates[i].lastKey.eventTime = eventTime;
-            }
-         }
-   
-         for (var i = 0, len = Mduel.Game.players.length; i < len; i++) {
-            if (Mduel.Game.players[i].keyUp) {
-               Mduel.Game.players[i].keyUp(Mduel.Keyboard.playerKeyStates[i]);
+               
+               if (Mduel.Game.players[i].keyUp) {
+                  Mduel.Game.players[i].keyUp(Mduel.Keyboard.playerKeyStates[i]);
+               }
             }
          }
       }

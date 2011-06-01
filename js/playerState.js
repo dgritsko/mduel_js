@@ -29,7 +29,7 @@ Mduel.PlayerState.playerState = function(spec) {
             }
             else if (keyState.lastKey.name == 'down' && !keyState.right.pressed && !keyState.right.pressed) {
                if (that.player.isOnRope()) {
-	          that.player.velocity.y = 1;
+	          that.player.velocity.y = that.player.constants.climbSpeed;
 	          that.setState('climbing');
                }
                else {
@@ -38,7 +38,7 @@ Mduel.PlayerState.playerState = function(spec) {
             }
             else if (keyState.lastKey.name == 'up' && !keyState.right.pressed && !keyState.right.pressed) {
                if (that.player.isOnRope()) {
-                  that.player.velocity.y = -1;
+                  that.player.velocity.y = -that.player.constants.climbSpeed;
                   that.setState('climbing');
                }
                else {
@@ -156,7 +156,21 @@ Mduel.PlayerState.playerState = function(spec) {
          animation : 'uncrouching',
          update : function(elapsed) {
             if (that.currentAnimation.isFinished()) {
-               that.setState('stand');
+               var keyState = Mduel.Keyboard.playerKeyStates[that.player.id];
+            
+               if (keyState.left.pressed && (!keyState.right.pressed || keyState.left.eventTime > keyState.right.eventTime)) {
+                  that.player.flip = true;
+                  that.player.velocity.x = -that.player.constants.runSpeed;
+                  that.setState('run');
+               }
+               else if (keyState.right.pressed && (!keyState.left.pressed || keyState.right.eventTime > keyState.left.eventTime)) {
+                  that.player.flip = false;
+                  that.player.velocity.x = that.player.constants.runSpeed;
+                  that.setState('run');
+               }
+               else {
+                  that.setState('stand');
+               }
             }
          }
       },
@@ -178,11 +192,11 @@ Mduel.PlayerState.playerState = function(spec) {
          },
          keyDown : function(keyState) {
             if (keyState.lastKey.name == 'up') {
-               that.player.velocity.y = -1;
+               that.player.velocity.y = -that.player.constants.climbSpeed;
                that.setState('climbing');            
             }
             else if (keyState.lastKey.name == 'down') {
-               that.player.velocity.y = 1;
+               that.player.velocity.y = that.player.constants.climbSpeed;
                that.setState('climbing');
             }
          }

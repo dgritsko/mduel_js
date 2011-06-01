@@ -90,7 +90,6 @@ Mduel.Player.player = function(spec) {
          else
          {
             that.location = 'air';
-            that.velocity.y = Mduel.Player.Constants.maxFallSpeed;
          }         
       }
       else if (that.location == 'air') 
@@ -164,5 +163,5 @@ Mduel.Player.initializePlayers = function() {
 
 Mduel.Player.Constants = {
    runSpeed: 3,
-   maxFallSpeed: 7.5
+   climbSpeed: 2.5
 };
