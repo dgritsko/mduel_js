@@ -75,6 +75,10 @@ Mduel.PlayerState.playerState = function(spec) {
                   that.setState('crouch');
                }
             }
+            else if (keyState.lastKey.name == 'up') {
+               that.player.velocity.y = -10;
+               that.setState('runJump');
+            }
          }      
       },
       standJump : {
@@ -83,6 +87,17 @@ Mduel.PlayerState.playerState = function(spec) {
             if (that.currentAnimation.isFinished()) {
                that.setState('stand');
                that.player.velocity.y = 0;
+            }
+            else if (!that.player.isOnPlatform()) {
+               that.player.velocity.y += 2;
+            }
+         }
+      },
+      runJump : {
+         animation : 'roll', // TODO
+         update : function(elapsed) {
+            if (that.currentAnimation.isFinished()) {
+               that.setState('run');
             }
             else if (!that.player.isOnPlatform()) {
                that.player.velocity.y += 2;
@@ -152,7 +167,16 @@ Mduel.PlayerState.playerState = function(spec) {
                that.setState('climbing');
             }
          }
-      }      
+      },
+      ropeFall : {
+         animation : 'stand'
+      },
+      fall : {
+         animation : 'stand'
+      },
+      dead : {
+         animation : 'stand'
+      }
    };
     
    that.setState = function(state) {
