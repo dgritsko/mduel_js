@@ -15,6 +15,7 @@ Mduel.Player.player = function(spec) {
    
    that.playerState = Mduel.PlayerState.playerState({ player: that });
    
+   that.id = spec.id;
    that.flip = spec.flip;
    that.spriteImage = spec.spriteImage;
    that.constants = Mduel.Player.Constants;
@@ -147,12 +148,14 @@ Mduel.Player.initializePlayers = function() {
    var rval = [
       Mduel.Player.player({ 
       	position: { x: 32, y: 280 },
-      	spriteImage: Mduel.Images.player1
+      	spriteImage: Mduel.Images.player1,
+      	id: 0
      }),
      Mduel.Player.player({ 
-           	position: { x: 544, y: 280 },
-           	spriteImage: Mduel.Images.player2,
-           	flip: true
+        position: { x: 544, y: 280 },
+        spriteImage: Mduel.Images.player2,
+        flip: true,
+        id: 1
      })
    ];
    

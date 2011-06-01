@@ -98,7 +98,22 @@ Mduel.PlayerState.playerState = function(spec) {
          update : function(elapsed) {
             if (that.player.velocity.y >= 10) {
                that.player.velocity.y = 0;
-               that.setState('run');
+               
+               console.log(that.player.id);
+               var keyState = Mduel.Keyboard.playerKeyStates[that.player.id];
+               if (!keyState.right.pressed && !keyState.left.pressed) {
+                  that.player.velocity.x = 0;
+                  that.setState('stand');
+               }
+               else {
+                  if ((keyState.right.pressed && !keyState.left.pressed && that.player.velocity.x < 0) ||
+                      (keyState.left.pressed && !keyState.right.pressed && that.player.velocity.x > 0)) {
+                     that.player.flip = !that.player.flip;
+                     that.player.velocity.x = -1 * that.player.velocity.x;
+                  }
+               
+                  that.setState('run');
+               }
             }
             else {
                that.player.velocity.y += 1;
@@ -186,6 +201,7 @@ Mduel.PlayerState.playerState = function(spec) {
          that.currentAnimation = Mduel.Animations[that.currentState.animation]();
          
          if (Mduel.Game.debug) {
+            console.log(state);
             Mduel.Game.debugText = 'State: ' + state;
          }
       }
