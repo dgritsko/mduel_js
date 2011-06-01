@@ -84,23 +84,24 @@ Mduel.PlayerState.playerState = function(spec) {
       standJump : {
          animation : 'roll', // TODO
          update : function(elapsed) {
-            if (that.currentAnimation.isFinished()) {
-               that.setState('stand');
+            if (that.player.velocity.y >= 10) {
                that.player.velocity.y = 0;
+               that.setState('stand');
             }
-            else if (!that.player.isOnPlatform()) {
-               that.player.velocity.y += 0.1 * (elapsed / 1000);
+            else {
+               that.player.velocity.y += 1;
             }
          }
       },
       runJump : {
          animation : 'roll', // TODO
          update : function(elapsed) {
-            if (that.currentAnimation.isFinished()) {
+            if (that.player.velocity.y >= 10) {
+               that.player.velocity.y = 0;
                that.setState('run');
             }
-            else if (!that.player.isOnPlatform()) {
-               that.player.velocity.y += 2;
+            else {
+               that.player.velocity.y += 1;
             }
          }
       },
