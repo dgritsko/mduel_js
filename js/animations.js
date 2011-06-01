@@ -97,3 +97,30 @@ Mduel.Animations.uncrouching = function() {
             data: Mduel.Sprites.player
          });
 }
+
+Mduel.Animations.climbing = function() {
+
+   return Mduel.Animation.animation({
+            frames:
+            [
+               { sprite: 'climb_1', time: 75 },
+               { sprite: 'climb_2', time: 75 },
+               { sprite: 'climb_3', time: 75 },
+               { sprite: 'climb_4', time: 75 }
+               //{ sprite: 'climb_5', time: 75 }
+            ], 
+            loop: true,
+            data: Mduel.Sprites.player
+         });
+}
+
+Mduel.Animations.rope = function() {
+
+   return Mduel.Animation.animation({
+            frames:
+            [
+               { sprite: 'climb_5', time: 1 }
+            ], 
+            data: Mduel.Sprites.player
+         });
+}

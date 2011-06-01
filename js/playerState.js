@@ -143,7 +143,7 @@ Mduel.PlayerState.playerState = function(spec) {
          }
       },
       climbing : {
-         animation : 'roll',
+         animation : 'climbing',
          keyUp : function(keyState) {
             if (!keyState.up.pressed && !keyState.down.pressed) {
                that.player.velocity.y = 0;
@@ -155,7 +155,7 @@ Mduel.PlayerState.playerState = function(spec) {
          }
       },
       rope : {
-         animation : 'stand',
+         animation : 'rope',
          keyUp : function(keyState) {
          },
          keyDown : function(keyState) {
