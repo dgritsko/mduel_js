@@ -183,7 +183,14 @@ Mduel.PlayerState.playerState = function(spec) {
             }
          },
          keyDown : function(keyState) {
-         
+            if (keyState.lastKey.name == 'left') {
+               that.player.velocity.x = -that.player.constants.runSpeed;               
+               that.setState('fall');
+            }
+            else if (keyState.lastKey.name == 'right') {
+               that.player.velocity.x = that.player.constants.runSpeed;               
+               that.setState('fall');
+            }
          }
       },
       rope : {
@@ -199,13 +206,42 @@ Mduel.PlayerState.playerState = function(spec) {
                that.player.velocity.y = that.player.constants.climbSpeed;
                that.setState('climbing');
             }
+            else if (keyState.lastKey.name == 'left') {
+               that.player.velocity.x = -that.player.constants.runSpeed;               
+               that.setState('fall');
+            }
+            else if (keyState.lastKey.name == 'right') {
+               that.player.velocity.x = that.player.constants.runSpeed;               
+               that.setState('fall');
+            }
          }
       },
       ropeFall : {
-         animation : 'stand'
+         animation : 'stand',
+         update : function(elapsed) {
+            if (that.player.velocity.y < 10) {
+               that.player.velocity.y += 1;
+            }
+            
+            if (that.player.getPosition().y > 320) 
+            {
+               that.player.velocity.y = 0;
+            }
+         }
       },
       fall : {
-         animation : 'stand_fall'
+         animation : 'stand_fall',
+         update : function(elapsed) {
+            if (that.player.velocity.y < 10) {
+               that.player.velocity.y += 1;
+            }
+            
+            if (that.player.getPosition().y > 320) 
+            {
+               that.player.velocity.y = 0;
+               that.player.velocity.x = 0;
+            }
+         }
       },
       dead : {
          animation : 'empty'

@@ -92,13 +92,6 @@ Mduel.Player.player = function(spec) {
             that.location = 'air';
          }         
       }
-      else if (that.location == 'air') 
-      {
-         if (that.getPosition().y > 320) 
-         {
-            that.velocity.y = 0;
-         }
-      }
    }
    
    that.isOnPlatform = function() {
