@@ -115,19 +115,19 @@ Mduel.Player.player = function(spec) {
    }
    
    that.isOnRope = function() {
-      var rval = false;
+      var rval = undefined;
 
       var pos = that.getPosition();
       var x = pos.x + 32;
    
       var predX = function(p) {
-         return x >= (p.ropeStart.x - 2) && x <= (p.ropeStart.x + 2);
+         return x >= (p.ropeStart.x - 4) && x <= (p.ropeStart.x + 4);
       };
       
       var ropes = Mduel.Util.where(Mduel.Game.stage.ropes, predX);
       
       if (ropes.length == 1 && ropes[0].ropeEnd.y >= (pos.y + 48) && ropes[0].ropeStart.y <= (pos.y - 16)) {
-         rval = true;
+         rval = ropes[0];
       }
       
       return rval;

@@ -152,3 +152,14 @@ Mduel.Animations.rope = function() {
             data: Mduel.Sprites.player
          });
 }
+
+Mduel.Animations.standFall = function() {
+
+   return Mduel.Animation.animation({
+            frames:
+            [
+               { sprite: 'stand_fall', time: 1 }
+            ], 
+            data: Mduel.Sprites.player
+         });
+}
