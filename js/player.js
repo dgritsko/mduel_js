@@ -106,9 +106,11 @@ Mduel.Player.player = function(spec) {
          
       var columnPlatforms = Mduel.Util.where(Mduel.Game.stage.platforms, predX);
      
+      var playerFeet = pos.y + 56;
+     
       var predY = function(p) {
-         var diff = p.y - pos.y;
-         return diff <= 56 && diff > 0;
+         var diff = p.y - playerFeet;
+         return diff <= 12 && diff >= -8;
       }
    
       var platform = Mduel.Util.where(columnPlatforms, predY);
