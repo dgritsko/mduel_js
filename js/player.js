@@ -98,14 +98,14 @@ Mduel.Player.player = function(spec) {
       var rval = undefined;
    
       var pos = that.getPosition();
-      var x = pos.x + 32;
+      var playerCenter = pos.x + 32;
    
       var predX = function(p) {
-         return x >= p.x && x <= (p.x + 32);
+         return playerCenter >= p.x && playerCenter <= (p.x + 32);
       };
          
       var columnPlatforms = Mduel.Util.where(Mduel.Game.stage.platforms, predX);
-      
+     
       var predY = function(p) {
          var diff = p.y - pos.y;
          return diff <= 56 && diff > 0;
@@ -113,9 +113,9 @@ Mduel.Player.player = function(spec) {
    
       var platform = Mduel.Util.where(columnPlatforms, predY);
       
-      if (platform.length == 1) {
+      if (platform.length > 0) {
          rval = platform[0];
-      }      
+      }
       
       return rval;
    }
