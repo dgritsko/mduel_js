@@ -105,8 +105,11 @@ Mduel.PlayerState.playerState = function(spec) {
 
             if (that.player.velocity.y >= 0) {
                var platform = that.player.isOnPlatform();
-
+               
                if (platform) {            
+                  var pos = that.player.getPosition();
+                  pos.y = platform.y - 56;
+               
                   that.player.velocity.y = 0;
                   that.setState('stand');
                }
@@ -125,6 +128,9 @@ Mduel.PlayerState.playerState = function(spec) {
 
                if (platform) {
                   that.player.velocity.y = 0;
+                  
+                  var pos = that.player.getPosition();
+                  pos.y = platform.y - 56;
                
                   var keyState = Mduel.Keyboard.playerKeyStates[that.player.id];
                   if (!keyState.right.pressed && !keyState.left.pressed) {
@@ -267,11 +273,13 @@ Mduel.PlayerState.playerState = function(spec) {
       fall : {
          animation : 'standFall',
          update : function(elapsed) {
+            var pos = that.player.getPosition();
+         
             if (that.player.velocity.y < that.player.constants.maxFallSpeed) {
                that.player.velocity.y += 1;
             }
             
-            if (that.player.getPosition().y > 320) {
+            if (pos.y > 320) {
                that.player.velocity.y = 0;
                that.player.velocity.x = 0;
             }
@@ -280,6 +288,9 @@ Mduel.PlayerState.playerState = function(spec) {
                if (platform) {
                   that.player.velocity.y = 0;
                   that.player.velocity.x = 0;
+                  
+                  pos.y = platform.y - 56;
+                  
                   that.setState('stand');
                }
             }
