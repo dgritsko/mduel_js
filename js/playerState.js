@@ -287,6 +287,9 @@ Mduel.PlayerState.playerState = function(spec) {
                var platform = that.player.isOnPlatform();
                if (platform) {
                   that.player.velocity.y = 0;
+                  
+                  // TODO: Check keyboard states here
+                  
                   that.player.velocity.x = 0;
                   
                   pos.y = platform.y - 56;

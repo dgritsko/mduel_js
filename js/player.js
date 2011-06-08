@@ -163,7 +163,7 @@ Mduel.Player.initializePlayers = function() {
 };
 
 Mduel.Player.Constants = {
-   runSpeed: 3,
+   runSpeed: 3.2,
    climbSpeed: 2.5,
    maxFallSpeed: 12
 };
