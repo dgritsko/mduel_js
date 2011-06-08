@@ -95,6 +95,8 @@ Mduel.Player.player = function(spec) {
    }
    
    that.isOnPlatform = function() {
+      var rval = undefined;
+   
       var pos = that.getPosition();
       var x = pos.x + 32;
    
@@ -111,7 +113,11 @@ Mduel.Player.player = function(spec) {
    
       var platform = Mduel.Util.where(columnPlatforms, predY);
       
-      return platform.length > 0;
+      if (platform.length == 1) {
+         rval = platform[0];
+      }      
+      
+      return rval;
    }
    
    that.isOnRope = function() {
@@ -156,5 +162,6 @@ Mduel.Player.initializePlayers = function() {
 
 Mduel.Player.Constants = {
    runSpeed: 3,
-   climbSpeed: 2.5
+   climbSpeed: 2.5,
+   maxFallSpeed: 12
 };

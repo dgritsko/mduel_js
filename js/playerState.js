@@ -60,6 +60,11 @@ Mduel.PlayerState.playerState = function(spec) {
       },
       run : {
          animation : 'run',
+         update : function(elapsed) {
+            if (!that.player.isOnPlatform()) {
+               that.setState('fall');
+            }
+         },
          keyUp : function(keyState) {
             if (!keyState.left.pressed && !keyState.right.pressed) {
                that.player.velocity.x = 0;
@@ -94,38 +99,48 @@ Mduel.PlayerState.playerState = function(spec) {
       standJump : {
          animation : 'standJump',
          update : function(elapsed) {
-            if (that.player.velocity.y >= 10) {
-               that.player.velocity.y = 0;
-               that.setState('stand');
-            }
-            else {
+            if (that.player.velocity.y < that.player.constants.maxFallSpeed) {
                that.player.velocity.y += 1;
+            }
+
+            if (that.player.velocity.y >= 0) {
+               var platform = that.player.isOnPlatform();
+
+               if (platform) {            
+                  that.player.velocity.y = 0;
+                  that.setState('stand');
+               }
             }
          }
       },
       runJump : {
          animation : 'runJump',
          update : function(elapsed) {
-            if (that.player.velocity.y >= 10) {
-               that.player.velocity.y = 0;
-               
-               var keyState = Mduel.Keyboard.playerKeyStates[that.player.id];
-               if (!keyState.right.pressed && !keyState.left.pressed) {
-                  that.player.velocity.x = 0;
-                  that.setState('stand');
-               }
-               else {
-                  if ((keyState.right.pressed && !keyState.left.pressed && that.player.velocity.x < 0) ||
-                      (keyState.left.pressed && !keyState.right.pressed && that.player.velocity.x > 0)) {
-                     that.player.flip = !that.player.flip;
-                     that.player.velocity.x = -1 * that.player.velocity.x;
-                  }
-               
-                  that.setState('run');
-               }
-            }
-            else {
+            if (that.player.velocity.y < that.player.constants.maxFallSpeed) {
                that.player.velocity.y += 1;
+            }
+
+            if (that.player.velocity.y >= 0) {
+               var platform = that.player.isOnPlatform();
+
+               if (platform) {
+                  that.player.velocity.y = 0;
+               
+                  var keyState = Mduel.Keyboard.playerKeyStates[that.player.id];
+                  if (!keyState.right.pressed && !keyState.left.pressed) {
+                     that.player.velocity.x = 0;
+                     that.setState('stand');
+                  }
+                  else {
+                     if ((keyState.right.pressed && !keyState.left.pressed && that.player.velocity.x < 0) ||
+                         (keyState.left.pressed && !keyState.right.pressed && that.player.velocity.x > 0)) {
+                        that.player.flip = !that.player.flip;
+                        that.player.velocity.x = -1 * that.player.velocity.x;
+                     }
+                  
+                     that.setState('run');
+                  }
+               }
             }
          }
       },
@@ -148,7 +163,10 @@ Mduel.PlayerState.playerState = function(spec) {
       roll : {
          animation : 'roll',
          update : function(elapsed) {
-            if (that.currentAnimation.isFinished()) {
+            if (!that.player.isOnPlatform()) {
+               that.setState('fall');
+            }
+            else if (that.currentAnimation.isFinished()) {
                that.player.velocity.x = 0;
                
                var keyState = Mduel.Keyboard.playerKeyStates[that.player.id];
@@ -229,27 +247,41 @@ Mduel.PlayerState.playerState = function(spec) {
       ropeFall : {
          animation : 'stand',
          update : function(elapsed) {
-            if (that.player.velocity.y < 10) {
+            if (that.player.velocity.y < that.player.constants.maxFallSpeed) {
                that.player.velocity.y += 1;
             }
             
-            if (that.player.getPosition().y > 320) 
-            {
+            if (that.player.getPosition().y > 320) {
                that.player.velocity.y = 0;
             }
+            else {
+               var platform = that.player.isOnPlatform();
+               if (platform) {
+                  that.player.velocity.y = 0;
+                  that.player.velocity.x = 0;
+                  that.setState('stand');
+               }
+            }            
          }
       },
       fall : {
          animation : 'standFall',
          update : function(elapsed) {
-            if (that.player.velocity.y < 10) {
+            if (that.player.velocity.y < that.player.constants.maxFallSpeed) {
                that.player.velocity.y += 1;
             }
             
-            if (that.player.getPosition().y > 320) 
-            {
+            if (that.player.getPosition().y > 320) {
                that.player.velocity.y = 0;
                that.player.velocity.x = 0;
+            }
+            else {
+               var platform = that.player.isOnPlatform();
+               if (platform) {
+                  that.player.velocity.y = 0;
+                  that.player.velocity.x = 0;
+                  that.setState('stand');
+               }
             }
          }
       },
@@ -265,7 +297,6 @@ Mduel.PlayerState.playerState = function(spec) {
          
          if (Mduel.Game.debug) {
             console.log(state);
-            Mduel.Game.debugText = 'State: ' + state;
          }
       }
       else {
