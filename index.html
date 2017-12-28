@@ -1,25 +1,37 @@
-<html>
-   <head>
-      <title>marshmallow duel</title>
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Marshmallow Duel</title>
 
-      <link href="css/main.css" rel="stylesheet" type="text/css"></link>
-   </head>
-   <body onload="Mduel.Game.startGame()">
-      <div id="game_container">
-         <canvas id="game" width="640" height="400" style="background-color: #000;">Your browser does not support Canvas.</canvas>
-      </div>
+    <script type="text/javascript">
+        MarshmallowDuel = {};
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script type="text/javascript" src="js/phaser.min.js"></script>
+    <script type="text/javascript" src="js/boot.js"></script>
+    <script type="text/javascript" src="js/game.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
 
-      <script type="text/javascript" src="js/images.js"></script>
-	  <script type="text/javascript" src="js/util.js"></script>
-      <script type="text/javascript" src="js/keyboard.js"></script>
-	  <script type="text/javascript" src="js/spritesheet.js"></script>
-	  <script type="text/javascript" src="js/sprites.js"></script>
-	  <script type="text/javascript" src="js/animation.js"></script>
-      <script type="text/javascript" src="js/player.js"></script>
-      <script type="text/javascript" src="js/playerState.js"></script>
-      <script type="text/javascript" src="js/pickups.js"></script>
-      <script type="text/javascript" src="js/stage.js"></script>
-	  <script type="text/javascript" src="js/animations.js"></script>
-      <script type="text/javascript" src="js/game.js"></script>
-   </body>
+        #fullscreen {
+            margin: auto;
+            width: 1280px;
+            text-align: right;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+<div id="fullscreen">
+    <a href="#">Fullscreen</a>
+</div>
+<div id="game"></div>
+
+</body>
 </html>
