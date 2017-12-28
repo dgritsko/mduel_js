@@ -1,6 +1,8 @@
 (function() {
     function preload() {
         // TODO: Load assets
+
+        game.load.spritesheet('player1', 'assets/player1.png', 64, 64);
     }
 
     function create() {
