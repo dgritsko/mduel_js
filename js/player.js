@@ -1,7 +1,5 @@
 MarshmallowDuel.Player = class {
     constructor() {
-        console.log('sup');
-
         this.sprite = game.add.sprite(game.camera.view.centerX, game.camera.view.centerY, 'player1');
         this.sprite.anchor.setTo(0.5);
 
@@ -31,6 +29,10 @@ MarshmallowDuel.Player = class {
         this.sprite.animations.add('empty', [66], 0, false);
         this.sprite.animations.add('trapped', [67], 0, false);
 
-        this.sprite.animations.play('run');
+        this.sprite.animations.play('stand');
+
+        game.physics.enable(this.sprite);
+
+        this.sprite.body.setSize(this.sprite.width / 2, this.sprite.height - 16, this.sprite.width / 4, 8);
     }
 }
