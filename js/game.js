@@ -71,11 +71,17 @@
         });
 
         // Ropes
-        // TODO
-        const ropes = generateRopes();
+        const ropes = generateRopes(platformInfos);
 
         ropes.forEach(r => {
-            const anchor = game.add.sprite((r.x * horizontalSpacing) + 47, (r.y * verticalSpacing) + 32, 'rope_anchor');
+            const x = (r.x * horizontalSpacing) + 47;
+            const y = (r.y * verticalSpacing) + 32;
+
+            const graphics = game.add.graphics(x + 0.5, y);
+            graphics.lineStyle(2, 0x8C6414, 1);
+            graphics.lineTo(0, verticalSpacing * r.length - 15);
+
+            const anchor = game.add.sprite(x, y, 'rope_anchor');
             anchor.anchor.setTo(0.5);
         });
 
@@ -185,14 +191,57 @@
         return result;
     }
 
-    const generateRopes = () => {
+    const generateRopes = (platforms) => {
         const result = [];
 
         // Fixed top ropes
         result.push({ x: 3.5, y: 0, length: 5 });
         result.push({ x: 13.5, y: 0, length: 5 });
 
-        // TODO: Other ropes
+        const leftRopes = [];
+        const otherRopes = [];
+
+        const isPlatform = (column, row) => (platforms.filter(p => p.row == row && p.column == column).length > 0)
+
+
+        for (let i = 1; i < 18; i++) {
+            const options = [];
+            if (isPlatform(i, 1) && isPlatform(i, 2)) {
+                options.push({ x: i, y: 1, length: 2 });
+            }
+            if (isPlatform(i, 2) && isPlatform(i, 3)) {
+                options.push({ x: i, y: 2, length: 2 });
+            }
+            if (isPlatform(i, 1) && isPlatform(i, 3)) {
+                options.push({ x: i, y: 1, length: 3 });
+            }
+
+            if (options.length > 0) {
+                const item = Phaser.ArrayUtils.getRandomItem(options);
+
+                if (i < 4) {
+                    leftRopes.push(item)
+                } else if (i > 4 && i != 14) {
+                    otherRopes.push(item);
+                }
+            }
+        }
+
+        if (leftRopes.length > 0) {
+            result.push(Phaser.ArrayUtils.getRandomItem(leftRopes));
+        }
+
+        if (otherRopes.length > 0) {
+            // Hard max of other ropes is 4
+            const max = Math.min(otherRopes.length, Math.floor(Math.random() * 3) + 1);
+
+            let count = 0;
+            while (count < max && otherRopes.length > 0) {
+                result.push(Phaser.ArrayUtils.removeRandomItem(otherRopes));
+           
+                count++;
+           }   
+        }
 
         return result;
     }
