@@ -18,27 +18,92 @@
     }
 
     function update() {
-        game.physics.arcade.collide(player1.sprite, level.platforms, (player, platform) => {
+        // TODO: Import this?
+        const locations = MarshmallowDuel.Player.Locations;
 
-        }, (player, platform) => {
-            return (player.y + player.offsetY) >= platform.y;
+        let behaviors = [
+            { 
+                match: { left: true, location: locations.PLATFORM }, 
+                act: 
+                    p => {
+                        p.sprite.body.velocity.x = -100;
+                        p.sprite.scale.setTo(-1, 1);
+                        p.sprite.animations.play('run');
+                    }
+            },
+            { 
+                match: { right: true, location: locations.PLATFORM }, 
+                act: 
+                    p => {
+                        p.sprite.body.velocity.x = 100;
+                        p.sprite.scale.setTo(1, 1);
+                        p.sprite.animations.play('run');
+                    }
+            },
+            {
+                match: { up: true, location: locations.PLATFORM },
+                act:
+                    p => {
+                        p.sprite.body.velocity.y = -300;
+                        p.sprite.animations.play('jump');
+                        p.location = locations.AIR;
+                    }
+            },
+            { 
+                match: { location: locations.PLATFORM },
+                act: 
+                    p => {
+                        p.sprite.body.velocity.x = 0;
+                        p.sprite.animations.play('stand');
+                    }
+            }
+        ];
+
+        const players = [player1];
+
+        players.forEach(player => {
+            // TODO: Refactor this collision system
+            game.physics.arcade.collide(player.sprite, level.platforms, (_, platform) => {
+                if (player.location !== locations.PLATFORM) {
+                    player.sprite.animations.play('stand');
+                    player.location = locations.PLATFORM;
+                }
+            }, (player, platform) => {
+                return (player.y + player.offsetY) >= platform.y;
+            });
+
+            const curr = { 
+                left: player.input.left.isDown,
+                right: player.input.right.isDown,
+                up: player.input.up.isDown,
+                down: player.input.down.isDown,
+                location: player.location
+            };
+    
+            for (let i = 0; i < behaviors.length; i++) {
+                const behavior = behaviors[i];
+    
+                const propsMatch = x => (typeof(behavior.match[x]) === 'undefined' || behavior.match[x] == curr[x]);
+    
+                let isMatch = true;
+    
+                isMatch = isMatch && propsMatch('left');
+                isMatch = isMatch && propsMatch('right');
+                isMatch = isMatch && propsMatch('up');
+                isMatch = isMatch && propsMatch('down');
+                isMatch = isMatch && propsMatch('location');
+    
+                if (isMatch) {
+                    //game.debug.text('Matched: ' + i, 2, 14, '#ff0000');
+
+                    behavior.act(player);
+                    break;
+                }
+            }
         });
-
-        if (player1.input.left.isDown) {
-            player1.sprite.body.velocity.x = -100;
-            player1.sprite.scale.setTo(-1, 1);
-            player1.sprite.animations.play('run');
-        } else if (player1.input.right.isDown) {
-            player1.sprite.body.velocity.x = 100;
-            player1.sprite.scale.setTo(1, 1);
-            player1.sprite.animations.play('run');
-        } else {
-            player1.sprite.body.velocity.x = 0;
-            player1.sprite.animations.play('stand');
-            player1.sprite.animations.stop();
-        }
-
-        game.debug.body(player1.sprite);
+        
+        //game.debug.text(player1.sprite.animations, 2, 14, '#ff0000');
+        //game.debug.body(player1.sprite);
     }
 
     function makeLevel() {
@@ -246,5 +311,9 @@
         return result;
     }
 
-    MarshmallowDuel.Game = {preload: preload, create: create, update: update};
+    function render() {
+
+    }
+
+    MarshmallowDuel.Game = {preload: preload, create: create, update: update, render: render};
 })();

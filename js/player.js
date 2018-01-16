@@ -34,5 +34,14 @@ MarshmallowDuel.Player = class {
         game.physics.enable(this.sprite);
 
         this.sprite.body.setSize(this.sprite.width / 2, this.sprite.height - 16, this.sprite.width / 4, 8);
+
+        this.location = MarshmallowDuel.Player.Locations.PLATFORM;
     }
+}
+
+MarshmallowDuel.Player.Locations = {
+    PLATFORM: 0,
+    ROPE: 1,
+    AIR: 2,
+    PIT: 3
 }
