@@ -69,7 +69,11 @@
                     player.location = locations.PLATFORM;
                 }
             }, (player, platform) => {
-                return (player.y + player.offsetY) >= platform.y;
+                const maxY = player.y + player.offsetY;
+
+                const collision = maxY >= platform.y && maxY < (platform.y + 16);
+
+                return collision;
             });
 
             const curr = { 
