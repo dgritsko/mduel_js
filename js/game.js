@@ -22,6 +22,53 @@
         const locations = MarshmallowDuel.Player.Locations;
 
         let behaviors = [
+            {
+                match: { up: true, location: locations.ROPE },
+                act:
+                    p => {
+                        p.sprite.animations.play('climb');
+                        p.sprite.body.moves = false;
+                        p.sprite.y = p.sprite.y - 2;
+                    }
+            },
+            {
+                match: { down: true, location: locations.ROPE },
+                act:
+                    p => {
+                        p.sprite.animations.play('climb');
+                        p.sprite.body.moves = false;
+                        p.sprite.y = p.sprite.y + 2;
+                    }
+            },
+            {
+                match: { right: true, location: locations.ROPE },
+                act: 
+                    p => {
+                        p.sprite.animations.play('stand_fall');
+                        p.sprite.scale.setTo(-1, 1);
+                        p.sprite.body.moves = true;
+                        p.sprite.body.velocity.x = 100;
+                        p.location = locations.AIR;
+                    }
+            },
+            {
+                match: { left: true, location: locations.ROPE },
+                act: 
+                    p => {
+                        p.sprite.animations.play('stand_fall');
+                        p.sprite.scale.setTo(1, 1);
+                        p.sprite.body.moves = true;
+                        p.sprite.body.velocity.x = -100;
+                        p.location = locations.AIR;
+                    }
+            },
+            {
+                match: { location: locations.ROPE },
+                act:
+                    p => {
+                        p.sprite.animations.stop();
+                    }
+            },
             { 
                 match: { left: true, location: locations.PLATFORM }, 
                 act: 
@@ -44,9 +91,18 @@
                 match: { up: true, location: locations.PLATFORM },
                 act:
                     p => {
-                        p.sprite.body.velocity.y = -300;
-                        p.sprite.animations.play('jump');
-                        p.location = locations.AIR;
+                        const x = p.sprite.x;
+                        const y = p.sprite.y + p.sprite.offsetY;
+                        const ropes = level.ropes.filter(r => (r.x >= (x - 10) && r.x <= (x + 10))).filter(r => (y >= r.y && y <= (r.y + r.height + 10)));
+
+                        if (ropes.length > 0) {
+                            p.location = locations.ROPE;
+                            p.sprite.x = ropes[0].x;
+                        } else {
+                            p.sprite.body.velocity.y = -300;
+                            p.sprite.animations.play('jump');
+                            p.location = locations.AIR;
+                        }
                     }
             },
             { 
@@ -64,7 +120,7 @@
         players.forEach(player => {
             // TODO: Refactor this collision system
             game.physics.arcade.collide(player.sprite, level.platforms, (_, platform) => {
-                if (player.location !== locations.PLATFORM) {
+                if (player.location !== locations.PLATFORM && player.location !== locations.ROPE) {
                     player.sprite.animations.play('stand');
                     player.location = locations.PLATFORM;
                 }
@@ -143,14 +199,15 @@
         const ropes = generateRopes(platformInfos);
 
         ropes.forEach(r => {
-            const x = (r.x * horizontalSpacing) + 47;
-            const y = (r.y * verticalSpacing) + 32;
+            r.x = (r.column * horizontalSpacing) + 47;
+            r.y = (r.row * verticalSpacing) + 32;
+            r.height = verticalSpacing * r.length - 15
 
-            const graphics = game.add.graphics(x + 0.5, y);
+            const graphics = game.add.graphics(r.x + 0.5, r.y);
             graphics.lineStyle(2, 0x8C6414, 1);
-            graphics.lineTo(0, verticalSpacing * r.length - 15);
+            graphics.lineTo(0, r.height);
 
-            const anchor = game.add.sprite(x, y, 'rope_anchor');
+            const anchor = game.add.sprite(r.x, r.y, 'rope_anchor');
             anchor.anchor.setTo(0.5);
         });
 
@@ -180,7 +237,8 @@
             topSpawn,
             leftSpawn,
             rightSpawn,
-            marshmallows
+            marshmallows,
+            ropes
         }
     }
 
@@ -264,8 +322,8 @@
         const result = [];
 
         // Fixed top ropes
-        result.push({ x: 3.5, y: 0, length: 5 });
-        result.push({ x: 13.5, y: 0, length: 5 });
+        result.push({ column: 3.5, row: 0, length: 5 });
+        result.push({ column: 13.5, row: 0, length: 5 });
 
         const leftRopes = [];
         const otherRopes = [];
@@ -276,13 +334,13 @@
         for (let i = 1; i < 18; i++) {
             const options = [];
             if (isPlatform(i, 1) && isPlatform(i, 2)) {
-                options.push({ x: i, y: 1, length: 2 });
+                options.push({ column: i, row: 1, length: 2 });
             }
             if (isPlatform(i, 2) && isPlatform(i, 3)) {
-                options.push({ x: i, y: 2, length: 2 });
+                options.push({ column: i, row: 2, length: 2 });
             }
             if (isPlatform(i, 1) && isPlatform(i, 3)) {
-                options.push({ x: i, y: 1, length: 3 });
+                options.push({ column: i, row: 1, length: 3 });
             }
 
             if (options.length > 0) {
