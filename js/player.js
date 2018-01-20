@@ -6,7 +6,7 @@ MarshmallowDuel.Player = class {
         this.sprite.animations.add('stand', [0], 0, false);
         this.sprite.animations.add('run', [1,2,3,4], 12, true);
         this.sprite.animations.add('crouch', [6,5], 4, false);
-        this.sprite.animations.add('roll', [7,8,9,10], 10, true);
+        this.sprite.animations.add('roll', [7,8,9,10], 10, false);
         this.sprite.animations.add('jump', [11,12,13,14,15,16,17], 10, true);
         this.sprite.animations.add('run_jump', [18,19,20], 4, false);
         this.sprite.animations.add('stand_fall', [21], 0, true);

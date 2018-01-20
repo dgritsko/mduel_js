@@ -51,8 +51,13 @@
                 p.location = attr.location;
             }
 
-            if (attr.preventFalls) {
+            if (attr.onRope) {
                 p.sprite.body.moves = false;
+
+                if (p.rope) {
+                    p.sprite.y = Math.max(p.sprite.y, p.rope.top.y + p.sprite.offsetY - 8);
+                    p.sprite.y = Math.min(p.sprite.y, p.rope.bottom.y - p.sprite.offsetY);
+                }
             } else {
                 p.sprite.body.moves = true;
             }
@@ -61,11 +66,11 @@
         let behaviors = [
             {
                 match: { up: true, location: locations.ROPE },
-                act: apply({ animation: 'climb', preventFalls: true, yAdjustment: -2 })
+                act: apply({ animation: 'climb', onRope: true, yAdjustment: -2 })
             },
             {
                 match: { down: true, location: locations.ROPE },
-                act: apply({ animation: 'climb', preventFalls: true, yAdjustment: 2 })
+                act: apply({ animation: 'climb', onRope: true, yAdjustment: 2 })
             },
             {
                 match: { right: true, location: locations.ROPE },
@@ -99,10 +104,29 @@
                 act: apply({ animation: 'run', direction: 'right', xVel: 100 })
             },
             {
-                match: { down: true, left: true, location: locations.PLATFORM },
+                match: { down: true, left: true, location: locations.PLATFORM, xVel: -100 },
                 act: 
                     p => {
-                        console.log(p.sprite.animation)
+                        const name = 'roll';
+
+                        if (p.sprite.animations.currentAnim.name !== name) {
+                            p.sprite.animations.play(name);
+                        } else if (p.sprite.animations.currentAnim.isFinished) {
+                            p.sprite.body.velocity.x = 0;
+                        }
+                    }
+            },
+            {
+                match: { down: true, right: true, location: locations.PLATFORM, xVel: 100 },
+                act: 
+                    p => {
+                        const name = 'roll';
+
+                        if (p.sprite.animations.currentAnim.name !== name) {
+                            p.sprite.animations.play(name);
+                        } else if (p.sprite.animations.currentAnim.isFinished) {
+                            p.sprite.body.velocity.x = 0;
+                        }
                     }
             },
             {
@@ -116,13 +140,14 @@
                         if (ropes.length > 0) {
                             p.location = locations.ROPE;
                             p.sprite.x = ropes[0].x;
+                            p.rope = { top: new Phaser.Point(ropes[0].x, ropes[0].y), bottom: new Phaser.Point(ropes[0].x, ropes[0].y + ropes[0].height) };
                         } else {
                             apply({ yVel: -300, animation: 'jump', location: locations.AIR })(p);
                         }
                     }
             },
             {
-                match: { down: true, location: locations.PLATFORM },
+                match: { down: true, location: locations.PLATFORM, xVel: 0 },
                 act:
                     p => {
                         const x = p.sprite.x;
@@ -132,9 +157,15 @@
                         if (ropes.length > 0) {
                             p.location = locations.ROPE;
                             p.sprite.x = ropes[0].x;
+                            p.rope = { top: new Phaser.Point(ropes[0].x, ropes[0].y), bottom: new Phaser.Point(ropes[0].x, ropes[0].y + ropes[0].height) };
                         } else {
-                            apply({ xVel: 0, animation: 'crouch' })(p);
-                            //apply({ yVel: -300, animation: 'jump', location: locations.AIR })(p);
+                            const name = 'crouch';
+
+                            if (p.sprite.animations.currentAnim.name !== name) {
+                                p.sprite.animations.play(name);
+                            } else if (p.sprite.animations.currentAnim.isFinished) {
+                                p.sprite.body.velocity.x = 0;
+                            }
                         }
                     }
             },
@@ -166,11 +197,13 @@
                 right: player.input.right.isDown,
                 up: player.input.up.isDown,
                 down: player.input.down.isDown,
-                location: player.location
+                location: player.location,
+                xVel: player.sprite.body.velocity.x
             };
     
             let bestMatch = null;
             let bestScore = 0;
+            let bestMatchIndex = -1;
 
             for (let i = 0; i < behaviors.length; i++) {
                 const behavior = behaviors[i];
@@ -195,15 +228,18 @@
                 checkProps('up');
                 checkProps('down');
                 checkProps('location');
+                checkProps('xVel');
     
                 if (isMatch && bestScore < matchScore) {
                     bestScore = matchScore;
                     bestMatch = behavior;
+                    bestMatchIndex = i;
                 }
             }
 
             if (bestMatch) {
                 bestMatch.act(player);
+                //console.log(`Behavior ${bestMatchIndex}`);
             }
         });
         
