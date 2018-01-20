@@ -21,46 +21,59 @@
         // TODO: Import this?
         const locations = MarshmallowDuel.Player.Locations;
 
+
+        const apply = (attr) => p => {
+            if (attr.animation) {
+                p.sprite.animations.play(attr.animation);
+            } else {
+                p.sprite.animations.stop();
+            }
+
+            if (attr.direction === 'left') {
+                p.sprite.scale.setTo(-1, 1);
+            } else if (attr.direction === 'right') {
+                p.sprite.scale.setTo(1, 1);
+            }
+
+            if (typeof(attr.xVel) !== 'undefined') {
+                p.sprite.body.velocity.x = attr.xVel;
+            }
+
+            if (typeof(attr.yVel) !== 'undefined') {
+                p.sprite.body.velocity.y = attr.yVel;
+            }
+
+            if (typeof(attr.yAdjustment) !== 'undefined') {
+                p.sprite.y = p.sprite.y + attr.yAdjustment;
+            }
+
+            if (typeof(attr.location) !== 'undefined') {
+                p.location = attr.location;
+            }
+
+            if (attr.preventFalls) {
+                p.sprite.body.moves = false;
+            } else {
+                p.sprite.body.moves = true;
+            }
+        };
+
         let behaviors = [
             {
                 match: { up: true, location: locations.ROPE },
-                act:
-                    p => {
-                        p.sprite.animations.play('climb');
-                        p.sprite.body.moves = false;
-                        p.sprite.y = p.sprite.y - 2;
-                    }
+                act: apply({ animation: 'climb', preventFalls: true, yAdjustment: -2 })
             },
             {
                 match: { down: true, location: locations.ROPE },
-                act:
-                    p => {
-                        p.sprite.animations.play('climb');
-                        p.sprite.body.moves = false;
-                        p.sprite.y = p.sprite.y + 2;
-                    }
+                act: apply({ animation: 'climb', preventFalls: true, yAdjustment: 2 })
             },
             {
                 match: { right: true, location: locations.ROPE },
-                act: 
-                    p => {
-                        p.sprite.animations.play('stand_fall');
-                        p.sprite.scale.setTo(-1, 1);
-                        p.sprite.body.moves = true;
-                        p.sprite.body.velocity.x = 100;
-                        p.location = locations.AIR;
-                    }
+                act: apply({ animation: 'stand_fall', location: locations.AIR, xVel: 100, direction: 'right' })
             },
             {
                 match: { left: true, location: locations.ROPE },
-                act: 
-                    p => {
-                        p.sprite.animations.play('stand_fall');
-                        p.sprite.scale.setTo(1, 1);
-                        p.sprite.body.moves = true;
-                        p.sprite.body.velocity.x = -100;
-                        p.location = locations.AIR;
-                    }
+                act: apply({ animation: 'stand_fall', location: locations.AIR, xVel: -100, direction: 'left' })
             },
             {
                 match: { location: locations.ROPE },
@@ -69,22 +82,27 @@
                         p.sprite.animations.stop();
                     }
             },
+            {  
+                match: { up: true, left: true, location: locations.PLATFORM },
+                act: apply({ animation: 'run_jump', direction: 'left', xVel: -100, yVel: -300, location: locations.AIR })
+            },
+            {  
+                match: { up: true, right: true, location: locations.PLATFORM },
+                act: apply({ animation: 'run_jump', direction: 'right', xVel: 100, yVel: -300, location: locations.AIR })
+            },
             { 
-                match: { left: true, location: locations.PLATFORM }, 
-                act: 
-                    p => {
-                        p.sprite.body.velocity.x = -100;
-                        p.sprite.scale.setTo(-1, 1);
-                        p.sprite.animations.play('run');
-                    }
+                match: { left: true, location: locations.PLATFORM },
+                act: apply({ animation: 'run', direction: 'left', xVel: -100 })
             },
             { 
                 match: { right: true, location: locations.PLATFORM }, 
+                act: apply({ animation: 'run', direction: 'right', xVel: 100 })
+            },
+            {
+                match: { down: true, left: true, location: locations.PLATFORM },
                 act: 
                     p => {
-                        p.sprite.body.velocity.x = 100;
-                        p.sprite.scale.setTo(1, 1);
-                        p.sprite.animations.play('run');
+                        console.log(p.sprite.animation)
                     }
             },
             {
@@ -99,19 +117,30 @@
                             p.location = locations.ROPE;
                             p.sprite.x = ropes[0].x;
                         } else {
-                            p.sprite.body.velocity.y = -300;
-                            p.sprite.animations.play('jump');
-                            p.location = locations.AIR;
+                            apply({ yVel: -300, animation: 'jump', location: locations.AIR })(p);
+                        }
+                    }
+            },
+            {
+                match: { down: true, location: locations.PLATFORM },
+                act:
+                    p => {
+                        const x = p.sprite.x;
+                        const y = p.sprite.y + p.sprite.offsetY;
+                        const ropes = level.ropes.filter(r => (r.x >= (x - 10) && r.x <= (x + 10))).filter(r => (y >= r.y && y <= (r.y + r.height + 10)));
+
+                        if (ropes.length > 0) {
+                            p.location = locations.ROPE;
+                            p.sprite.x = ropes[0].x;
+                        } else {
+                            apply({ xVel: 0, animation: 'crouch' })(p);
+                            //apply({ yVel: -300, animation: 'jump', location: locations.AIR })(p);
                         }
                     }
             },
             { 
                 match: { location: locations.PLATFORM },
-                act: 
-                    p => {
-                        p.sprite.body.velocity.x = 0;
-                        p.sprite.animations.play('stand');
-                    }
+                act: apply({ animation: 'stand', xVel: 0 })
             }
         ];
 
@@ -140,25 +169,41 @@
                 location: player.location
             };
     
+            let bestMatch = null;
+            let bestScore = 0;
+
             for (let i = 0; i < behaviors.length; i++) {
                 const behavior = behaviors[i];
     
-                const propsMatch = x => (typeof(behavior.match[x]) === 'undefined' || behavior.match[x] == curr[x]);
-    
                 let isMatch = true;
-    
-                isMatch = isMatch && propsMatch('left');
-                isMatch = isMatch && propsMatch('right');
-                isMatch = isMatch && propsMatch('up');
-                isMatch = isMatch && propsMatch('down');
-                isMatch = isMatch && propsMatch('location');
-    
-                if (isMatch) {
-                    //game.debug.text('Matched: ' + i, 2, 14, '#ff0000');
+                let matchScore = 0;
 
-                    behavior.act(player);
-                    break;
+                const checkProps = x => {
+                    if (typeof(behavior.match[x]) === 'undefined') {
+                        return;
+                    } 
+                    
+                    if (behavior.match[x] !== curr[x]) {
+                        isMatch = false;
+                    } else {
+                        matchScore++;
+                    }
+                };
+    
+                checkProps('left');
+                checkProps('right');
+                checkProps('up');
+                checkProps('down');
+                checkProps('location');
+    
+                if (isMatch && bestScore < matchScore) {
+                    bestScore = matchScore;
+                    bestMatch = behavior;
                 }
+            }
+
+            if (bestMatch) {
+                bestMatch.act(player);
             }
         });
         
