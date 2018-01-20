@@ -2,13 +2,26 @@
     let level;
     let player1;
 
+    const cfg = {
+        gravity: 800,
+        climbRate: 2,
+        runSpeed: 100,
+        jumpSpeed: 300,
+        ropeDist: 10,
+        platformYDist: 16,
+        verticalSpacing: 64,
+        verticalOffset: 80,
+        horizontalSpacing: 32,
+        horizontalOffset: 32
+    };
+
     function preload() {
         // TODO: Load assets
     }
 
     function create() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        game.physics.arcade.gravity.y = 800;
+        game.physics.arcade.gravity.y = cfg.gravity;
 
         level = makeLevel();
         
@@ -20,7 +33,6 @@
     function update() {
         // TODO: Import this?
         const locations = MarshmallowDuel.Player.Locations;
-
 
         const apply = (attr) => p => {
             if (attr.animation) {
@@ -66,19 +78,19 @@
         let behaviors = [
             {
                 match: { up: true, location: locations.ROPE },
-                act: apply({ animation: 'climb', onRope: true, yAdjustment: -2 })
+                act: apply({ animation: 'climb', onRope: true, yAdjustment: -cfg.climbRate })
             },
             {
                 match: { down: true, location: locations.ROPE },
-                act: apply({ animation: 'climb', onRope: true, yAdjustment: 2 })
+                act: apply({ animation: 'climb', onRope: true, yAdjustment: cfg.climbRate })
             },
             {
                 match: { right: true, location: locations.ROPE },
-                act: apply({ animation: 'stand_fall', location: locations.AIR, xVel: 100, direction: 'right' })
+                act: apply({ animation: 'stand_fall', location: locations.AIR, xVel: cfg.runSpeed, direction: 'right' })
             },
             {
                 match: { left: true, location: locations.ROPE },
-                act: apply({ animation: 'stand_fall', location: locations.AIR, xVel: -100, direction: 'left' })
+                act: apply({ animation: 'stand_fall', location: locations.AIR, xVel: -cfg.runSpeed, direction: 'left' })
             },
             {
                 match: { location: locations.ROPE },
@@ -89,22 +101,22 @@
             },
             {  
                 match: { up: true, left: true, location: locations.PLATFORM },
-                act: apply({ animation: 'run_jump', direction: 'left', xVel: -100, yVel: -300, location: locations.AIR })
+                act: apply({ animation: 'run_jump', direction: 'left', xVel: -cfg.runSpeed, yVel: -cfg.jumpSpeed, location: locations.AIR })
             },
             {  
                 match: { up: true, right: true, location: locations.PLATFORM },
-                act: apply({ animation: 'run_jump', direction: 'right', xVel: 100, yVel: -300, location: locations.AIR })
+                act: apply({ animation: 'run_jump', direction: 'right', xVel: cfg.runSpeed, yVel: -cfg.jumpSpeed, location: locations.AIR })
             },
             { 
                 match: { left: true, location: locations.PLATFORM },
-                act: apply({ animation: 'run', direction: 'left', xVel: -100 })
+                act: apply({ animation: 'run', direction: 'left', xVel: -cfg.runSpeed })
             },
             { 
                 match: { right: true, location: locations.PLATFORM }, 
-                act: apply({ animation: 'run', direction: 'right', xVel: 100 })
+                act: apply({ animation: 'run', direction: 'right', xVel: cfg.runSpeed })
             },
             {
-                match: { down: true, left: true, location: locations.PLATFORM, xVel: -100 },
+                match: { down: true, left: true, location: locations.PLATFORM, xVel: -cfg.runSpeed },
                 act: 
                     p => {
                         const name = 'roll';
@@ -117,7 +129,7 @@
                     }
             },
             {
-                match: { down: true, right: true, location: locations.PLATFORM, xVel: 100 },
+                match: { down: true, right: true, location: locations.PLATFORM, xVel: cfg.runSpeed },
                 act: 
                     p => {
                         const name = 'roll';
@@ -135,14 +147,14 @@
                     p => {
                         const x = p.sprite.x;
                         const y = p.sprite.y + p.sprite.offsetY;
-                        const ropes = level.ropes.filter(r => (r.x >= (x - 10) && r.x <= (x + 10))).filter(r => (y >= r.y && y <= (r.y + r.height + 10)));
+                        const ropes = level.ropes.filter(r => (r.x >= (x - cfg.ropeDist) && r.x <= (x + cfg.ropeDist))).filter(r => (y >= r.y && y <= (r.y + r.height + cfg.ropeDist)));
 
                         if (ropes.length > 0) {
                             p.location = locations.ROPE;
                             p.sprite.x = ropes[0].x;
                             p.rope = { top: new Phaser.Point(ropes[0].x, ropes[0].y), bottom: new Phaser.Point(ropes[0].x, ropes[0].y + ropes[0].height) };
                         } else {
-                            apply({ yVel: -300, animation: 'jump', location: locations.AIR })(p);
+                            apply({ yVel: -cfg.jumpSpeed, animation: 'jump', location: locations.AIR })(p);
                         }
                     }
             },
@@ -152,7 +164,7 @@
                     p => {
                         const x = p.sprite.x;
                         const y = p.sprite.y + p.sprite.offsetY;
-                        const ropes = level.ropes.filter(r => (r.x >= (x - 10) && r.x <= (x + 10))).filter(r => (y >= r.y && y <= (r.y + r.height + 10)));
+                        const ropes = level.ropes.filter(r => (r.x >= (x - cfg.ropeDist) && r.x <= (x + cfg.ropeDist))).filter(r => (y >= r.y && y <= (r.y + r.height + cfg.ropeDist)));
 
                         if (ropes.length > 0) {
                             p.location = locations.ROPE;
@@ -187,7 +199,7 @@
             }, (player, platform) => {
                 const maxY = player.y + player.offsetY;
 
-                const collision = maxY >= platform.y && maxY < (platform.y + 16);
+                const collision = maxY >= platform.y && maxY < (platform.y + cfg.platformYDist);
 
                 return collision;
             });
@@ -248,11 +260,7 @@
     }
 
     function makeLevel() {
-        const verticalSpacing = 64;
-        const verticalOffset = 80;
-
-        const horizontalSpacing = 32;
-        const horizontalOffset = 32;
+        const { verticalSpacing, verticalOffset, horizontalSpacing, horizontalOffset } = cfg;
 
         const levelHeight = 5;
         const levelWidth = 18;
@@ -326,11 +334,7 @@
     const generatePlatforms = () => {
         let result = [];
 
-        const verticalSpacing = 64;
-        const verticalOffset = 80;
-
-        const horizontalSpacing = 32;
-        const horizontalOffset = 32;
+        const { verticalSpacing, verticalOffset, horizontalSpacing, horizontalOffset } = cfg;
 
         const levelHeight = 5;
         const levelWidth = 18;
