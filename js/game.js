@@ -2,19 +2,6 @@
     let level;
     let player1;
 
-    const cfg = {
-        gravity: 800,
-        climbRate: 2,
-        runSpeed: 100,
-        jumpSpeed: 300,
-        ropeDist: 10,
-        platformYDist: 16,
-        verticalSpacing: 64,
-        verticalOffset: 80,
-        horizontalSpacing: 32,
-        horizontalOffset: 32
-    };
-
     function preload() {
         // TODO: Load assets
     }
@@ -191,7 +178,7 @@
 
         players.forEach(player => {
             // TODO: Refactor this collision system
-            game.physics.arcade.collide(player.sprite, level.platforms, (_, platform) => {
+            const hitPlatform = game.physics.arcade.collide(player.sprite, level.platforms, (_, platform) => {
                 if (player.location !== locations.PLATFORM && player.location !== locations.ROPE) {
                     player.sprite.animations.play('stand');
                     player.location = locations.PLATFORM;
@@ -199,10 +186,35 @@
             }, (player, platform) => {
                 const maxY = player.y + player.offsetY;
 
-                const collision = maxY >= platform.y && maxY < (platform.y + cfg.platformYDist);
+                const yCollision = maxY >= platform.y && maxY < (platform.y + cfg.platformYDist);
 
-                return collision;
+                const platformXDist = 10;
+
+                const xCollision = (player.x + platformXDist) >= platform.x && (player.x - platformXDist) <= (platform.x + platform.width);
+
+                return yCollision && xCollision;
             });
+
+            if (!hitPlatform) {
+                switch (player.location) {
+                    case locations.PLATFORM:
+                        player.sprite.animations.play('stand_fall');
+                        player.location = locations.AIR;
+                        break;
+                    case locations.AIR:
+                        if ((player.sprite.x + (player.sprite.offsetX / 2)) <= 0) {
+                            player.sprite.body.velocity.x = Math.abs(player.sprite.body.velocity.x);
+                        } else if ((player.sprite.x + (player.sprite.offsetX / 2)) >= game.world.width) {
+                            player.sprite.body.velocity.x = -Math.abs(player.sprite.body.velocity.x);
+                        }
+
+                        if (player.sprite.y > 500) {
+                            // TODO: FIDS
+                            player.sprite.y -= 500;
+                        }
+                        break;
+                }
+            }
 
             const curr = { 
                 left: player.input.left.isDown,
