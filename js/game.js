@@ -1,9 +1,22 @@
 (function() {
     let level;
-    let player1;
+    const players = [];
 
     function preload() {
         // TODO: Load assets
+    }
+
+    function createPlayerInput(playerId) {
+        if (playerId === 1) {
+            return game.input.keyboard.createCursorKeys();
+        } else {
+            return {
+                up: game.input.keyboard.addKey(Phaser.Keyboard.I),
+                down: game.input.keyboard.addKey(Phaser.Keyboard.K),
+                left: game.input.keyboard.addKey(Phaser.Keyboard.J),
+                right: game.input.keyboard.addKey(Phaser.Keyboard.L)
+            }
+        }
     }
 
     function create() {
@@ -12,9 +25,14 @@
 
         level = makeLevel();
         
-        player1 = new MarshmallowDuel.Player();
+        const player1 = new MarshmallowDuel.Player('player1', 100, 100);
+        const player2 = new MarshmallowDuel.Player('player2', game.world.width - 100, 100);
 
-        player1.input = game.input.keyboard.createCursorKeys();
+        player1.input = createPlayerInput(1);
+        player2.input = createPlayerInput(2);
+
+        players.push(player1);
+        players.push(player2);
     }
 
     function update() {
@@ -174,7 +192,42 @@
             }
         ];
 
-        const players = [player1];
+        const player1 = players[0];
+        const player2 = players[1];
+
+        player1.sprite.data.index = 0;
+        player2.sprite.data.index = 1;
+
+        game.physics.arcade.collide(player1.sprite, player2.sprite, (p1, p2) => {
+
+        }, (p1, p2) => {
+            const getLocation = p => players[p.data.index].location;
+            const currentLocations = [getLocation(p1), getLocation(p2)];
+            
+            const checkLocations = (location1, location2) => {
+                return (currentLocations[0] === location1 && currentLocations[1] === location2) || (currentLocations[1] === location1 && currentLocations[0] === location2);
+            }
+
+            if (checkLocations(locations.PLATFORM, locations.PLATFORM)) {
+                if ((p1.body.velocity.x * p2.body.velocity.x) <= 0) {
+                    // TODO
+                }
+            } else if (checkLocations(locations.ROPE, locations.ROPE)) {
+                if ((p1.body.velocity.y * p2.body.velocity.y) <= 0) {
+                    // TODO
+                }
+            } else if (checkLocations(locations.AIR, locations.AIR)) {
+
+            } else if (checkLocations(locations.PLATFORM, locations.AIR)) {
+
+            } else if (checkLocations(locations.PLATFORM, locations.ROPE)) {
+
+            } else if (checkLocations(locations.AIR, locations.ROPE)) {
+
+            } 
+
+            return false;
+        });
 
         players.forEach(player => {
             // TODO: Refactor this collision system

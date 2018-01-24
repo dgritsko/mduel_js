@@ -1,6 +1,6 @@
 MarshmallowDuel.Player = class {
-    constructor() {
-        this.sprite = game.add.sprite(game.camera.view.centerX, game.camera.view.centerY, 'player1');
+    constructor(spriteName, x, y) {
+        this.sprite = game.add.sprite(x, y, spriteName);
         this.sprite.anchor.setTo(0.5);
 
         this.sprite.animations.add('stand', [0], 0, false);
