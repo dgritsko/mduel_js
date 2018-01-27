@@ -13,7 +13,7 @@ $(document).ready(function() {
     }
   });
   
-  var game = new Phaser.Game(640, 480, Phaser.AUTO, 'game');
+  var game = new Phaser.Game(640, 400, Phaser.AUTO, 'game');
   
   game.state.add('Boot', MarshmallowDuel.Boot);
   game.state.add('Game', MarshmallowDuel.Game);

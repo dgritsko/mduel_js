@@ -452,6 +452,11 @@
         // Marshmallows
         const marshmallows = game.add.group();
         for (let j = 0; j < (game.world.width / horizontalSpacing); j++) {
+            const mallowSurface = game.add.sprite(j * horizontalSpacing, game.world.height - (horizontalSpacing * 1.75), 'mallow_surface');
+            mallowSurface.animations.add('default', [j % 4, (j + 1) % 4, (j + 2) % 4, (j + 3) % 4], 0.25, true);
+            mallowSurface.animations.play('default');
+            marshmallows.add(mallowSurface);
+
             const marshmallow = game.add.sprite(j * horizontalSpacing, game.world.height - horizontalSpacing, 'mallow');
             marshmallows.add(marshmallow);
         }

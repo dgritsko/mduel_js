@@ -9,6 +9,7 @@
         game.load.image('powerup_spawn', 'assets/powerup_spawn.png');   
         game.load.image('rope_anchor', 'assets/rope_anchor.png');   
         game.load.image('mallow', 'assets/mallow.png');   
+        game.load.spritesheet('mallow_surface', 'assets/mallow_surface.png', 32, 32);   
     }
 
     function create() {
