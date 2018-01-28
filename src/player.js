@@ -1,4 +1,4 @@
-MarshmallowDuel.Player = class {
+export class Player {
     constructor(spriteName, x, y) {
         this.sprite = game.add.sprite(x, y, spriteName);
         this.sprite.anchor.setTo(0.5);
@@ -35,11 +35,11 @@ MarshmallowDuel.Player = class {
 
         this.sprite.body.setSize(this.sprite.width / 2, this.sprite.height - 16, this.sprite.width / 4, 8);
 
-        this.location = MarshmallowDuel.Player.Locations.PLATFORM;
+        this.location = locations.PLATFORM;
     }
 }
 
-MarshmallowDuel.Player.Locations = {
+export const locations = {
     PLATFORM: 0,
     ROPE: 1,
     AIR: 2,
