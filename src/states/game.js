@@ -1,6 +1,7 @@
 import cfg from '../gameConfig';
 import { locations, Player } from '../player';
 import { makeLevel } from '../gameutil/level';
+import { handleMovement } from './game.movement';
 
 let level;
 const players = [];
@@ -37,159 +38,6 @@ function create() {
 }
 
 function update() {
-    const apply = (attr) => p => {
-        if (attr.animation) {
-            p.sprite.animations.play(attr.animation);
-        } else {
-            p.sprite.animations.stop();
-        }
-
-        if (attr.direction === 'left') {
-            p.sprite.scale.setTo(-1, 1);
-        } else if (attr.direction === 'right') {
-            p.sprite.scale.setTo(1, 1);
-        }
-
-        if (typeof(attr.xVel) !== 'undefined') {
-            p.sprite.body.velocity.x = attr.xVel;
-        }
-
-        if (typeof(attr.yVel) !== 'undefined') {
-            p.sprite.body.velocity.y = attr.yVel;
-        }
-
-        if (typeof(attr.yAdjustment) !== 'undefined') {
-            p.sprite.y = p.sprite.y + attr.yAdjustment;
-        }
-
-        if (typeof(attr.location) !== 'undefined') {
-            p.location = attr.location;
-        }
-
-        if (attr.onRope) {
-            p.sprite.body.moves = false;
-
-            if (p.rope) {
-                p.sprite.y = Math.max(p.sprite.y, p.rope.top.y + p.sprite.offsetY - 8);
-                p.sprite.y = Math.min(p.sprite.y, p.rope.bottom.y - p.sprite.offsetY);
-            }
-        } else {
-            p.sprite.body.moves = true;
-        }
-    };
-
-    let behaviors = [
-        {
-            match: { up: true, location: locations.ROPE },
-            act: apply({ animation: 'climb', onRope: true, yAdjustment: -cfg.climbRate })
-        },
-        {
-            match: { down: true, location: locations.ROPE },
-            act: apply({ animation: 'climb', onRope: true, yAdjustment: cfg.climbRate })
-        },
-        {
-            match: { right: true, location: locations.ROPE },
-            act: apply({ animation: 'stand_fall', location: locations.AIR, xVel: cfg.runSpeed, direction: 'right' })
-        },
-        {
-            match: { left: true, location: locations.ROPE },
-            act: apply({ animation: 'stand_fall', location: locations.AIR, xVel: -cfg.runSpeed, direction: 'left' })
-        },
-        {
-            match: { location: locations.ROPE },
-            act:
-                p => {
-                    p.sprite.animations.stop();
-                }
-        },
-        {  
-            match: { up: true, left: true, location: locations.PLATFORM },
-            act: apply({ animation: 'run_jump', direction: 'left', xVel: -cfg.runSpeed, yVel: -cfg.jumpSpeed, location: locations.AIR })
-        },
-        {  
-            match: { up: true, right: true, location: locations.PLATFORM },
-            act: apply({ animation: 'run_jump', direction: 'right', xVel: cfg.runSpeed, yVel: -cfg.jumpSpeed, location: locations.AIR })
-        },
-        { 
-            match: { left: true, location: locations.PLATFORM },
-            act: apply({ animation: 'run', direction: 'left', xVel: -cfg.runSpeed })
-        },
-        { 
-            match: { right: true, location: locations.PLATFORM }, 
-            act: apply({ animation: 'run', direction: 'right', xVel: cfg.runSpeed })
-        },
-        {
-            match: { down: true, left: true, location: locations.PLATFORM, xVel: -cfg.runSpeed },
-            act: 
-                p => {
-                    const name = 'roll';
-
-                    if (p.sprite.animations.currentAnim.name !== name) {
-                        p.sprite.animations.play(name);
-                    } else if (p.sprite.animations.currentAnim.isFinished) {
-                        p.sprite.body.velocity.x = 0;
-                    }
-                }
-        },
-        {
-            match: { down: true, right: true, location: locations.PLATFORM, xVel: cfg.runSpeed },
-            act: 
-                p => {
-                    const name = 'roll';
-
-                    if (p.sprite.animations.currentAnim.name !== name) {
-                        p.sprite.animations.play(name);
-                    } else if (p.sprite.animations.currentAnim.isFinished) {
-                        p.sprite.body.velocity.x = 0;
-                    }
-                }
-        },
-        {
-            match: { up: true, location: locations.PLATFORM },
-            act:
-                p => {
-                    const x = p.sprite.x;
-                    const y = p.sprite.y + p.sprite.offsetY;
-                    const ropes = level.ropes.filter(r => (r.x >= (x - cfg.ropeDist) && r.x <= (x + cfg.ropeDist))).filter(r => (y >= r.y && y <= (r.y + r.height + cfg.ropeDist)));
-
-                    if (ropes.length > 0) {
-                        p.location = locations.ROPE;
-                        p.sprite.x = ropes[0].x;
-                        p.rope = { top: new Phaser.Point(ropes[0].x, ropes[0].y), bottom: new Phaser.Point(ropes[0].x, ropes[0].y + ropes[0].height) };
-                    } else {
-                        apply({ yVel: -cfg.jumpSpeed, animation: 'jump', location: locations.AIR })(p);
-                    }
-                }
-        },
-        {
-            match: { down: true, location: locations.PLATFORM, xVel: 0 },
-            act:
-                p => {
-                    const x = p.sprite.x;
-                    const y = p.sprite.y + p.sprite.offsetY;
-                    const ropes = level.ropes.filter(r => (r.x >= (x - cfg.ropeDist) && r.x <= (x + cfg.ropeDist))).filter(r => (y >= r.y && y <= (r.y + r.height + cfg.ropeDist)));
-
-                    if (ropes.length > 0) {
-                        p.location = locations.ROPE;
-                        p.sprite.x = ropes[0].x;
-                        p.rope = { top: new Phaser.Point(ropes[0].x, ropes[0].y), bottom: new Phaser.Point(ropes[0].x, ropes[0].y + ropes[0].height) };
-                    } else {
-                        const name = 'crouch';
-
-                        if (p.sprite.animations.currentAnim.name !== name) {
-                            p.sprite.animations.play(name);
-                        } else if (p.sprite.animations.currentAnim.isFinished) {
-                            p.sprite.body.velocity.x = 0;
-                        }
-                    }
-                }
-        },
-        { 
-            match: { location: locations.PLATFORM },
-            act: apply({ animation: 'stand', xVel: 0 })
-        }
-    ];
-
     const player1 = players[0];
     const player2 = players[1];
 
@@ -335,55 +183,7 @@ function update() {
             }
         }
 
-        const curr = { 
-            left: player.input.left.isDown,
-            right: player.input.right.isDown,
-            up: player.input.up.isDown,
-            down: player.input.down.isDown,
-            location: player.location,
-            xVel: player.sprite.body.velocity.x
-        };
-
-        let bestMatch = null;
-        let bestScore = 0;
-        let bestMatchIndex = -1;
-
-        for (let i = 0; i < behaviors.length; i++) {
-            const behavior = behaviors[i];
-
-            let isMatch = true;
-            let matchScore = 0;
-
-            const checkProps = x => {
-                if (typeof(behavior.match[x]) === 'undefined') {
-                    return;
-                } 
-                
-                if (behavior.match[x] !== curr[x]) {
-                    isMatch = false;
-                } else {
-                    matchScore++;
-                }
-            };
-
-            checkProps('left');
-            checkProps('right');
-            checkProps('up');
-            checkProps('down');
-            checkProps('location');
-            checkProps('xVel');
-
-            if (isMatch && bestScore < matchScore) {
-                bestScore = matchScore;
-                bestMatch = behavior;
-                bestMatchIndex = i;
-            }
-        }
-
-        if (bestMatch) {
-            bestMatch.act(player);
-            //console.log(`Behavior ${bestMatchIndex}`);
-        }
+        handleMovement(player, level);
     });
     
     //game.debug.text(player1.sprite.animations, 2, 14, '#ff0000');
