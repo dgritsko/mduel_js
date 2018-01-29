@@ -136,8 +136,15 @@ const jumpUpOrClimb = {
         }
 };
 
-const crouchOrClimb = {
+const crouch = {
     match: { down: true, location: locations.PLATFORM, xVel: 0 },
+    act: player => {
+
+    }
+}
+
+const crouchOrClimb = {
+    match: { down: true, right: false, left: false, location: locations.PLATFORM, xVel: 0 },
     act:
         (player, level) => {
             const x = player.sprite.x;
@@ -178,6 +185,7 @@ const behaviors = [
     rollLeft,
     rollRight,
     jumpUpOrClimb,
+    crouch,
     crouchOrClimb,
     stand
 ];
