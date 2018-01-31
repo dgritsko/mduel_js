@@ -8,14 +8,21 @@ const players = [];
 
 function createPlayerInput(playerId) {
     if (playerId === 1) {
-        return game.input.keyboard.createCursorKeys();
-    } else {
+        return {
+            up: game.input.keyboard.addKey(Phaser.Keyboard.W),
+            down: game.input.keyboard.addKey(Phaser.Keyboard.S),
+            left: game.input.keyboard.addKey(Phaser.Keyboard.A),
+            right: game.input.keyboard.addKey(Phaser.Keyboard.D)
+        }
+    } else if (playerId === 2) {
         return {
             up: game.input.keyboard.addKey(Phaser.Keyboard.I),
             down: game.input.keyboard.addKey(Phaser.Keyboard.K),
             left: game.input.keyboard.addKey(Phaser.Keyboard.J),
             right: game.input.keyboard.addKey(Phaser.Keyboard.L)
         }
+    } else {
+        return game.input.keyboard.createCursorKeys();
     }
 }
 
@@ -171,8 +178,10 @@ function update() {
                 case locations.AIR:
                     if ((player.sprite.x + (player.sprite.offsetX / 2)) <= 0) {
                         player.sprite.body.velocity.x = Math.abs(player.sprite.body.velocity.x);
+                        player.sprite.animations.play('backward_fall');
                     } else if ((player.sprite.x + (player.sprite.offsetX / 2)) >= game.world.width) {
                         player.sprite.body.velocity.x = -Math.abs(player.sprite.body.velocity.x);
+                        player.sprite.animations.play('backward_fall');
                     }
 
                     if (player.sprite.y > 500) {

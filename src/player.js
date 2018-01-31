@@ -5,10 +5,14 @@ export class Player {
 
         this.sprite.animations.add('stand', [0], 0, false);
         this.sprite.animations.add('run', [1,2,3,4], 12, true);
-        this.sprite.animations.add('crouch', [6,5], 4, false);
-        this.sprite.animations.add('roll', [7,8,9,10], 10, false);
-        this.sprite.animations.add('jump', [11,12,13,14,15,16,17], 10, true);
-        this.sprite.animations.add('run_jump', [18,19,20], 4, false);
+        this.sprite.animations.add('crouch', [10,5], 15, false);
+        this.sprite.animations.add('uncrouch', [5,6], 12, false);
+        this.sprite.animations.add('land', [6], 0, false);
+        this.sprite.animations.add('forward_roll', [7,8,9], 10, false);
+        this.sprite.animations.add('backward_roll', [9,8,7], 10, false);
+        //this.sprite.animations.add('jump', [11,12,13,14,15,16,17], 10, true);
+        this.sprite.animations.add('stand_jump', [6,12,13,14,15,16, 6], 10, false);
+        this.sprite.animations.add('run_jump', [17,18,19,20], 4, false);
         this.sprite.animations.add('stand_fall', [21], 0, true);
         this.sprite.animations.add('fall_roll', [22,23,24,25], 4, false);
         this.sprite.animations.add('forward_fall', [26,27], 10, true);
@@ -30,6 +34,31 @@ export class Player {
         this.sprite.animations.add('trapped', [67], 0, false);
 
         this.sprite.animations.play('stand');
+
+
+        // Jump up
+        //this.sprite.animations.add('custom1', [6, 12, 13, 14, 15, 16, 6], 8, true);
+        
+        // Jump forward
+        // 17, 18, 19, 20
+
+        // Jump start/end, land from fall/jump
+        // 6
+
+        // Backward roll (land from backward fall)
+        // 9, 8, 7
+
+        // Forward roll
+        // 7, 8, 9
+
+        // Crouch down
+        // 10, 5
+
+        // Uncrouch
+        // 5, 6
+
+        // Hit platform
+        // 7, 8 
 
         game.physics.enable(this.sprite);
 

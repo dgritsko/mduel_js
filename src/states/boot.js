@@ -10,9 +10,6 @@ function preload() {
 }
 
 function create() {
-    var scaleMode = MarshmallowDuel.fullscreen ? Phaser.ScaleManager.SHOW_ALL : Phaser.ScaleManager.NONE;
-
-    game.scale.scaleMode = scaleMode;
     game.scale.pageAlignHorizontally = true;
     game.scale.pageAlignVertically = true;
 
