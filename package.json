@@ -28,6 +28,7 @@
     "webpack-dev-server": "^2.11.1"
   },
   "dependencies": {
-    "phaser-ce": "^2.10.0"
+    "phaser-ce": "^2.10.0",
+    "tinyqueue": "^1.2.3"
   }
 }

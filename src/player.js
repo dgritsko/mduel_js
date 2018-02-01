@@ -1,6 +1,51 @@
+import Queue from 'tinyqueue';
+import { now } from './util/util';
+
 export class Player {
     constructor(spriteName, x, y) {
         this.sprite = game.add.sprite(x, y, spriteName);
+        this.configureSprite();
+
+        this.sprite.animations.play('stand');
+
+        this.eventQueue = new Queue();
+
+        // Jump up
+        //this.sprite.animations.add('custom1', [6, 12, 13, 14, 15, 16, 6], 8, true);
+        
+        // Jump forward
+        // 17, 18, 19, 20
+
+        // Jump start/end, land from fall/jump
+        // 6
+
+        // Backward roll (land from backward fall)
+        // 9, 8, 7
+
+        // Forward roll
+        // 7, 8, 9
+
+        // Crouch down
+        // 10, 5
+
+        // Uncrouch
+        // 5, 6
+
+        // Hit platform
+        // 7, 8 
+
+        this.location = locations.PLATFORM;
+    }
+
+    updateEvents() {
+        const next = this.eventQueue.peek();
+        if (next && next.time <= now()) {
+            this.eventQueue.pop();
+            next.event();
+        }
+    }
+
+    configureSprite() {
         this.sprite.anchor.setTo(0.5);
 
         this.sprite.animations.add('stand', [0], 0, false);
@@ -33,38 +78,9 @@ export class Player {
         this.sprite.animations.add('empty', [66], 0, false);
         this.sprite.animations.add('trapped', [67], 0, false);
 
-        this.sprite.animations.play('stand');
-
-
-        // Jump up
-        //this.sprite.animations.add('custom1', [6, 12, 13, 14, 15, 16, 6], 8, true);
-        
-        // Jump forward
-        // 17, 18, 19, 20
-
-        // Jump start/end, land from fall/jump
-        // 6
-
-        // Backward roll (land from backward fall)
-        // 9, 8, 7
-
-        // Forward roll
-        // 7, 8, 9
-
-        // Crouch down
-        // 10, 5
-
-        // Uncrouch
-        // 5, 6
-
-        // Hit platform
-        // 7, 8 
-
         game.physics.enable(this.sprite);
 
         this.sprite.body.setSize(this.sprite.width / 2, this.sprite.height - 16, this.sprite.width / 4, 8);
-
-        this.location = locations.PLATFORM;
     }
 }
 

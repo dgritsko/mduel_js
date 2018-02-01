@@ -27,6 +27,7 @@ function createPlayerInput(playerId) {
 }
 
 function create() {
+    game.stage.disableVisibilityChange = true;
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.physics.arcade.gravity.y = cfg.gravity;
 
