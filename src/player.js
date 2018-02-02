@@ -104,6 +104,56 @@ export class Player {
             return game.input.keyboard.createCursorKeys();
         }
     }
+
+    getState() {
+        return {
+            x: this.sprite.x,
+            y: this.sprite.y,
+            inputEnabled: true,
+            gravityEnabled: true,
+            xVelocity: this.sprite.body.velocity.x,
+            yVelocity: this.sprite.body.velocity.y,
+            location: this.location,
+            position: this.position
+        }
+    }
+
+    applyState({ x, y, inputEnabled, gravityEnabled, xVelocity, yVelocity, location, position }) {
+        const isNumber = value => typeof(value) === 'number';
+        const isBool = value => typeof(value) === 'boolean';
+
+        if (isNumber(x)) {
+            this.sprite.x = x;
+        }
+
+        if (isNumber(y)) {
+            this.sprite.y = y;
+        }
+
+        if (isBool(inputEnabled)) {
+            // TODO 
+        }
+
+        if (isBool(gravityEnabled)) {
+            // TODO 
+        }
+
+        if (isNumber(xVelocity)) {
+            // TODO 
+        }
+
+        if (isNumber(yVelocity)) {
+            // TODO 
+        }
+
+        if (isNumber(location)) {
+            // TODO 
+        }
+
+        if (isNumber(position)) {
+            // TODO
+        }
+    }
 }
 
 export const locations = {
