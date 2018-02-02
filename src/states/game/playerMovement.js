@@ -1,4 +1,4 @@
-import { locations } from '../../player';
+import { locations } from '../../enums/locations';
 import cfg from '../../gameConfig';
 
 const apply = (attr) => player => {

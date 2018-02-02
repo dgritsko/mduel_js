@@ -1,5 +1,8 @@
 import Queue from 'tinyqueue';
-import { now } from './util/util';
+import { now, isBool, isNumber, isString } from './util/util';
+import { locations } from './enums/locations';
+import { positions } from './enums/positions';
+import { directions } from './enums/directions';
 
 export class Player {
     constructor(spriteName, x, y, id) {
@@ -7,36 +10,14 @@ export class Player {
         this.configureSprite();
 
         this.input = this.configureInput(id);
-
-        this.sprite.animations.play('stand');
-
         this.eventQueue = new Queue();
 
-        // Jump up
-        //this.sprite.animations.add('custom1', [6, 12, 13, 14, 15, 16, 6], 8, true);
-        
-        // Jump forward
-        // 17, 18, 19, 20
-
-        // Jump start/end, land from fall/jump
-        // 6
-
-        // Backward roll (land from backward fall)
-        // 9, 8, 7
-
-        // Forward roll
-        // 7, 8, 9
-
-        // Crouch down
-        // 10, 5
-
-        // Uncrouch
-        // 5, 6
-
-        // Hit platform
-        // 7, 8 
-
-        this.location = locations.PLATFORM;
+        this.applyState({
+            location: locations.PLATFORM,
+            position: positions.DEFAULT,
+            animation: 'stand',
+            inputEnabled: true
+        });
     }
 
     updateEvents() {
@@ -80,6 +61,30 @@ export class Player {
         this.sprite.animations.add('empty', [66], 0, false);
         this.sprite.animations.add('trapped', [67], 0, false);
 
+        // Jump up
+        //this.sprite.animations.add('custom1', [6, 12, 13, 14, 15, 16, 6], 8, true);
+        
+        // Jump forward
+        // 17, 18, 19, 20
+
+        // Jump start/end, land from fall/jump
+        // 6
+
+        // Backward roll (land from backward fall)
+        // 9, 8, 7
+
+        // Forward roll
+        // 7, 8, 9
+
+        // Crouch down
+        // 10, 5
+
+        // Uncrouch
+        // 5, 6
+
+        // Hit platform
+        // 7, 8 
+
         game.physics.enable(this.sprite);
 
         this.sprite.body.setSize(this.sprite.width / 2, this.sprite.height - 16, this.sprite.width / 4, 8);
@@ -88,6 +93,7 @@ export class Player {
     configureInput(id) {
         if (id === 1) {
             return {
+                action: game.input.keyboard.addKey(Phaser.Keyboard.Q),
                 up: game.input.keyboard.addKey(Phaser.Keyboard.W),
                 down: game.input.keyboard.addKey(Phaser.Keyboard.S),
                 left: game.input.keyboard.addKey(Phaser.Keyboard.A),
@@ -95,13 +101,16 @@ export class Player {
             }
         } else if (id === 2) {
             return {
+                action: game.input.keyboard.addKey(Phaser.Keyboard.U),
                 up: game.input.keyboard.addKey(Phaser.Keyboard.I),
                 down: game.input.keyboard.addKey(Phaser.Keyboard.K),
                 left: game.input.keyboard.addKey(Phaser.Keyboard.J),
                 right: game.input.keyboard.addKey(Phaser.Keyboard.L)
             }
         } else {
-            return game.input.keyboard.createCursorKeys();
+            const input = game.input.keyboard.createCursorKeys();
+            input.action = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+            return input;
         }
     }
 
@@ -109,19 +118,18 @@ export class Player {
         return {
             x: this.sprite.x,
             y: this.sprite.y,
-            inputEnabled: true,
-            gravityEnabled: true,
+            inputEnabled: this.inputEnabled,
+            gravityEnabled: this.sprite.body.moves,
             xVelocity: this.sprite.body.velocity.x,
             yVelocity: this.sprite.body.velocity.y,
             location: this.location,
-            position: this.position
+            position: this.position,
+            direction: this.sprite.scale.x < 0 ? directions.LEFT : directions.RIGHT,
+            animation: this.sprite.animations.name
         }
     }
 
-    applyState({ x, y, inputEnabled, gravityEnabled, xVelocity, yVelocity, location, position }) {
-        const isNumber = value => typeof(value) === 'number';
-        const isBool = value => typeof(value) === 'boolean';
-
+    applyState({ x, y, inputEnabled, gravityEnabled, xVelocity, yVelocity, location, position, direction, animation }) {
         if (isNumber(x)) {
             this.sprite.x = x;
         }
@@ -131,34 +139,46 @@ export class Player {
         }
 
         if (isBool(inputEnabled)) {
-            // TODO 
+            this.inputEnabled = inputEnabled;
         }
 
         if (isBool(gravityEnabled)) {
-            // TODO 
+            this.sprite.body.moves = gravityEnabled;
         }
 
         if (isNumber(xVelocity)) {
-            // TODO 
+            this.sprite.body.velocity.x = xVelocity;
         }
 
         if (isNumber(yVelocity)) {
-            // TODO 
+            this.sprite.body.velocity.y = yVelocity;
         }
 
         if (isNumber(location)) {
-            // TODO 
+            this.location = location;
         }
 
         if (isNumber(position)) {
-            // TODO
+            this.position = position;
+        }
+
+        if (isNumber(direction)) {
+            switch (direction) {
+                case directions.LEFT:
+                    this.sprite.scale.setTo(-1, 1);
+                    break;
+                case directions.RIGHT:
+                    this.sprite.scale.setTo(1, 1);
+                    break;
+            }
+        }
+
+        if (isString(animation)) {
+            if (animation === 'none') {
+                this.sprite.animations.stop();
+            } else {
+                this.sprite.animations.play(animation);
+            }
         }
     }
-}
-
-export const locations = {
-    PLATFORM: 0,
-    ROPE: 1,
-    AIR: 2,
-    PIT: 3
 }

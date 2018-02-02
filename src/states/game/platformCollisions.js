@@ -1,5 +1,5 @@
 import cfg from '../../gameConfig';
-import { locations } from '../../player';
+import { locations } from '../../enums/locations';
 
 const handlePlatformCollisions = (player, level) => {
     // TODO: Refactor this collision system

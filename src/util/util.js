@@ -1,3 +1,7 @@
 const now = () => new Date().getTime()
 
-export { now }
+const isNumber = value => typeof(value) === 'number';
+const isBool = value => typeof(value) === 'boolean';
+const isString = value => typeof(value) === 'string';
+
+export { now, isNumber, isBool, isString };
