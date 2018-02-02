@@ -1,6 +1,6 @@
-import { now } from '../util/util';
-import cfg from '../gameConfig';
-import { locations, Player } from '../player';
+import { now } from '../../util/util';
+import cfg from '../../gameConfig';
+import { locations, Player } from '../../player';
 
 let player1;
 

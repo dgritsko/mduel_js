@@ -2,9 +2,11 @@ import Queue from 'tinyqueue';
 import { now } from './util/util';
 
 export class Player {
-    constructor(spriteName, x, y) {
+    constructor(spriteName, x, y, id) {
         this.sprite = game.add.sprite(x, y, spriteName);
         this.configureSprite();
+
+        this.input = this.configureInput(id);
 
         this.sprite.animations.play('stand');
 
@@ -81,6 +83,26 @@ export class Player {
         game.physics.enable(this.sprite);
 
         this.sprite.body.setSize(this.sprite.width / 2, this.sprite.height - 16, this.sprite.width / 4, 8);
+    }
+
+    configureInput(id) {
+        if (id === 1) {
+            return {
+                up: game.input.keyboard.addKey(Phaser.Keyboard.W),
+                down: game.input.keyboard.addKey(Phaser.Keyboard.S),
+                left: game.input.keyboard.addKey(Phaser.Keyboard.A),
+                right: game.input.keyboard.addKey(Phaser.Keyboard.D)
+            }
+        } else if (id === 2) {
+            return {
+                up: game.input.keyboard.addKey(Phaser.Keyboard.I),
+                down: game.input.keyboard.addKey(Phaser.Keyboard.K),
+                left: game.input.keyboard.addKey(Phaser.Keyboard.J),
+                right: game.input.keyboard.addKey(Phaser.Keyboard.L)
+            }
+        } else {
+            return game.input.keyboard.createCursorKeys();
+        }
     }
 }
 

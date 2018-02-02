@@ -1,0 +1,5 @@
+const handlePowerupCollisions = () => {
+
+}
+
+export { handlePowerupCollisions }

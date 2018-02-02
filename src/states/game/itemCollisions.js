@@ -1,0 +1,5 @@
+const handleItemCollisions = () => {
+
+}
+
+export { handleItemCollisions }

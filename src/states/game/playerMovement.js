@@ -1,5 +1,5 @@
-import { locations } from '../player';
-import cfg from '../gameConfig';
+import { locations } from '../../player';
+import cfg from '../../gameConfig';
 
 const apply = (attr) => player => {
     if (attr.animation) {
@@ -201,7 +201,7 @@ const getCurrentInput = (player) => {
     };
 };
 
-const handleMovement = (player, level) => {
+const handlePlayerMovement = (player, level) => {
     let bestMatch = null;
     let bestScore = 0;
     let bestMatchIndex = -1;
@@ -245,4 +245,4 @@ const handleMovement = (player, level) => {
     }
 }
 
-export { handleMovement };
+export { handlePlayerMovement };
