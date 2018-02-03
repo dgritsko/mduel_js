@@ -4,7 +4,7 @@ export const animations = {
     CROUCH: 'crouch',
     CROUCHING: 'crouching',
     UNCROUCH: 'uncrouch',
-    LAND: 'land',
+    TRANSITION: 'transition',
     FORWARD_ROLL: 'forward_roll',
     BACKWARD_ROLL: 'backward_roll',
     //JUMP: 'jump',
