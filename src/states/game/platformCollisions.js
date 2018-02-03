@@ -22,7 +22,7 @@ const handlePlatformCollisions = (player, level) => {
     });
 
     if (!hitPlatform && player.location === locations.PLATFORM) {
-        player.applyState({ location: locations.PLATFORM, location: locations.AIR });
+        player.applyState({ location: locations.PLATFORM, location: locations.AIR, animation: animations.STAND_FALL });
     }
 }
 
