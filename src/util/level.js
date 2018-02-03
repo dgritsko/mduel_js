@@ -13,6 +13,11 @@ function generateRopes(platforms) {
     const isPlatform = (column, row) => (platforms.filter(p => p.row == row && p.column == column).length > 0)
 
     for (let i = 1; i < 18; i++) {
+        // Make sure the ropes don't spawn directly next to the fixed ropes
+        if ([3, 4, 13, 14].indexOf(i) > -1) {
+            continue;
+        }
+
         const options = [];
         if (isPlatform(i, 1) && isPlatform(i, 2)) {
             options.push({ column: i, row: 1, length: 2 });
