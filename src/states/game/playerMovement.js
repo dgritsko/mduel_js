@@ -10,6 +10,56 @@ const moveLeft = { direction: directions.LEFT, xVelocity: -cfg.runSpeed };
 const moveRight = { direction: directions.RIGHT, xVelocity: cfg.runSpeed };
 const moveJump = { yVelocity: -cfg.jumpSpeed, location: locations.AIR }
 
+const nearbyRope = (player, level) => {
+    const x = player.sprite.x;
+    const y = player.sprite.y + player.sprite.offsetY;
+    const ropes = level.ropes.filter(r => (r.x >= (x - cfg.ropeDist) && r.x <= (x + cfg.ropeDist))).filter(r => (y >= r.y && y <= (r.y + r.height + cfg.ropeDist)));
+
+    return ropes.length === 1 ? ropes[0] : null;
+}
+
+const score = (state, test) => {
+    const keys = Object.keys(test);
+
+    return {
+        actual: keys.filter(k => {
+            if (Array.isArray(test[k])) {
+                return test[k].indexOf(state[k]) > -1;
+            }
+
+            return state[k] === test[k]
+        }).length,
+        target: keys.length
+    };
+};
+
+const stayOnRope = player => {
+    if (player.rope) {
+        let { y } = player.getState();
+        y = Math.max(y, player.rope.top.y + player.sprite.offsetY - 8);
+        y = Math.min(y, player.rope.bottom.y - player.sprite.offsetY)
+        player.applyState({ y });
+    }   
+}
+
+const climbRope = (player, rope) => {
+    player.applyState({ location: locations.ROPE, x: rope.x });
+    player.rope = {
+        top: { x: rope.x, y: rope.y },
+        bottom: { x: rope.x, y: rope.y + rope.height }
+    }
+}
+
+const performRoll = direction => {
+    const runSpeed = direction === directions.LEFT ? -cfg.runSpeed : cfg.runSpeed;
+
+    return [
+        { animation: animations.FORWARD_ROLL, direction, xVelocity: runSpeed, position: positions.ROLLING },
+        { animation: animations.CROUCH, xVelocity: 0, position: positions.CROUCHING }
+    ];
+}
+
+
 const runLeft = {
     match: { location: locations.PLATFORM, left: true, down: false, position: [positions.DEFAULT, positions.CROUCHING] },
     act: Object.assign({ animation: animations.RUN }, basicState, moveLeft)
@@ -30,28 +80,21 @@ const jumpRight = {
     act: Object.assign({ animation: animations.RUN_JUMP }, basicState, moveRight, moveJump)
 }
 
-const nearbyRope = (player, level) => {
-    const x = player.sprite.x;
-    const y = player.sprite.y + player.sprite.offsetY;
-    const ropes = level.ropes.filter(r => (r.x >= (x - cfg.ropeDist) && r.x <= (x + cfg.ropeDist))).filter(r => (y >= r.y && y <= (r.y + r.height + cfg.ropeDist)));
-
-    return ropes.length === 1 ? ropes[0] : null;
-}
-
 const jumpUpOrClimb = {
     match: { location: locations.PLATFORM, position: positions.DEFAULT, up: true, left: false, right: false },
     act: (player, level) => {
         const rope = nearbyRope(player, level);
 
         if (rope) {
-            player.applyState({ location: locations.ROPE, x: rope.x });
-            player.rope = {
-                top: { x: rope.x, y: rope.y },
-                bottom: { x: rope.x, y: rope.y + rope.height }
-            }
+            climbRope(player, rope);
         } else {
             // TODO: Tweak jump animation
-            player.applyState({ animation: animations.STAND_JUMP, location: locations.AIR, position: positions.DEFAULT, yVelocity: -cfg.jumpSpeed })
+            player.queueEvents([
+                { animation: animations.TRANSITION },
+                { animation: animations.STAND_JUMP, location: locations.AIR, position: positions.DEFAULT, yVelocity: -cfg.jumpSpeed }
+            ])
+
+            
         }
     }
 };
@@ -61,29 +104,17 @@ const crouchOrClimb = {
     act: (player, level, state) => {
         const rope = nearbyRope(player, level);
 
-        if (rope && state.position === positions.DEFAULT) {
-            player.applyState({ location: locations.ROPE, x: rope.x });
-            player.rope = {
-                top: { x: rope.x, y: rope.y },
-                bottom: { x: rope.x, y: rope.y + rope.height }
-            }
+        if (rope && state.position === positions.DEFAULT && state.xVelocity == 0) {
+            climbRope(player, rope);
         } else {
-            if (state.xVelocity > 0) {
+            if (state.xVelocity != 0) {
                 // TODO: Automatically roll when landing on platform and pressing down with some x-momentum
+                player.queueEvents(performRoll(state.direction));
             } else {
                 player.applyState({ position: positions.CROUCHING, animation: animations.CROUCH, xVelocity: 0 })
             }
         }
     }
-}
-
-const stayOnRope = player => {
-    if (player.rope) {
-        let { y } = player.getState();
-        y = Math.max(y, player.rope.top.y + player.sprite.offsetY - 8);
-        y = Math.min(y, player.rope.bottom.y - player.sprite.offsetY)
-        player.applyState({ y });
-    }   
 }
 
 const climbUpRope = {
@@ -114,18 +145,12 @@ const fallOffRopeRight = {
 
 const rollLeft = {
     match: { location: locations.PLATFORM, position: positions.DEFAULT, down: true, left: true },
-    act: [
-        { animation: animations.FORWARD_ROLL, direction: directions.LEFT, xVelocity: -cfg.runSpeed, position: positions.ROLLING },
-        { animation: animations.CROUCH, xVelocity: 0, position: positions.CROUCHING }
-    ]
+    act: performRoll(directions.LEFT)
 }
 
 const rollRight = {
     match: { location: locations.PLATFORM, position: positions.DEFAULT, down: true, right: true },
-    act: [
-        { animation: animations.FORWARD_ROLL, direction: directions.RIGHT, xVelocity: cfg.runSpeed, position: positions.ROLLING },
-        { animation: animations.CROUCH, xVelocity: 0, position: positions.CROUCHING }
-    ]
+    act: performRoll(directions.RIGHT)
 }
 
 const behaviors = [
@@ -142,21 +167,6 @@ const behaviors = [
     rollLeft,
     rollRight,
 ];
-
-const score = (state, test) => {
-    const keys = Object.keys(test);
-
-    return {
-        actual: keys.filter(k => {
-            if (Array.isArray(test[k])) {
-                return test[k].indexOf(state[k]) > -1;
-            }
-
-            return state[k] === test[k]
-        }).length,
-        target: keys.length
-    };
-};
 
 const handlePlayerMovement = (player, level) => {
     let bestMatch = null;

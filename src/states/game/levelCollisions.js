@@ -1,5 +1,22 @@
-const handleLevelCollisions = () => {
+import cfg from '../../gameConfig';
+import { locations } from '../../enums/locations';
+import { animations } from '../../enums/animations';
 
+const handleLevelCollisions = player => {
+    if (player.location !== locations.AIR) {
+        return;
+    }
+
+    if ((player.sprite.x + (player.sprite.offsetX / 2)) <= 0) {
+        player.applyState({ animation: animations.BACKWARD_FALL, xVelocity: cfg.runSpeed })
+    } else if ((player.sprite.x + (player.sprite.offsetX / 2)) >= game.world.width) {
+        player.applyState({ animation: animations.BACKWARD_FALL, xVelocity: -cfg.runSpeed })
+    }
+
+    if (player.sprite.y > 500) {
+        // TODO: FIDS
+        player.sprite.y -= 500;
+    }
 }
 
 export { handleLevelCollisions }
