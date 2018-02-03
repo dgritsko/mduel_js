@@ -3,6 +3,7 @@ import { now, isBool, isNumber, isString } from './util/util';
 import { locations } from './enums/locations';
 import { positions } from './enums/positions';
 import { directions } from './enums/directions';
+import { animations } from './enums/animations';
 
 export class Player {
     constructor(spriteName, x, y, id) {
@@ -31,35 +32,35 @@ export class Player {
     configureSprite() {
         this.sprite.anchor.setTo(0.5);
 
-        this.sprite.animations.add('stand', [0], 0, false);
-        this.sprite.animations.add('run', [1,2,3,4], 12, true);
-        this.sprite.animations.add('crouch', [10,5], 15, false);
-        this.sprite.animations.add('uncrouch', [5,6], 12, false);
-        this.sprite.animations.add('land', [6], 0, false);
-        this.sprite.animations.add('forward_roll', [7,8,9], 10, false);
-        this.sprite.animations.add('backward_roll', [9,8,7], 10, false);
-        //this.sprite.animations.add('jump', [11,12,13,14,15,16,17], 10, true);
-        this.sprite.animations.add('stand_jump', [6,12,13,14,15,16, 6], 10, false);
-        this.sprite.animations.add('run_jump', [17,18,19,20], 4, false);
-        this.sprite.animations.add('stand_fall', [21], 0, true);
-        this.sprite.animations.add('fall_roll', [22,23,24,25], 4, false);
-        this.sprite.animations.add('forward_fall', [26,27], 10, true);
-        this.sprite.animations.add('backward_fall', [28,29], 10, true);
-        this.sprite.animations.add('shoot', [30,31], 2, false);
-        this.sprite.animations.add('grenade_toss', [32,33], 3, true);
-        this.sprite.animations.add('puck_toss', [34,35], 2, true);
-        this.sprite.animations.add('parachute', [36], 0, false);
-        this.sprite.animations.add('hook', [37,38], 2, true); // not sure if this is the right animation name
-        this.sprite.animations.add('climb', [39,40,41,42,43], 10, true);
-        this.sprite.animations.add('victory', [44,45], 2, true);
-        this.sprite.animations.add('rope_victory', [46,47], 2, true);
-        this.sprite.animations.add('disintegrate', [48,49,50,51,52,53], 10, true);
-        this.sprite.animations.add('vaporize', [54,55,56,57], 10, true);
-        this.sprite.animations.add('taunt', [58,59,60,61], 10, true);
-        this.sprite.animations.add('flex', [62,63], 2, false);
-        this.sprite.animations.add('magnet', [64,65], 2, false);
-        this.sprite.animations.add('empty', [66], 0, false);
-        this.sprite.animations.add('trapped', [67], 0, false);
+        this.sprite.animations.add(animations.STAND, [0], 0, false);
+        this.sprite.animations.add(animations.RUN, [1,2,3,4], 12, true);
+        this.sprite.animations.add(animations.CROUCH, [10,5], 15, false);
+        this.sprite.animations.add(animations.UNCROUCH, [5,6], 12, false);
+        this.sprite.animations.add(animations.LAND, [6], 0, false);
+        this.sprite.animations.add(animations.FORWARD_ROLL, [7,8,9], 10, false);
+        this.sprite.animations.add(animations.BACKWARD_ROLL, [9,8,7], 10, false);
+        //this.sprite.animations.add(animations.JUMP, [11,12,13,14,15,16,17], 10, true);
+        this.sprite.animations.add(animations.STAND_JUMP, [6,12,13,14,15,16, 6], 10, false);
+        this.sprite.animations.add(animations.RUN_JUMP, [17,18,19,20], 4, false);
+        this.sprite.animations.add(animations.STAND_FALL, [21], 0, true);
+        this.sprite.animations.add(animations.FALL_ROLL, [22,23,24,25], 4, false);
+        this.sprite.animations.add(animations.FORWARD_FALL, [26,27], 10, true);
+        this.sprite.animations.add(animations.BACKWARD_FALL, [28,29], 10, true);
+        this.sprite.animations.add(animations.SHOOT, [30,31], 2, false);
+        this.sprite.animations.add(animations.GRENADE_TOSS, [32,33], 3, true);
+        this.sprite.animations.add(animations.PUCK_TOSS, [34,35], 2, true);
+        this.sprite.animations.add(animations.PARACHUTE, [36], 0, false);
+        this.sprite.animations.add(animations.HOOK, [37,38], 2, true); // not sure if this is the right animation name
+        this.sprite.animations.add(animations.CLIMB, [39,40,41,42,43], 10, true);
+        this.sprite.animations.add(animations.VICTORY, [44,45], 2, true);
+        this.sprite.animations.add(animations.ROPE_VICTORY, [46,47], 2, true);
+        this.sprite.animations.add(animations.DISINTEGRATE, [48,49,50,51,52,53], 10, true);
+        this.sprite.animations.add(animations.VAPORIZE, [54,55,56,57], 10, true);
+        this.sprite.animations.add(animations.TAUNT, [58,59,60,61], 10, true);
+        this.sprite.animations.add(animations.FLEX, [62,63], 2, false);
+        this.sprite.animations.add(animations.MAGNET, [64,65], 2, false);
+        this.sprite.animations.add(animations.EMPTY, [66], 0, false);
+        this.sprite.animations.add(animations.TRAPPED, [67], 0, false);
 
         // Jump up
         //this.sprite.animations.add('custom1', [6, 12, 13, 14, 15, 16, 6], 8, true);

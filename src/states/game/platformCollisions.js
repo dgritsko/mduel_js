@@ -1,5 +1,6 @@
 import cfg from '../../gameConfig';
 import { locations } from '../../enums/locations';
+import { animations } from '../../enums/animations';
 
 const handlePlatformCollisions = (player, level) => {
     // TODO: Refactor this collision system
@@ -23,16 +24,16 @@ const handlePlatformCollisions = (player, level) => {
     if (!hitPlatform) {
         switch (player.location) {
             case locations.PLATFORM:
-                player.sprite.animations.play('stand_fall');
+                player.sprite.animations.play(animations.STAND_FALL);
                 player.location = locations.AIR;
                 break;
             case locations.AIR:
                 if ((player.sprite.x + (player.sprite.offsetX / 2)) <= 0) {
                     player.sprite.body.velocity.x = Math.abs(player.sprite.body.velocity.x);
-                    player.sprite.animations.play('backward_fall');
+                    player.sprite.animations.play(animations.BACKWARD_FALL);
                 } else if ((player.sprite.x + (player.sprite.offsetX / 2)) >= game.world.width) {
                     player.sprite.body.velocity.x = -Math.abs(player.sprite.body.velocity.x);
-                    player.sprite.animations.play('backward_fall');
+                    player.sprite.animations.play(animations.FORWARD_FALL);
                 }
 
                 if (player.sprite.y > 500) {
