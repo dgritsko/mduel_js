@@ -5,7 +5,7 @@ import { animations } from '../../enums/animations';
 const handlePlatformCollisions = (player, level) => {
     // TODO: Refactor this collision system
     const hitPlatform = game.physics.arcade.collide(player.sprite, level.platforms, (_, platform) => {
-        if (player.location !== locations.PLATFORM || player.location !== locations.ROPE) {
+        if (player.location !== locations.PLATFORM && player.location !== locations.ROPE) {
             player.applyState({ location: locations.PLATFORM, animation: animations.STAND });    
         }
         
