@@ -82,19 +82,21 @@ const jumpRight = {
 
 const jumpUpOrClimb = {
     match: { location: locations.PLATFORM, position: positions.DEFAULT, up: true, left: false, right: false },
-    act: (player, level) => {
+    act: (player, level, state) => {
         const rope = nearbyRope(player, level);
 
-        if (rope) {
+        if (rope && state.xVelocity === 0) {
             climbRope(player, rope);
         } else {
             // TODO: Tweak jump animation
-            player.queueEvents([
-                { animation: animations.TRANSITION },
-                { animation: animations.STAND_JUMP, location: locations.AIR, position: positions.DEFAULT, yVelocity: -cfg.jumpSpeed }
-            ])
-
-            
+            if (state.xVelocity === 0) {
+                player.queueEvents([
+                    { animation: animations.TRANSITION },
+                    { animation: animations.STAND_JUMP, location: locations.AIR, position: positions.DEFAULT, yVelocity: -cfg.jumpSpeed }
+                ])
+            } else {
+                player.applyState({ xVelocity: 0})
+            }
         }
     }
 };
