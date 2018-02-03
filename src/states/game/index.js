@@ -22,10 +22,10 @@ function create() {
     // const player1 = new Player('player1', 100, 100);
     // const player2 = new Player('player2', game.world.width - 100, 100);
     const player1 = new Player('player1', 60, 300, 1);
-    const player2 = new Player('player2', 160, 300, 2);
+    //const player2 = new Player('player2', 160, 300, 2);
 
     players.push(player1);
-    players.push(player2);
+    // players.push(player2);
 }
 
 function update() {

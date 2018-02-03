@@ -2,11 +2,12 @@ export const animations = {
     STAND: 'stand',
     RUN: 'run',
     CROUCH: 'crouch',
+    CROUCHING: 'crouching',
     UNCROUCH: 'uncrouch',
     LAND: 'land',
     FORWARD_ROLL: 'forward_roll',
     BACKWARD_ROLL: 'backward_roll',
-    JUMP: 'jump',
+    //JUMP: 'jump',
     STAND_JUMP: 'stand_jump',
     RUN_JUMP: 'run_jump',
     STAND_FALL: 'stand_fall',
@@ -28,4 +29,5 @@ export const animations = {
     MAGNET: 'magnet',
     EMPTY: 'empty',
     TRAPPED: 'trapped',
+    NONE: 'none' // special: stops current animation
 }

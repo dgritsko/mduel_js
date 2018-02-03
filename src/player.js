@@ -22,11 +22,29 @@ export class Player {
     }
 
     updateEvents() {
-        const next = this.eventQueue.peek();
-        if (next && next.time <= now()) {
-            this.eventQueue.pop();
-            next.event();
+        if (this.eventQueue.length === 0) {
+            return;
         }
+
+        const next = this.eventQueue.peek();
+
+        if (this.sprite.animations.currentAnim.isFinished) {
+            this.eventQueue.pop();
+            this.applyState(next);
+        }
+    }
+
+    queueEvents(events) {
+        if (events.length === 0) {
+            this.eventQueue = new Queue();
+            return;
+        }
+
+        const head = events[0];
+        const tail = events.slice(1);
+
+        this.applyState(head);
+        this.eventQueue = new Queue(tail);
     }
 
     configureSprite() {
@@ -35,13 +53,14 @@ export class Player {
         this.sprite.animations.add(animations.STAND, [0], 0, false);
         this.sprite.animations.add(animations.RUN, [1,2,3,4], 12, true);
         this.sprite.animations.add(animations.CROUCH, [10,5], 15, false);
+        this.sprite.animations.add(animations.CROUCHED, [5], 0, false);
         this.sprite.animations.add(animations.UNCROUCH, [5,6], 12, false);
-        this.sprite.animations.add(animations.LAND, [6], 0, false);
+        this.sprite.animations.add(animations.TRANSITION, [6], 0, false);
         this.sprite.animations.add(animations.FORWARD_ROLL, [7,8,9], 10, false);
         this.sprite.animations.add(animations.BACKWARD_ROLL, [9,8,7], 10, false);
         //this.sprite.animations.add(animations.JUMP, [11,12,13,14,15,16,17], 10, true);
         this.sprite.animations.add(animations.STAND_JUMP, [6,12,13,14,15,16, 6], 10, false);
-        this.sprite.animations.add(animations.RUN_JUMP, [17,18,19,20], 4, false);
+        this.sprite.animations.add(animations.RUN_JUMP, [17,18,19,20], 10, false);
         this.sprite.animations.add(animations.STAND_FALL, [21], 0, true);
         this.sprite.animations.add(animations.FALL_ROLL, [22,23,24,25], 4, false);
         this.sprite.animations.add(animations.FORWARD_FALL, [26,27], 10, true);
@@ -120,7 +139,6 @@ export class Player {
             x: this.sprite.x,
             y: this.sprite.y,
             inputEnabled: this.inputEnabled,
-            gravityEnabled: this.sprite.body.moves,
             xVelocity: this.sprite.body.velocity.x,
             yVelocity: this.sprite.body.velocity.y,
             location: this.location,
@@ -130,7 +148,23 @@ export class Player {
         }
     }
 
-    applyState({ x, y, inputEnabled, gravityEnabled, xVelocity, yVelocity, location, position, direction, animation }) {
+    getInput() {
+        const left = this.input.left.isDown
+        const right = this.input.right.isDown
+        const up = this.input.up.isDown
+        const down = this.input.down.isDown
+        const anyInput = left || right || up || down;
+
+        return { 
+            left,
+            right,
+            up,
+            down,
+            anyInput
+        };
+    }
+
+    applyState({ x, y, dx, dy, inputEnabled, xVelocity, yVelocity, location, position, direction, animation }) {
         if (isNumber(x)) {
             this.sprite.x = x;
         }
@@ -139,12 +173,16 @@ export class Player {
             this.sprite.y = y;
         }
 
-        if (isBool(inputEnabled)) {
-            this.inputEnabled = inputEnabled;
+        if (isNumber(dx)) {
+            this.sprite.x += dx;
         }
 
-        if (isBool(gravityEnabled)) {
-            this.sprite.body.moves = gravityEnabled;
+        if (isNumber(dy)) {
+            this.sprite.y += dy;
+        }
+
+        if (isBool(inputEnabled)) {
+            this.inputEnabled = inputEnabled;
         }
 
         if (isNumber(xVelocity)) {
@@ -157,6 +195,15 @@ export class Player {
 
         if (isNumber(location)) {
             this.location = location;
+
+            switch (location) {
+                case locations.ROPE:
+                    this.sprite.body.moves = false;
+                    break;
+                default: 
+                    this.sprite.body.moves = true;
+                    break;
+            }
         }
 
         if (isNumber(position)) {
@@ -175,9 +222,9 @@ export class Player {
         }
 
         if (isString(animation)) {
-            if (animation === 'none') {
+            if (animation === animations.NONE) {
                 this.sprite.animations.stop();
-            } else {
+            } else if (this.sprite.animations.currentAnim.name !== animation || this.sprite.animations.currentAnim.loop) {
                 this.sprite.animations.play(animation);
             }
         }
