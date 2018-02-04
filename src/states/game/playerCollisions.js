@@ -3,15 +3,41 @@ import { locations } from "../../enums/locations";
 import { animations } from "../../enums/animations";
 import { matchingProps } from "../../util/util";
 
+const running = {
+    location: locations.PLATFORM,
+    xVelocity: [cfg.runSpeed, -cfg.runSpeed]
+};
+const standing = { location: locations.PLATFORM, xVelocity: 0 };
+
+const climbing = { location: locations.ROPE };
+
 const behaviors = [
     {
         match: {
-            first: { location: locations.PLATFORM, xVelocity: cfg.runSpeed },
-            second: { location: locations.PLATFORM, xVelocity: 0 }
+            first: running,
+            second: running
         },
         act: (player, otherPlayer) => {
+            player.applyState({
+                xVelocity: -player.getState().xVelocity,
+                yVelocity: -200,
+                animation: animations.STAND_FALL,
+                location: locations.AIR
+            });
+
             otherPlayer.applyState({
-                xVelocity: 200,
+                xVelocity: -otherPlayer.getState().xVelocity,
+                yVelocity: -200,
+                animation: animations.STAND_FALL,
+                location: locations.AIR
+            });
+        }
+    },
+    {
+        match: { first: running, second: standing },
+        act: (player, otherPlayer) => {
+            otherPlayer.applyState({
+                xVelocity: player.getState().xVelocity,
                 yVelocity: -200,
                 animation: animations.STAND_FALL,
                 location: locations.AIR
