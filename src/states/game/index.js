@@ -1,13 +1,13 @@
-import cfg from '../../gameConfig';
-import { locations, Player } from '../../player';
-import { makeLevel } from '../../gameutil/level';
-import { handlePlayerMovement } from './playerMovement';
-import { handlePlatformCollisions } from './platformCollisions';
-import { handlePlayerCollisions } from './playerCollisions';
-import { handleItemCollisions } from './itemCollisions'
-import { handleLevelCollisions } from './levelCollisions';
-import { handleItemUsage } from './itemUsage';
-import { handlePowerupCollisions } from './powerupCollisions';
+import cfg from "../../gameConfig";
+import { locations, Player } from "../../player";
+import { makeLevel } from "../../gameutil/level";
+import { handlePlayerMovement } from "./playerMovement";
+import { handlePlatformCollisions } from "./platformCollisions";
+import { handlePlayerCollisions } from "./playerCollisions";
+import { handleItemCollisions } from "./itemCollisions";
+import { handleLevelCollisions } from "./levelCollisions";
+import { handleItemUsage } from "./itemUsage";
+import { handlePowerupCollisions } from "./powerupCollisions";
 
 let level;
 const players = [];
@@ -18,14 +18,14 @@ function create() {
     game.physics.arcade.gravity.y = cfg.gravity;
 
     level = makeLevel();
-    
+
     // const player1 = new Player('player1', 100, 100);
     // const player2 = new Player('player2', game.world.width - 100, 100);
-    const player1 = new Player('player1', 60, 300, 1);
-    //const player2 = new Player('player2', 160, 300, 2);
+    const player1 = new Player("player1", 60, 300, 1);
+    const player2 = new Player("player2", 160, 300, 2);
 
     players.push(player1);
-    // players.push(player2);
+    players.push(player2);
 }
 
 function update() {
@@ -43,12 +43,21 @@ function update() {
 
     // handle item usage on action keypress (NOT if key was pressed prior to this)
 
-    players.forEach(player => {
+    function except(items, index) {
+        const before = items.slice(0, index);
+        const after = items.slice(index + 1);
+
+        return [...before, ...after];
+    }
+
+    players.forEach((player, index) => {
+        const otherPlayers = except(players, index);
+
         const state = player.getState();
 
         handlePlatformCollisions(player, level);
 
-        handlePlayerCollisions(player);
+        handlePlayerCollisions(player, otherPlayers);
 
         handleItemCollisions(player);
 
@@ -64,12 +73,12 @@ function update() {
     });
 
     const debug = JSON.stringify(players[0].getState());
-    game.debug.text(debug.substr(0, 60), 2, 14, '#ff0000')
-    game.debug.text(debug.substr(60, 60), 2, 30, '#ff0000')
-    game.debug.text(debug.substr(120, 60), 2, 46, '#ff0000')
-    
+    game.debug.text(debug.substr(0, 60), 2, 14, "#ff0000");
+    game.debug.text(debug.substr(60, 60), 2, 30, "#ff0000");
+    game.debug.text(debug.substr(120, 60), 2, 46, "#ff0000");
+
     //game.debug.text(player1.sprite.animations, 2, 14, '#ff0000');
     //game.debug.body(player1.sprite);
 }
 
-export default {create: create, update: update};
+export default { create: create, update: update };
