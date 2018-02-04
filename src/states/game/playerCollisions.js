@@ -1,16 +1,63 @@
 import cfg from "../../gameConfig";
-import { locations } from "../../player";
+import { locations } from "../../enums/locations";
+import { animations } from "../../enums/animations";
+import { matchingProps } from "../../util/util";
+
+const behaviors = [
+    {
+        match: {
+            first: { location: locations.PLATFORM, xVelocity: cfg.runSpeed },
+            second: { location: locations.PLATFORM, xVelocity: 0 }
+        },
+        act: (player, otherPlayer) => {
+            otherPlayer.applyState({
+                xVelocity: 200,
+                yVelocity: -200,
+                animation: animations.STAND_FALL,
+                location: locations.AIR
+            });
+        }
+    }
+];
 
 const handlePlayerCollisions = (player, otherPlayers) => {
+    const playerState = player.getState();
+
     otherPlayers.forEach(otherPlayer => {
+        const otherPlayerState = otherPlayer.getState();
+
+        let behavior = null;
+
         const hitPlayer = game.physics.arcade.overlap(
             player.sprite,
             otherPlayer.sprite,
             (playerSprite, otherPlayerSprite) => {
-                console.log("hit");
+                if (behavior) {
+                    behavior.act(player, otherPlayer);
+                }
             },
             (playerSprite, otherPlayerSprite) => {
-                return true;
+                for (let i = 0; i < behaviors.length; i++) {
+                    behavior = behaviors[i];
+
+                    const playerProps = matchingProps(
+                        playerState,
+                        behavior.match.first || {}
+                    );
+                    const otherPlayerProps = matchingProps(
+                        otherPlayerState,
+                        behavior.match.second || {}
+                    );
+
+                    if (
+                        playerProps.actual === playerProps.target &&
+                        otherPlayerProps.actual === otherPlayerProps.target
+                    ) {
+                        return true;
+                    }
+                }
+
+                return false;
             }
         );
     });

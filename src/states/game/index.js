@@ -27,14 +27,14 @@ function create() {
     players.push(player1);
     players.push(player2);
 
-    const text = game.add.bitmapText(
-        game.world.centerX,
-        game.world.centerY,
-        "mduel",
-        "Percy vs. Clifford",
-        32
-    );
-    text.tint = 0xa439a4;
+    // const text = game.add.bitmapText(
+    //     game.world.centerX,
+    //     game.world.centerY,
+    //     "mduel",
+    //     "Percy vs. Clifford",
+    //     32
+    // );
+    // text.tint = 0xa439a4;
 }
 
 function update() {
