@@ -14,7 +14,8 @@ const handlePlatformCollisions = (player, level) => {
             ) {
                 player.applyState({
                     location: locations.PLATFORM,
-                    animation: animations.STAND
+                    animation: animations.STAND,
+                    inputEnabled: true
                 });
             }
         },

@@ -30,7 +30,12 @@ export class Player {
 
         const next = this.eventQueue.peek();
 
-        if (this.sprite.animations.currentAnim.isFinished) {
+        const shouldAdvance =
+            (typeof next.after === "undefined" &&
+                this.sprite.animations.currentAnim.isFinished) ||
+            next.after < now();
+
+        if (shouldAdvance) {
             this.eventQueue.pop();
             this.applyState(next);
         }
