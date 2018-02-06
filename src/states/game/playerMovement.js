@@ -64,7 +64,7 @@ const runLeft = {
         down: false,
         position: [positions.DEFAULT, positions.CROUCHING]
     },
-    act: Object.assign({ animation: animations.RUN }, basicState, moveLeft)
+    update: Object.assign({ animation: animations.RUN }, basicState, moveLeft)
 };
 
 const runRight = {
@@ -74,7 +74,7 @@ const runRight = {
         down: false,
         position: [positions.DEFAULT, positions.CROUCHING]
     },
-    act: Object.assign({ animation: animations.RUN }, basicState, moveRight)
+    update: Object.assign({ animation: animations.RUN }, basicState, moveRight)
 };
 
 const jumpLeft = {
@@ -85,7 +85,7 @@ const jumpLeft = {
         down: false,
         position: positions.DEFAULT
     },
-    act: Object.assign(
+    update: Object.assign(
         { animation: animations.RUN_JUMP },
         basicState,
         moveLeft,
@@ -101,7 +101,7 @@ const jumpRight = {
         down: false,
         position: positions.DEFAULT
     },
-    act: Object.assign(
+    update: Object.assign(
         { animation: animations.RUN_JUMP },
         basicState,
         moveRight,
@@ -117,7 +117,7 @@ const jumpUpOrClimb = {
         left: false,
         right: false
     },
-    act: (player, level, state) => {
+    update: (player, level, state) => {
         const rope = nearbyRope(player, level);
 
         if (rope && state.xVelocity === 0) {
@@ -148,7 +148,7 @@ const crouchOrClimb = {
         left: false,
         right: false
     },
-    act: (player, level, state) => {
+    update: (player, level, state) => {
         const rope = nearbyRope(player, level);
 
         if (
@@ -174,7 +174,7 @@ const crouchOrClimb = {
 
 const climbUpRope = {
     match: { location: locations.ROPE, up: true },
-    act: (player, level) => {
+    update: (player, level) => {
         player.applyState({
             animation: animations.CLIMB,
             position: positions.DEFAULT,
@@ -186,7 +186,7 @@ const climbUpRope = {
 
 const climbDownRope = {
     match: { location: locations.ROPE, down: true },
-    act: (player, level) => {
+    update: (player, level) => {
         player.applyState({
             animation: animations.CLIMB,
             position: positions.DEFAULT,
@@ -198,7 +198,7 @@ const climbDownRope = {
 
 const fallOffRopeLeft = {
     match: { location: locations.ROPE, left: true },
-    act: Object.assign(
+    update: Object.assign(
         { animation: animations.STAND_FALL, location: locations.AIR },
         basicState,
         moveLeft
@@ -207,7 +207,7 @@ const fallOffRopeLeft = {
 
 const fallOffRopeRight = {
     match: { location: locations.ROPE, right: true },
-    act: Object.assign(
+    update: Object.assign(
         { animation: animations.STAND_FALL, location: locations.AIR },
         basicState,
         moveRight
@@ -221,7 +221,7 @@ const rollLeft = {
         down: true,
         left: true
     },
-    act: performRoll(directions.LEFT)
+    update: performRoll(directions.LEFT)
 };
 
 const rollRight = {
@@ -231,7 +231,7 @@ const rollRight = {
         down: true,
         right: true
     },
-    act: performRoll(directions.RIGHT)
+    update: performRoll(directions.RIGHT)
 };
 
 const behaviors = [
@@ -273,13 +273,7 @@ const handlePlayerMovement = (player, level) => {
         }
 
         if (bestMatch && bestScore > 0) {
-            if (Array.isArray(bestMatch.act)) {
-                player.queueEvents(bestMatch.act);
-            } else if (typeof bestMatch.act === "function") {
-                bestMatch.act(player, level, playerState);
-            } else if (typeof bestMatch.act === "object") {
-                player.applyState(bestMatch.act);
-            }
+            player.update(bestMatch.update, level, playerState);
         }
     }
 

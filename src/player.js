@@ -249,6 +249,16 @@ export class Player {
         };
     }
 
+    update(toUpdate, level, state) {
+        if (Array.isArray(toUpdate)) {
+            this.queueEvents(toUpdate);
+        } else if (typeof toUpdate === "function") {
+            toUpdate(this, level, state);
+        } else if (typeof toUpdate === "object") {
+            this.applyState(toUpdate);
+        }
+    }
+
     applyState({
         x,
         y,
