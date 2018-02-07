@@ -23,6 +23,24 @@ const getDirectionVelocity = d => {
     }
 };
 
+const shouldCollide = (first, second) => {
+    const left = first.x < second.x ? first : second;
+    const right = first.x < second.x ? second : first;
+
+    const top = first.y < second.y ? first : second;
+    const bottom = first.y < second.y ? second : first;
+
+    const shouldCollideX =
+        (left.xVelocity > 0 && right.xVelocity <= 0) ||
+        (left.xVelocity >= 0 && right.xVelocity < 0);
+
+    const shouldCollideY =
+        (top.yVelocity > 0 && bottom.yVelocity <= 0) ||
+        (top.yVelocity >= 0 && bottom.yVelocity < 0);
+
+    return shouldCollideX || shouldCollideY;
+};
+
 const runningVsRunning = {
     match: {
         first: running,
@@ -140,7 +158,7 @@ const handlePlayerCollisions = (player, otherPlayers) => {
 
         let behavior = null;
 
-        const hitPlayer = game.physics.arcade.collide(
+        const hitPlayer = game.physics.arcade.overlap(
             player.sprite,
             otherPlayer.sprite,
             (playerSprite, otherPlayerSprite) => {
@@ -149,6 +167,10 @@ const handlePlayerCollisions = (player, otherPlayers) => {
                 }
             },
             (playerSprite, otherPlayerSprite) => {
+                if (!shouldCollide(player.getState(), otherPlayer.getState())) {
+                    return false;
+                }
+
                 for (let i = 0; i < behaviors.length; i++) {
                     behavior = behaviors[i];
 
