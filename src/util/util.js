@@ -19,4 +19,21 @@ const matchingProps = (state, test) => {
     };
 };
 
-export { now, isNumber, isBool, isString, matchingProps };
+const debugRender = obj => {
+    //const text = JSON.stringify(obj);
+    // const width = 66;
+    // for (let i = 0; i < text.length / width; i++) {
+    //     const substr = text.substr(i * width, (i + 1) * width);
+    //     game.debug.text(substr, 2, 14 + i * 16, "#ff0000");
+    // }
+
+    const keys = Object.keys(obj);
+    let text = "";
+    let parts = keys.map(k => `${k}: ${obj[k]}`);
+
+    for (let i = 0; i < parts.length; i++) {
+        game.debug.text(parts[i], 2, 14 + i * 16, "#ff0000");
+    }
+};
+
+export { now, isNumber, isBool, isString, matchingProps, debugRender };

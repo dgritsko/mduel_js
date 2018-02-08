@@ -82,11 +82,6 @@ function update() {
         playerSnapshot.player.updateEvents();
     });
 
-    const debug = JSON.stringify(players[0].getState());
-    game.debug.text(debug.substr(0, 60), 2, 14, "#ff0000");
-    game.debug.text(debug.substr(60, 60), 2, 30, "#ff0000");
-    game.debug.text(debug.substr(120, 60), 2, 46, "#ff0000");
-
     //game.debug.text(player1.sprite.animations, 2, 14, '#ff0000');
     //game.debug.body(player1.sprite);
 }
