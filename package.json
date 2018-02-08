@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "phaser-ce": "^2.10.0",
+    "ramda": "^0.25.0",
     "tinyqueue": "^1.2.3"
   }
 }
