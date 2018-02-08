@@ -2,7 +2,9 @@ import cfg from "../../gameConfig";
 import { locations } from "../../enums/locations";
 import { animations } from "../../enums/animations";
 
-const handlePlatformCollisions = (player, level) => {
+const handlePlatformCollisions = (snapshot, level) => {
+    const player = snapshot.player;
+
     // TODO: Refactor this collision system
     const hitPlatform = game.physics.arcade.collide(
         player.sprite,

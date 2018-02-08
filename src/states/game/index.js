@@ -8,6 +8,7 @@ import { handleItemCollisions } from "./itemCollisions";
 import { handleLevelCollisions } from "./levelCollisions";
 import { handleItemUsage } from "./itemUsage";
 import { handlePowerupCollisions } from "./powerupCollisions";
+import { PlayerSnapshot } from "../../playerSnapshot";
 
 let level;
 const players = [];
@@ -59,26 +60,26 @@ function update() {
         return [...before, ...after];
     }
 
-    players.forEach((player, index) => {
-        const otherPlayers = except(players, index);
+    const playerSnapshots = players.map(p => new PlayerSnapshot(p));
 
-        const state = player.getState();
+    playerSnapshots.forEach((playerSnapshot, index) => {
+        const otherPlayerSnapshots = except(playerSnapshots, index);
 
-        handlePlatformCollisions(player, level);
+        handlePlatformCollisions(playerSnapshot, level);
 
-        handlePlayerCollisions(player, otherPlayers);
+        handlePlayerCollisions(playerSnapshot, otherPlayerSnapshots);
 
-        handleItemCollisions(player);
+        handleItemCollisions(playerSnapshot);
 
-        handlePowerupCollisions(player);
+        handlePowerupCollisions(playerSnapshot);
 
-        handleLevelCollisions(player);
+        handleLevelCollisions(playerSnapshot);
 
-        handleItemUsage(player);
+        handleItemUsage(playerSnapshot);
 
-        handlePlayerMovement(player, level);
+        handlePlayerMovement(playerSnapshot, level);
 
-        player.updateEvents();
+        playerSnapshot.player.updateEvents();
     });
 
     const debug = JSON.stringify(players[0].getState());

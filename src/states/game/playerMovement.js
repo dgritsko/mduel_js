@@ -249,18 +249,18 @@ const behaviors = [
     rollRight
 ];
 
-const handlePlayerMovement = (player, level) => {
+const handlePlayerMovement = (playerSnapshot, level) => {
+    const { player, state } = playerSnapshot;
+
     let bestMatch = null;
     let bestScore = 0;
     let bestMatchIndex = -1;
 
-    const playerState = Object.assign({}, player.getState(), player.getInput());
-
-    if (playerState.inputEnabled && playerState.anyInput) {
+    if (state.inputEnabled && state.anyInput) {
         for (let i = 0; i < behaviors.length; i++) {
             const behavior = behaviors[i];
 
-            const behaviorScore = matchingProps(playerState, behavior.match);
+            const behaviorScore = matchingProps(state, behavior.match);
 
             if (
                 behaviorScore.actual === behaviorScore.target &&
@@ -273,17 +273,17 @@ const handlePlayerMovement = (player, level) => {
         }
 
         if (bestMatch && bestScore > 0) {
-            player.update(bestMatch.update, level, playerState);
+            player.update(bestMatch.update, level, state);
         }
     }
 
     if (
         !bestMatch &&
         player.eventQueue.length === 0 &&
-        !playerState.anyInput &&
-        playerState.inputEnabled
+        !state.anyInput &&
+        state.inputEnabled
     ) {
-        switch (playerState.location) {
+        switch (state.location) {
             case locations.PLATFORM:
                 player.applyState({
                     animation: animations.STAND,

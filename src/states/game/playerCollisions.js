@@ -150,11 +150,13 @@ const behaviors = [
     airVsStanding
 ];
 
-const handlePlayerCollisions = (player, otherPlayers) => {
-    const playerState = player.getState();
+const handlePlayerCollisions = (playerSnapshot, otherPlayerSnapshots) => {
+    const player = playerSnapshot.player;
+    const playerState = playerSnapshot.state;
 
-    otherPlayers.forEach(otherPlayer => {
-        const otherPlayerState = otherPlayer.getState();
+    otherPlayerSnapshots.forEach(otherPlayerSnapshot => {
+        const otherPlayer = otherPlayerSnapshot.player;
+        const otherPlayerState = otherPlayerSnapshot.state;
 
         let behavior = null;
 
