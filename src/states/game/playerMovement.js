@@ -277,7 +277,12 @@ const handlePlayerMovement = (player, level) => {
         }
     }
 
-    if (!bestMatch && player.eventQueue.length === 0 && !playerState.anyInput) {
+    if (
+        !bestMatch &&
+        player.eventQueue.length === 0 &&
+        !playerState.anyInput &&
+        playerState.inputEnabled
+    ) {
         switch (playerState.location) {
             case locations.PLATFORM:
                 player.applyState({
