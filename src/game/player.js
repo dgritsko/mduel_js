@@ -1,9 +1,9 @@
 import Queue from "tinyqueue";
-import { now, isBool, isNumber, isString } from "./util/util";
-import { locations } from "./enums/locations";
-import { positions } from "./enums/positions";
-import { directions } from "./enums/directions";
-import { animations } from "./enums/animations";
+import { now, isBool, isNumber, isString } from "./util";
+import { locations } from "../enums/locations";
+import { positions } from "../enums/positions";
+import { directions } from "../enums/directions";
+import { animations } from "../enums/animations";
 
 export class Player {
     constructor(spriteName, x, y, id) {

@@ -1,10 +1,9 @@
 import { locations } from "../../enums/locations";
 import { animations } from "../../enums/animations";
-import cfg from "../../gameConfig";
+import cfg from "../config";
 import { directions } from "../../enums/directions";
 import { positions } from "../../enums/positions";
-import index from "./index";
-import { matchingProps } from "../../util/util";
+import { matchingProps } from "../util";
 
 const basicState = { position: positions.DEFAULT };
 const moveLeft = { direction: directions.LEFT, xVelocity: -cfg.runSpeed };

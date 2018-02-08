@@ -1,7 +1,7 @@
-import cfg from "../../gameConfig";
+import cfg from "../config";
 import { locations } from "../../enums/locations";
 import { animations } from "../../enums/animations";
-import { matchingProps, now, debugRender } from "../../util/util";
+import { matchingProps, now, debugRender } from "../util";
 import { directions } from "../../enums/directions";
 
 const running = {

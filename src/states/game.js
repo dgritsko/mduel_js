@@ -1,14 +1,14 @@
-import cfg from "../../gameConfig";
-import { locations, Player } from "../../player";
-import { makeLevel } from "../../gameutil/level";
-import { handlePlayerMovement } from "./playerMovement";
-import { handlePlatformCollisions } from "./platformCollisions";
-import { handlePlayerCollisions } from "./playerCollisions";
-import { handleItemCollisions } from "./itemCollisions";
-import { handleLevelCollisions } from "./levelCollisions";
-import { handleItemUsage } from "./itemUsage";
-import { handlePowerupCollisions } from "./powerupCollisions";
-import { PlayerSnapshot } from "../../playerSnapshot";
+import cfg from "../game/config";
+import { Player } from "../game/player";
+import { makeLevel } from "../game/generateLevel";
+import { handlePlayerMovement } from "../game/update/playerMovement";
+import { handlePlatformCollisions } from "../game/update/platformCollisions";
+import { handlePlayerCollisions } from "../game/update/playerCollisions";
+import { handleItemCollisions } from "../game/update/itemCollisions";
+import { handleLevelCollisions } from "../game/update/levelCollisions";
+import { handleItemUsage } from "../game/update/itemUsage";
+import { handlePowerupCollisions } from "../game/update/powerupCollisions";
+import { PlayerSnapshot } from "../game/playerSnapshot";
 
 let level;
 const players = [];
@@ -39,20 +39,6 @@ function create() {
 }
 
 function update() {
-    // each player:
-    // 1. collide with platforms.
-    // 2. collide with other players
-    // 3. collide with items
-    // 4. collide with powerups
-    // 5. collide with pit
-    // 6. collide with walls
-
-    // then, if input enabled and on rope or platform:
-    // 1. handle input appropriately
-    // 2. if no input, then use default behavior for rope or platform
-
-    // handle item usage on action keypress (NOT if key was pressed prior to this)
-
     function except(items, index) {
         const before = items.slice(0, index);
         const after = items.slice(index + 1);
@@ -81,9 +67,6 @@ function update() {
 
         playerSnapshot.player.updateEvents();
     });
-
-    //game.debug.text(player1.sprite.animations, 2, 14, '#ff0000');
-    //game.debug.body(player1.sprite);
 }
 
 export default { create: create, update: update };

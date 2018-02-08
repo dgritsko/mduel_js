@@ -1,4 +1,4 @@
-import cfg from "../gameConfig";
+import cfg from "./config";
 
 function generateRopes(platforms) {
     const result = [];

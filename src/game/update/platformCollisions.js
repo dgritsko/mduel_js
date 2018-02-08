@@ -1,4 +1,4 @@
-import cfg from "../../gameConfig";
+import cfg from "../config";
 import { locations } from "../../enums/locations";
 import { animations } from "../../enums/animations";
 
