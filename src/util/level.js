@@ -1,4 +1,4 @@
-import cfg from '../gameConfig';
+import cfg from "../gameConfig";
 
 function generateRopes(platforms) {
     const result = [];
@@ -10,7 +10,8 @@ function generateRopes(platforms) {
     const leftRopes = [];
     const otherRopes = [];
 
-    const isPlatform = (column, row) => (platforms.filter(p => p.row == row && p.column == column).length > 0)
+    const isPlatform = (column, row) =>
+        platforms.filter(p => p.row == row && p.column == column).length > 0;
 
     for (let i = 1; i < 18; i++) {
         // Make sure the ropes don't spawn directly next to the fixed ropes
@@ -33,7 +34,7 @@ function generateRopes(platforms) {
             const item = Phaser.ArrayUtils.getRandomItem(options);
 
             if (i < 4) {
-                leftRopes.push(item)
+                leftRopes.push(item);
             } else if (i > 4 && i != 14) {
                 otherRopes.push(item);
             }
@@ -46,14 +47,17 @@ function generateRopes(platforms) {
 
     if (otherRopes.length > 0) {
         // Hard max of other ropes is 4
-        const max = Math.min(otherRopes.length, Math.floor(Math.random() * 3) + 1);
+        const max = Math.min(
+            otherRopes.length,
+            Math.floor(Math.random() * 3) + 1
+        );
 
         let count = 0;
         while (count < max && otherRopes.length > 0) {
             result.push(Phaser.ArrayUtils.removeRandomItem(otherRopes));
-        
+
             count++;
-        }   
+        }
     }
 
     return result;
@@ -62,7 +66,12 @@ function generateRopes(platforms) {
 function generatePlatforms() {
     let result = [];
 
-    const { verticalSpacing, verticalOffset, horizontalSpacing, horizontalOffset } = cfg;
+    const {
+        verticalSpacing,
+        verticalOffset,
+        horizontalSpacing,
+        horizontalOffset
+    } = cfg;
 
     const levelHeight = 5;
     const levelWidth = 18;
@@ -83,7 +92,7 @@ function generatePlatforms() {
     for (let j = 2; j < 6; j++) {
         result.push({ row: 0, column: j, isSpawn: false });
     }
-    
+
     // Top right
     for (let j = 12; j < 16; j++) {
         result.push({ row: 0, column: j, isSpawn: false });
@@ -100,31 +109,45 @@ function generatePlatforms() {
         while (curr.length < levelWidth) {
             // 50% of the time, choose to start the level with a gap
             if (curr.length == 0 && game.rnd.integerInRange(0, 1) == 1) {
-                for (var j = 0; j < game.rnd.integerInRange(0, maxGapWidth); j++) {
+                for (
+                    var j = 0;
+                    j < game.rnd.integerInRange(0, maxGapWidth);
+                    j++
+                ) {
                     curr.push(false);
                 }
             } else {
-                for (let j = 0; j < game.rnd.integerInRange(minPlatformWidth, maxPlatformWidth); j++) {
+                for (
+                    let j = 0;
+                    j <
+                    game.rnd.integerInRange(minPlatformWidth, maxPlatformWidth);
+                    j++
+                ) {
                     curr.push(true);
                 }
-                for (let j = 0; j < game.rnd.integerInRange(minGapWidth, maxGapWidth); j++) {
+                for (
+                    let j = 0;
+                    j < game.rnd.integerInRange(minGapWidth, maxGapWidth);
+                    j++
+                ) {
                     curr.push(false);
                 }
             }
         }
         curr = curr.slice(0, levelWidth);
-        
-        // Since we can run past the max level width, slicing off the extra can result in a 
-        // 1-width platform at the end of the level. In this case, make sure it's at least 
+
+        // Since we can run past the max level width, slicing off the extra can result in a
+        // 1-width platform at the end of the level. In this case, make sure it's at least
         // length 2
         if (curr[levelWidth - 1] && !curr[levelWidth - 2]) {
             curr[levelWidth - 2] = true;
         }
 
-        const temp = curr.map((value, index) => ({ value, index }))
+        const temp = curr
+            .map((value, index) => ({ value, index }))
             .filter(item => item.value)
             .map(item => ({ row: i, column: item.index, isSpawn: false }));
-        
+
         result = result.concat(temp);
     }
 
