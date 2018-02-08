@@ -280,8 +280,8 @@ const handlePlayerMovement = (playerSnapshot, level) => {
     if (
         !bestMatch &&
         player.eventQueue.length === 0 &&
-        !state.anyInput &&
-        state.inputEnabled
+        !playerSnapshot.state.anyInput &&
+        playerSnapshot.state.inputEnabled
     ) {
         switch (state.location) {
             case locations.PLATFORM:

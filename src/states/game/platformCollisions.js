@@ -12,7 +12,8 @@ const handlePlatformCollisions = (snapshot, level) => {
         (_, platform) => {
             if (
                 player.location !== locations.PLATFORM &&
-                player.location !== locations.ROPE
+                player.location !== locations.ROPE &&
+                player.eventQueue.length === 0
             ) {
                 player.applyState({
                     location: locations.PLATFORM,
