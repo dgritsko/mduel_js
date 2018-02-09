@@ -10,6 +10,9 @@ const moveLeft = { direction: directions.LEFT, xVelocity: -cfg.runSpeed };
 const moveRight = { direction: directions.RIGHT, xVelocity: cfg.runSpeed };
 const moveJump = { yVelocity: -cfg.jumpSpeed, location: locations.AIR };
 
+const speedFromDirection = d =>
+    d === directions.LEFT ? -cfg.runSpeed : cfg.runSpeed;
+
 const nearbyRope = (player, level) => {
     const x = player.sprite.x;
     const y = player.sprite.y + player.sprite.offsetY;
@@ -38,8 +41,7 @@ const climbRope = (player, rope) => {
 };
 
 const performRoll = direction => {
-    const runSpeed =
-        direction === directions.LEFT ? -cfg.runSpeed : cfg.runSpeed;
+    const runSpeed = speedFromDirection(direction);
 
     return [
         {
@@ -179,7 +181,6 @@ const climbUpRope = {
             position: positions.DEFAULT,
             dy: -cfg.climbRate
         });
-        stayOnRope(player);
     }
 };
 
@@ -191,7 +192,6 @@ const climbDownRope = {
             position: positions.DEFAULT,
             dy: cfg.climbRate
         });
-        stayOnRope(player);
     }
 };
 
@@ -297,6 +297,13 @@ const handlePlayerMovement = (playerSnapshot, level) => {
                 });
                 break;
         }
+    }
+
+    if (
+        playerSnapshot.state.location === locations.ROPE &&
+        playerSnapshot.player.rope
+    ) {
+        stayOnRope(playerSnapshot.player);
     }
 };
 
