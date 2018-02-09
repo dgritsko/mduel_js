@@ -238,6 +238,24 @@ export class Player {
         };
     }
 
+    getDebugState() {
+        const state = this.getState();
+
+        const fixValue = (k, d) => {
+            const entries = Object.entries(d);
+
+            state[k] = entries
+                .filter(e => e[1] === state[k])[0][0]
+                .toLowerCase();
+        };
+
+        fixValue("location", locations);
+        fixValue("position", positions);
+        fixValue("direction", directions);
+
+        return state;
+    }
+
     getInput() {
         const left = this.input.left.isDown;
         const right = this.input.right.isDown;
@@ -310,10 +328,10 @@ export class Player {
 
             switch (location) {
                 case locations.ROPE:
-                    this.sprite.body.moves = false;
+                    this.sprite.body.allowGravity = false;
                     break;
                 default:
-                    this.sprite.body.moves = true;
+                    this.sprite.body.allowGravity = true;
                     break;
             }
         }

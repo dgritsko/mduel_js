@@ -9,6 +9,7 @@ import { handleLevelCollisions } from "../game/update/levelCollisions";
 import { handleItemUsage } from "../game/update/itemUsage";
 import { handlePowerupCollisions } from "../game/update/powerupCollisions";
 import { PlayerSnapshot } from "../game/playerSnapshot";
+import { debugRender } from "../game/util";
 
 let level;
 const players = [];
@@ -67,6 +68,8 @@ function update() {
 
         playerSnapshot.player.updateEvents();
     });
+
+    //debugRender(players[1].getDebugState());
 }
 
 export default { create: create, update: update };

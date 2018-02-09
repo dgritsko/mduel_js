@@ -82,26 +82,26 @@ const runningVsStanding = {
     }
 };
 
-// const ropeVsRope = {
-//     match: { first: climbing, second: climbing },
-//     update: (playerSnapshot, otherPlayerSnapshot) => {
-//         player.update({
-//             xVelocity: -cfg.runSpeed,
-//             direction: directions.LEFT,
-//             animation: animations.FORWARD_FALL,
-//             location: locations.AIR,
-//             inputEnabled: false
-//         });
+const ropeVsRope = {
+    match: { first: climbing, second: climbing },
+    update: (playerSnapshot, otherPlayerSnapshot) => {
+        playerSnapshot.update({
+            xVelocity: -cfg.runSpeed,
+            direction: directions.RIGHT,
+            animation: animations.BACKWARD_FALL,
+            location: locations.AIR,
+            inputEnabled: false
+        });
 
-//         otherPlayer.update({
-//             xVelocity: cfg.runSpeed,
-//             direction: directions.RIGHT,
-//             animation: animations.FORWARD_FALL,
-//             location: locations.AIR,
-//             inputEnabled: false
-//         });
-//     }
-// };
+        otherPlayerSnapshot.update({
+            xVelocity: cfg.runSpeed,
+            direction: directions.RIGHT,
+            animation: animations.FORWARD_FALL,
+            location: locations.AIR,
+            inputEnabled: false
+        });
+    }
+};
 
 // const airVsAir = {
 //     match: { first: air, second: air },
@@ -139,8 +139,8 @@ const runningVsStanding = {
 
 const behaviors = [
     runningVsRunning,
-    runningVsStanding
-    // ropeVsRope,
+    runningVsStanding,
+    ropeVsRope
     // airVsAir,
     // airVsStanding
 ];
