@@ -271,7 +271,7 @@ const handlePlayerMovement = (playerSnapshot, level) => {
             }
         }
 
-        if (bestMatch && bestScore > 0) {
+        if (bestMatch && bestScore > 0 && player.inputEnabled) {
             player.update(bestMatch.update, level, state);
         }
     }

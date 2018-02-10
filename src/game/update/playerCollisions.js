@@ -75,7 +75,7 @@ const runningVsStanding = {
                 animation: animations.STAND
             },
             {
-                after: now() + 150,
+                after: now() + 100,
                 inputEnabled: true
             }
         ]);
@@ -172,7 +172,7 @@ const handlePlayerCollisions = (playerSnapshot, otherPlayerSnapshots) => {
         const otherPlayerState = otherPlayerSnapshot.state;
 
         const relativeState = getRelativeState(playerState, otherPlayerState);
-        debugRender(relativeState);
+        //debugRender(relativeState);
 
         let behavior = null;
 

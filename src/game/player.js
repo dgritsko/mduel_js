@@ -52,6 +52,7 @@ export class Player {
         const tail = events.slice(1);
 
         this.applyState(head);
+
         this.eventQueue = new Queue(tail);
     }
 
@@ -288,19 +289,20 @@ export class Player {
         }
     }
 
-    applyState({
-        x,
-        y,
-        dx,
-        dy,
-        inputEnabled,
-        xVelocity,
-        yVelocity,
-        location,
-        position,
-        direction,
-        animation
-    }) {
+    applyState(newState) {
+        const {
+            x,
+            y,
+            dx,
+            dy,
+            inputEnabled,
+            xVelocity,
+            yVelocity,
+            location,
+            position,
+            direction,
+            animation
+        } = newState;
         if (isNumber(x)) {
             this.sprite.x = x;
         }
