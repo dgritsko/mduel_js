@@ -32,7 +32,7 @@ const stayOnRope = player => {
     }
 };
 
-const climbRope = (player, rope) => {
+const getOnRope = (player, rope) => {
     player.update({ location: locations.ROPE, x: rope.x });
     player.rope = {
         top: { x: rope.x, y: rope.y },
@@ -58,56 +58,47 @@ const performRoll = direction => {
     ];
 };
 
-const runLeft = {
+const run = {
     match: {
         location: locations.PLATFORM,
-        left: true,
         down: false,
-        position: [positions.DEFAULT, positions.CROUCHING]
+        position: [positions.DEFAULT, positions.CROUCHING],
+        predicate: s => s.left || s.right
     },
-    update: Object.assign({ animation: animations.RUN }, basicState, moveLeft)
+    update: (player, level, state) => {
+        let update = Object.assign({ animation: animations.RUN }, basicState);
+
+        if (state.left) {
+            update = Object.assign(moveLeft, update);
+        } else if (state.right) {
+            update = Object.assign(moveRight, update);
+        }
+
+        player.update(update);
+    }
 };
 
-const runRight = {
+const jump = {
     match: {
         location: locations.PLATFORM,
-        right: true,
-        down: false,
-        position: [positions.DEFAULT, positions.CROUCHING]
-    },
-    update: Object.assign({ animation: animations.RUN }, basicState, moveRight)
-};
-
-const jumpLeft = {
-    match: {
-        location: locations.PLATFORM,
-        left: true,
         up: true,
         down: false,
+        predicate: s => s.left || s.right,
         position: positions.DEFAULT
     },
-    update: Object.assign(
-        { animation: animations.RUN_JUMP },
-        basicState,
-        moveLeft,
-        moveJump
-    )
-};
+    update: (player, level, state) => {
+        let update = Object.assign({}, basicState, moveJump);
 
-const jumpRight = {
-    match: {
-        location: locations.PLATFORM,
-        right: true,
-        up: true,
-        down: false,
-        position: positions.DEFAULT
-    },
-    update: Object.assign(
-        { animation: animations.RUN_JUMP },
-        basicState,
-        moveRight,
-        moveJump
-    )
+        if (state.left) {
+            update = Object.assign(update, moveLeft);
+        } else if (state.right) {
+            update = Object.assign(update, moveRight);
+        }
+
+        update.animation = animations.RUN_JUMP;
+
+        player.update(update);
+    }
 };
 
 const jumpUpOrClimb = {
@@ -122,7 +113,7 @@ const jumpUpOrClimb = {
         const rope = nearbyRope(player, level);
 
         if (rope && state.xVelocity === 0) {
-            climbRope(player, rope);
+            getOnRope(player, rope);
         } else {
             // TODO: Tweak jump animation
             if (state.xVelocity === 0) {
@@ -157,7 +148,7 @@ const crouchOrClimb = {
             state.position === positions.DEFAULT &&
             state.xVelocity == 0
         ) {
-            climbRope(player, rope);
+            getOnRope(player, rope);
         } else {
             if (state.xVelocity != 0) {
                 // TODO: Automatically roll when landing on platform and pressing down with some x-momentum
@@ -173,79 +164,58 @@ const crouchOrClimb = {
     }
 };
 
-const climbUpRope = {
-    match: { location: locations.ROPE, up: true },
-    update: (player, level) => {
+const climbRope = {
+    match: { location: locations.ROPE, predicate: s => s.up || s.down },
+    update: (player, level, state) => {
         player.update({
             animation: animations.CLIMB,
             position: positions.DEFAULT,
-            yVelocity: -cfg.climbSpeed
+            yVelocity: state.up ? -cfg.climbSpeed : cfg.climbSpeed
         });
     }
 };
 
-const climbDownRope = {
-    match: { location: locations.ROPE, down: true },
-    update: (player, level) => {
-        player.update({
-            animation: animations.CLIMB,
-            position: positions.DEFAULT,
-            yVelocity: cfg.climbSpeed
-        });
+const fallOffRope = {
+    match: { location: locations.ROPE, predicate: s => s.left || s.right },
+    update: (player, level, state) => {
+        let update = Object.assign({ location: locations.AIR }, basicState);
+
+        if (state.left) {
+            update = Object.assign(update, moveLeft);
+        } else if (state.right) {
+            update = Object.assign(update, moveRight);
+        }
+
+        update.animation = animations.STAND_FALL;
+
+        player.update(update);
     }
 };
 
-const fallOffRopeLeft = {
-    match: { location: locations.ROPE, left: true },
-    update: Object.assign(
-        { animation: animations.STAND_FALL, location: locations.AIR },
-        basicState,
-        moveLeft
-    )
-};
-
-const fallOffRopeRight = {
-    match: { location: locations.ROPE, right: true },
-    update: Object.assign(
-        { animation: animations.STAND_FALL, location: locations.AIR },
-        basicState,
-        moveRight
-    )
-};
-
-const rollLeft = {
+const roll = {
     match: {
         location: locations.PLATFORM,
         position: positions.DEFAULT,
         down: true,
-        left: true
+        predicate: s => s.left || s.right
     },
-    update: performRoll(directions.LEFT)
-};
-
-const rollRight = {
-    match: {
-        location: locations.PLATFORM,
-        position: positions.DEFAULT,
-        down: true,
-        right: true
-    },
-    update: performRoll(directions.RIGHT)
+    update: (player, level, state) => {
+        if (state.left) {
+            player.update(performRoll(directions.LEFT));
+        } else if (state.right) {
+            player.update(performRoll(directions.RIGHT));
+        }
+    }
 };
 
 const behaviors = [
-    runLeft,
-    runRight,
-    jumpLeft,
-    jumpRight,
+    run,
+    jump,
     crouchOrClimb,
     jumpUpOrClimb,
-    climbUpRope,
-    climbDownRope,
-    fallOffRopeLeft,
-    fallOffRopeRight,
-    rollLeft,
-    rollRight
+    climbRope,
+    fallOffRope,
+    roll
 ];
 
 const handlePlayerMovement = (playerSnapshot, level) => {

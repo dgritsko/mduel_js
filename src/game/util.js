@@ -11,6 +11,8 @@ const matchingProps = (state, test) => {
         actual: keys.filter(k => {
             if (Array.isArray(test[k])) {
                 return test[k].indexOf(state[k]) > -1;
+            } else if (typeof test[k] === "function") {
+                return test[k](state);
             }
 
             return state[k] === test[k];
