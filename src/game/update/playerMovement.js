@@ -186,6 +186,7 @@ const fallOffRope = {
             update = Object.assign(update, moveRight);
         }
 
+        update.yVelocity = cfg.fallSpeed;
         update.animation = animations.STAND_FALL;
 
         player.update(update);

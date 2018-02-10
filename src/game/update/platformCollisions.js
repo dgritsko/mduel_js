@@ -33,6 +33,10 @@ const handlePlatformCollisions = (snapshot, level) => {
                 return false;
             }
 
+            if (snapshot.state.location === locations.ROPE) {
+                return false;
+            }
+
             const maxY = player.y + player.offsetY;
 
             const yCollision =
