@@ -4,6 +4,7 @@ import { locations } from "../enums/locations";
 import { positions } from "../enums/positions";
 import { directions } from "../enums/directions";
 import { animations } from "../enums/animations";
+import cfg from "./config";
 
 export class Player {
     constructor(spriteName, x, y, id) {
@@ -196,6 +197,11 @@ export class Player {
             this.sprite.height - 16,
             this.sprite.width / 4,
             8
+        );
+
+        this.sprite.body.maxVelocity = new Phaser.Point(
+            cfg.runSpeed,
+            cfg.gravity
         );
     }
 
