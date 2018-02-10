@@ -1,6 +1,6 @@
 export default {
     gravity: 800,
-    climbRate: 2,
+    climbSpeed: 100,
     runSpeed: 100,
     jumpSpeed: 300,
     ropeDist: 10,

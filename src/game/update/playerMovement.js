@@ -179,7 +179,7 @@ const climbUpRope = {
         player.applyState({
             animation: animations.CLIMB,
             position: positions.DEFAULT,
-            dy: -cfg.climbRate
+            yVelocity: -cfg.climbSpeed
         });
     }
 };
@@ -190,7 +190,7 @@ const climbDownRope = {
         player.applyState({
             animation: animations.CLIMB,
             position: positions.DEFAULT,
-            dy: cfg.climbRate
+            yVelocity: cfg.climbSpeed
         });
     }
 };
@@ -293,7 +293,8 @@ const handlePlayerMovement = (playerSnapshot, level) => {
             case locations.ROPE:
                 player.applyState({
                     animation: animations.NONE,
-                    position: positions.DEFAULT
+                    position: positions.DEFAULT,
+                    yVelocity: 0
                 });
                 break;
         }
