@@ -28,12 +28,12 @@ const stayOnRope = player => {
         let { y } = player.getState();
         y = Math.max(y, player.rope.top.y + player.sprite.offsetY - 8);
         y = Math.min(y, player.rope.bottom.y - player.sprite.offsetY);
-        player.applyState({ y });
+        player.update({ y });
     }
 };
 
 const climbRope = (player, rope) => {
-    player.applyState({ location: locations.ROPE, x: rope.x });
+    player.update({ location: locations.ROPE, x: rope.x });
     player.rope = {
         top: { x: rope.x, y: rope.y },
         bottom: { x: rope.x, y: rope.y + rope.height }
@@ -136,7 +136,7 @@ const jumpUpOrClimb = {
                     }
                 ]);
             } else {
-                player.applyState({ xVelocity: 0 });
+                player.update({ xVelocity: 0 });
             }
         }
     }
@@ -163,7 +163,7 @@ const crouchOrClimb = {
                 // TODO: Automatically roll when landing on platform and pressing down with some x-momentum
                 player.queueEvents(performRoll(state.direction));
             } else {
-                player.applyState({
+                player.update({
                     position: positions.CROUCHING,
                     animation: animations.CROUCH,
                     xVelocity: 0
@@ -176,7 +176,7 @@ const crouchOrClimb = {
 const climbUpRope = {
     match: { location: locations.ROPE, up: true },
     update: (player, level) => {
-        player.applyState({
+        player.update({
             animation: animations.CLIMB,
             position: positions.DEFAULT,
             yVelocity: -cfg.climbSpeed
@@ -187,7 +187,7 @@ const climbUpRope = {
 const climbDownRope = {
     match: { location: locations.ROPE, down: true },
     update: (player, level) => {
-        player.applyState({
+        player.update({
             animation: animations.CLIMB,
             position: positions.DEFAULT,
             yVelocity: cfg.climbSpeed
@@ -284,14 +284,14 @@ const handlePlayerMovement = (playerSnapshot, level) => {
     ) {
         switch (state.location) {
             case locations.PLATFORM:
-                player.applyState({
+                player.update({
                     animation: animations.STAND,
                     xVelocity: 0,
                     position: positions.DEFAULT
                 });
                 break;
             case locations.ROPE:
-                player.applyState({
+                player.update({
                     animation: animations.NONE,
                     position: positions.DEFAULT,
                     yVelocity: 0

@@ -12,14 +12,18 @@ const handlePlatformCollisions = (snapshot, level) => {
         (_, platform) => {
             if (
                 player.location !== locations.PLATFORM &&
-                player.location !== locations.ROPE &&
-                player.eventQueue.length === 0
+                player.location !== locations.ROPE
             ) {
-                player.applyState({
+                const stateUpdate = {
                     location: locations.PLATFORM,
-                    animation: animations.STAND,
                     inputEnabled: true
-                });
+                };
+
+                if (player.eventQueue.length === 0) {
+                    stateUpdate.animation = animations.STAND;
+                }
+
+                player.update(stateUpdate);
             }
         },
         (player, platform) => {
@@ -43,7 +47,7 @@ const handlePlatformCollisions = (snapshot, level) => {
     );
 
     if (!hitPlatform && player.location === locations.PLATFORM) {
-        player.applyState({
+        player.update({
             location: locations.AIR,
             animation: animations.STAND_FALL
         });

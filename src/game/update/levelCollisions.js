@@ -10,7 +10,7 @@ const handleLevelCollisions = playerSnapshot => {
     }
 
     if (player.sprite.x + player.sprite.offsetX / 2 <= 0) {
-        player.applyState({
+        player.update({
             animation: animations.BACKWARD_FALL,
             xVelocity: cfg.runSpeed
         });
@@ -18,7 +18,7 @@ const handleLevelCollisions = playerSnapshot => {
         player.sprite.x + player.sprite.offsetX / 2 >=
         game.world.width
     ) {
-        player.applyState({
+        player.update({
             animation: animations.BACKWARD_FALL,
             xVelocity: -cfg.runSpeed
         });

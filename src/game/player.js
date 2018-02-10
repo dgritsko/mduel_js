@@ -42,9 +42,13 @@ export class Player {
         }
     }
 
+    clearQueue() {
+        this.eventQueue = new Queue();
+    }
+
     queueEvents(events) {
         if (events.length === 0) {
-            this.eventQueue = new Queue();
+            this.clearQueue();
             return;
         }
 
@@ -280,6 +284,8 @@ export class Player {
     }
 
     update(toUpdate, level, state) {
+        this.clearQueue();
+
         if (Array.isArray(toUpdate)) {
             this.queueEvents(toUpdate);
         } else if (typeof toUpdate === "function") {
