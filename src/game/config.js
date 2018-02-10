@@ -8,5 +8,6 @@ export default {
     verticalSpacing: 64,
     verticalOffset: 80,
     horizontalSpacing: 32,
-    horizontalOffset: 32
+    horizontalOffset: 32,
+    wallThreshold: 16
 };

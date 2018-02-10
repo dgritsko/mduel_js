@@ -9,15 +9,14 @@ const handleLevelCollisions = playerSnapshot => {
         return;
     }
 
-    if (player.sprite.x + player.sprite.offsetX / 2 <= 0) {
+    if (player.sprite.x < cfg.wallThreshold) {
         player.update({
             animation: animations.BACKWARD_FALL,
             xVelocity: cfg.runSpeed
         });
-    } else if (
-        player.sprite.x + player.sprite.offsetX / 2 >=
-        game.world.width
-    ) {
+    }
+
+    if (player.sprite.x > game.world.width - cfg.wallThreshold) {
         player.update({
             animation: animations.BACKWARD_FALL,
             xVelocity: -cfg.runSpeed

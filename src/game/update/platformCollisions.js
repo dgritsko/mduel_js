@@ -1,6 +1,7 @@
 import cfg from "../config";
 import { locations } from "../../enums/locations";
 import { animations } from "../../enums/animations";
+import { now } from "../util";
 
 const handlePlatformCollisions = (snapshot, level) => {
     const player = snapshot.player;
@@ -14,16 +15,17 @@ const handlePlatformCollisions = (snapshot, level) => {
                 player.location !== locations.PLATFORM &&
                 player.location !== locations.ROPE
             ) {
-                const stateUpdate = {
-                    location: locations.PLATFORM,
-                    inputEnabled: true
-                };
-
-                if (player.eventQueue.length === 0) {
-                    stateUpdate.animation = animations.STAND;
-                }
-
-                player.update(stateUpdate);
+                player.update([
+                    {
+                        location: locations.PLATFORM,
+                        animation: animations.TRANSITION,
+                        inputEnabled: false
+                    },
+                    {
+                        animation: animations.STAND,
+                        inputEnabled: true
+                    }
+                ]);
             }
         },
         (player, platform) => {

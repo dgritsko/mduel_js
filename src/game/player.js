@@ -61,7 +61,7 @@ export class Player {
     }
 
     configureSprite() {
-        this.sprite.anchor.setTo(0.5);
+        this.sprite.anchor.setTo(0.5, 0.5);
 
         const framerate = 12;
 
