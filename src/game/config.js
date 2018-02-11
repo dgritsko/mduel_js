@@ -1,9 +1,9 @@
 export default {
     gravity: 800,
     climbSpeed: 100,
-    runSpeed: 200,
+    runSpeed: 100,
     jumpSpeed: 800,
-    fallSpeed: 200,
+    fallSpeed: 300,
     ropeDist: 10,
     platformYDist: 16,
     verticalSpacing: 64,

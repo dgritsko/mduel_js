@@ -55,7 +55,9 @@ const handlePlatformCollisions = (snapshot, level) => {
     if (!hitPlatform && player.location === locations.PLATFORM) {
         player.update({
             location: locations.AIR,
-            animation: animations.STAND_FALL
+            animation: animations.STAND_FALL,
+            inputEnabled: false,
+            yVelocity: cfg.fallSpeed
         });
     }
 };
