@@ -3,14 +3,25 @@ import { locations } from "../../enums/locations";
 import { animations } from "../../enums/animations";
 import { matchingProps, now, debugRender } from "../util";
 import { directions } from "../../enums/directions";
+import { positions } from "../../enums/positions";
 
 const running = {
     location: locations.PLATFORM,
-    xVelocity: [cfg.runSpeed, -cfg.runSpeed]
+    xVelocity: [cfg.runSpeed, -cfg.runSpeed],
+    position: positions.DEFAULT
 };
-const standing = { location: locations.PLATFORM, xVelocity: 0 };
+const standing = {
+    location: locations.PLATFORM,
+    xVelocity: 0,
+    position: positions.DEFAULT
+};
+const crouchingOrRolling = {
+    location: locations.PLATFORM,
+    position: [positions.CROUCHING, positions.ROLLING]
+};
 const climbing = { location: locations.ROPE };
 const air = { location: locations.AIR };
+const platform = { location: locations.PLATFORM };
 
 const getClosingSpeed = (a0, b0, v1, v2) => {
     const add = (a, b) => {
@@ -54,31 +65,56 @@ const runningVsRunning = {
 const runningVsStanding = {
     match: { first: running, second: standing },
     update: (playerSnapshot, otherPlayerSnapshot) => {
-        const fallAnimation =
-            playerSnapshot.state.direction ===
-            otherPlayerSnapshot.state.direction
-                ? animations.FORWARD_FALL
-                : animations.BACKWARD_FALL;
+        switch (playerSnapshot.state.position) {
+            case positions.CROUCHING:
+            case positions.ROLLING:
+                otherPlayerSnapshot.update({
+                    yVelocity: -cfg.jumpSpeed,
+                    animation: animations.FORWARD_FALL,
+                    location: locations.AIR,
+                    inputEnabled: false
+                });
+                break;
+            default:
+                const fallAnimation =
+                    playerSnapshot.state.direction ===
+                    otherPlayerSnapshot.state.direction
+                        ? animations.FORWARD_FALL
+                        : animations.BACKWARD_FALL;
 
-        otherPlayerSnapshot.update({
-            xVelocity: playerSnapshot.state.xVelocity,
-            yVelocity: -cfg.jumpSpeed,
-            animation: fallAnimation,
+                otherPlayerSnapshot.update({
+                    xVelocity: playerSnapshot.state.xVelocity,
+                    yVelocity: -cfg.jumpSpeed,
+                    animation: fallAnimation,
+                    location: locations.AIR,
+                    inputEnabled: false
+                });
+
+                playerSnapshot.player.update([
+                    {
+                        inputEnabled: false,
+                        xVelocity: 0,
+                        animation: animations.STAND
+                    },
+                    {
+                        after: now() + 100,
+                        inputEnabled: true
+                    }
+                ]);
+                break;
+        }
+    }
+};
+
+const runningVsCrouching = {
+    match: { first: running, second: crouchingOrRolling },
+    update: (playerSnapshot, otherPlayerSnapshot) => {
+        playerSnapshot.update({
             location: locations.AIR,
+            yVelocity: -cfg.jumpSpeed,
+            animation: animations.FORWARD_FALL,
             inputEnabled: false
         });
-
-        playerSnapshot.player.update([
-            {
-                inputEnabled: false,
-                xVelocity: 0,
-                animation: animations.STAND
-            },
-            {
-                after: now() + 100,
-                inputEnabled: true
-            }
-        ]);
     }
 };
 
@@ -103,46 +139,118 @@ const ropeVsRope = {
     }
 };
 
-// const airVsAir = {
-//     match: { first: air, second: air },
-//     update: (playerSnapshot, otherPlayerSnapshot) => {
-//         player.update({
-//             xVelocity: getDirectionVelocity(directions.LEFT),
-//             inputEnabled: false,
-//             yVelocity: -200,
-//             animation: animations.BACKWARD_FALL,
-//             location: locations.AIR
-//         });
+const airVsPlatform = {
+    match: { first: air, second: platform },
+    update: (playerSnapshot, otherPlayerSnapshot) => {
+        if (
+            playerSnapshot.state.xVelocity === 0 &&
+            otherPlayerSnapshot.state.xVelocity === 0
+        ) {
+            otherPlayerSnapshot.update({
+                yVelocity: -cfg.jumpSpeed,
+                animation: animations.FORWARD_FALL,
+                location: locations.AIR,
+                inputEnabled: false
+            });
+        } else {
+            if (playerSnapshot.state.x > otherPlayerSnapshot.state.x) {
+                playerSnapshot.update({
+                    yVelocity: -cfg.jumpSpeed,
+                    location: locations.AIR,
+                    animation: animations.FORWARD_FALL,
+                    inputEnabled: false
+                });
 
-//         otherPlayer.update({
-//             xVelocity: getDirectionVelocity(directions.RIGHT),
-//             inputEnabled: false,
-//             yVelocity: -200,
-//             animation: animations.BACKWARD_FALL,
-//             location: locations.AIR
-//         });
-//     }
-// };
+                const fallAnimation =
+                    playerSnapshot.state.direction ===
+                    otherPlayerSnapshot.state.direction
+                        ? animations.BACKWARD_FALL
+                        : animations.FORWARD_FALL;
 
-// const airVsStanding = {
-//     match: { first: air, second: standing },
-//     update: (playerSnapshot, otherPlayerSnapshot) => {
-//         otherPlayer.update({
-//             xVelocity: player.getState().xVelocity,
-//             inputEnabled: false,
-//             yVelocity: -200,
-//             animation: animations.BACKWARD_FALL,
-//             location: location.AIR
-//         });
-//     }
-// };
+                otherPlayerSnapshot.update({
+                    yVelocity: -cfg.jumpSpeed,
+                    location: locations.AIR,
+                    xVelocity: -playerSnapshot.state.xVelocity,
+                    animation: fallAnimation,
+                    inputEnabled: false
+                });
+            } else {
+                playerSnapshot.update({
+                    yVelocity: -cfg.jumpSpeed,
+                    location: locations.AIR,
+                    xVelocity: -playerSnapshot.state.xVelocity,
+                    animation: animations.BACKWARD_FALL,
+                    inputEnabled: false
+                });
+
+                const fallAnimation =
+                    playerSnapshot.state.direction ===
+                    otherPlayerSnapshot.state.direction
+                        ? animations.FORWARD_FALL
+                        : animations.BACKWARD_FALL;
+
+                otherPlayerSnapshot.update({
+                    yVelocity: -cfg.jumpSpeed,
+                    location: locations.AIR,
+                    xVelocity: -playerSnapshot.state.xVelocity,
+                    animation: fallAnimation,
+                    inputEnabled: false
+                });
+            }
+        }
+    }
+};
+
+const airVsRope = {
+    match: { first: air, second: climbing },
+    update: (playerSnapshot, otherPlayerSnapshot) => {
+        const fallAnimation =
+            playerSnapshot.state.direction ===
+            otherPlayerSnapshot.state.direction
+                ? animations.FORWARD_FALL
+                : animations.BACKWARD_FALL;
+
+        otherPlayerSnapshot.update({
+            yVelocity: -cfg.jumpSpeed,
+            location: locations.AIR,
+            xVelocity: playerSnapshot.state.xVelocity,
+            animation: fallAnimation,
+            inputEnabled: false
+        });
+
+        playerSnapshot.update({
+            yVelocity: -cfg.jumpSpeed,
+            location: locations.AIR,
+            xVelocity: -playerSnapshot.state.xVelocity,
+            animation: animations.BACKWARD_FALL,
+            inputEnabled: false
+        });
+    }
+};
+
+const airVsAir = {
+    match: { first: air, second: air },
+    update: (playerSnapshot, otherPlayerSnapshot) => {
+        [playerSnapshot, otherPlayerSnapshot].forEach(snapshot => {
+            snapshot.update({
+                yVelocity: -cfg.jumpSpeed,
+                location: locations.AIR,
+                xVelocity: -snapshot.state.xVelocity,
+                animation: animations.BACKWARD_FALL,
+                inputEnabled: false
+            });
+        });
+    }
+};
 
 const behaviors = [
     runningVsRunning,
     runningVsStanding,
-    ropeVsRope
-    // airVsAir,
-    // airVsStanding
+    runningVsCrouching,
+    ropeVsRope,
+    airVsPlatform,
+    airVsRope,
+    airVsAir
 ];
 
 const getRelativeState = (first, second) => {
@@ -181,6 +289,8 @@ const handlePlayerCollisions = (playerSnapshot, otherPlayerSnapshots) => {
             otherPlayer.sprite,
             (playerSprite, otherPlayerSprite) => {
                 if (behavior) {
+                    console.log(`hit behavior ${behaviors.indexOf(behavior)}`);
+
                     behavior.update(playerSnapshot, otherPlayerSnapshot);
                 }
             },

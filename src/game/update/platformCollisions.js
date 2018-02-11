@@ -1,6 +1,7 @@
 import cfg from "../config";
 import { locations } from "../../enums/locations";
 import { animations } from "../../enums/animations";
+import { positions } from "../../enums/positions";
 import { now } from "../util";
 
 const handlePlatformCollisions = (snapshot, level) => {
@@ -24,6 +25,7 @@ const handlePlatformCollisions = (snapshot, level) => {
                     },
                     {
                         animation: animations.STAND,
+                        position: positions.DEFAULT,
                         inputEnabled: true
                     }
                 ]);
