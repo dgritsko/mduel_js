@@ -178,7 +178,10 @@ const climbRope = {
 const fallOffRope = {
     match: { location: locations.ROPE, predicate: s => s.left || s.right },
     update: (player, level, state) => {
-        let update = Object.assign({ location: locations.AIR }, basicState);
+        let update = Object.assign(
+            { location: locations.AIR, yVelocity: cfg.fallSpeed / 2 },
+            basicState
+        );
 
         if (state.left) {
             update = Object.assign(update, moveLeft);
@@ -186,7 +189,6 @@ const fallOffRope = {
             update = Object.assign(update, moveRight);
         }
 
-        update.yVelocity = cfg.fallSpeed;
         update.animation = animations.STAND_FALL;
 
         player.update(update);

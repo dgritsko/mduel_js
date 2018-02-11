@@ -206,7 +206,7 @@ export class Player {
 
         this.sprite.body.maxVelocity = new Phaser.Point(
             cfg.runSpeed,
-            cfg.fallSpeed
+            cfg.gravity
         );
     }
 

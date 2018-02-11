@@ -19,7 +19,8 @@ const handlePlatformCollisions = (snapshot, level) => {
                     {
                         location: locations.PLATFORM,
                         animation: animations.TRANSITION,
-                        inputEnabled: false
+                        inputEnabled: false,
+                        xVelocity: 0
                     },
                     {
                         animation: animations.STAND,
@@ -57,7 +58,7 @@ const handlePlatformCollisions = (snapshot, level) => {
             location: locations.AIR,
             animation: animations.STAND_FALL,
             inputEnabled: false,
-            yVelocity: cfg.fallSpeed
+            yVelocity: cfg.fallSpeed / 2
         });
     }
 };
