@@ -25,9 +25,11 @@ function create() {
     // const player2 = new Player('player2', game.world.width - 100, 100);
     const player1 = new Player("player1", 60, 300, 1);
     const player2 = new Player("player2", 160, 300, 2);
+    const player3 = new Player("player3", 400, 300, 3);
 
     players.push(player1);
     players.push(player2);
+    players.push(player3);
 
     // const text = game.add.bitmapText(
     //     game.world.centerX,

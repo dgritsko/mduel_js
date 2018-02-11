@@ -1,6 +1,7 @@
 function preload() {
     game.load.spritesheet("player1", "assets/player1.png", 64, 64);
     game.load.spritesheet("player2", "assets/player2.png", 64, 64);
+    game.load.spritesheet("player3", "assets/player3.png", 64, 64);
     game.load.image("main_platform", "assets/main_platform.png");
     game.load.image("spawn_platform", "assets/spawn_platform.png");
     game.load.image("powerup_spawn", "assets/powerup_spawn.png");
