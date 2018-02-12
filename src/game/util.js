@@ -21,6 +21,10 @@ const matchingProps = (state, test) => {
     };
 };
 
+const dist = (a, b) => {
+    return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
+};
+
 const debugRender = obj => {
     //const text = JSON.stringify(obj);
     // const width = 66;
@@ -38,4 +42,4 @@ const debugRender = obj => {
     }
 };
 
-export { now, isNumber, isBool, isString, matchingProps, debugRender };
+export { now, isNumber, isBool, isString, matchingProps, dist, debugRender };

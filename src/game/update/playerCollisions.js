@@ -1,7 +1,7 @@
 import cfg from "../config";
 import { locations } from "../../enums/locations";
 import { animations } from "../../enums/animations";
-import { matchingProps, now, debugRender } from "../util";
+import { matchingProps, now, dist, debugRender } from "../util";
 import { directions } from "../../enums/directions";
 import { positions } from "../../enums/positions";
 
@@ -110,6 +110,18 @@ const runningVsCrouching = {
     match: { first: running, second: crouchingOrRolling },
     update: (playerSnapshot, otherPlayerSnapshot) => {
         playerSnapshot.update({
+            location: locations.AIR,
+            yVelocity: -cfg.jumpSpeed,
+            animation: animations.FORWARD_FALL,
+            inputEnabled: false
+        });
+    }
+};
+
+const crouchingVsStanding = {
+    match: { first: crouchingOrRolling, second: standing },
+    update: (playerSnapshot, otherPlayerSnapshot) => {
+        otherPlayerSnapshot.update({
             location: locations.AIR,
             yVelocity: -cfg.jumpSpeed,
             animation: animations.FORWARD_FALL,
@@ -233,7 +245,7 @@ const airVsAir = {
     update: (playerSnapshot, otherPlayerSnapshot) => {
         [playerSnapshot, otherPlayerSnapshot].forEach(snapshot => {
             snapshot.update({
-                yVelocity: -cfg.jumpSpeed,
+                //yVelocity: -cfg.jumpSpeed,
                 location: locations.AIR,
                 xVelocity: -snapshot.state.xVelocity,
                 animation: animations.BACKWARD_FALL,
@@ -247,6 +259,7 @@ const behaviors = [
     runningVsRunning,
     runningVsStanding,
     runningVsCrouching,
+    crouchingVsStanding,
     ropeVsRope,
     airVsPlatform,
     airVsRope,
@@ -254,9 +267,7 @@ const behaviors = [
 ];
 
 const getRelativeState = (first, second) => {
-    const a = first.x - second.x;
-    const b = first.y - second.y;
-    const dist = Math.sqrt(a * a + b * b);
+    const distance = dist([first.x, first.y], [second.x, second.y]);
 
     const closingSpeed = getClosingSpeed(
         [first.x, first.y],
@@ -268,60 +279,59 @@ const getRelativeState = (first, second) => {
     const xDist = Math.abs(first.x - second.x);
     const yDist = Math.abs(first.y - second.y);
 
-    return { dist, closingSpeed, xDist, yDist };
+    return { distance, closingSpeed, xDist, yDist };
 };
 
 const handlePlayerCollisions = (playerSnapshot, otherPlayerSnapshots) => {
     const player = playerSnapshot.player;
     const playerState = playerSnapshot.state;
 
+    if (player.lastPlayerCollision + 100 > now()) {
+        return;
+    }
+
     otherPlayerSnapshots.forEach(otherPlayerSnapshot => {
         const otherPlayer = otherPlayerSnapshot.player;
         const otherPlayerState = otherPlayerSnapshot.state;
 
         const relativeState = getRelativeState(playerState, otherPlayerState);
+
+        if (relativeState.distance > 32) {
+            return;
+        }
+
         //debugRender(relativeState);
 
-        let behavior = null;
+        if (relativeState.closingSpeed >= 0) {
+            return;
+        }
 
-        const hitPlayer = game.physics.arcade.overlap(
-            player.sprite,
-            otherPlayer.sprite,
-            (playerSprite, otherPlayerSprite) => {
-                if (behavior) {
-                    console.log(`hit behavior ${behaviors.indexOf(behavior)}`);
+        for (let i = 0; i < behaviors.length; i++) {
+            const behavior = behaviors[i];
 
-                    behavior.update(playerSnapshot, otherPlayerSnapshot);
-                }
-            },
-            (playerSprite, otherPlayerSprite) => {
-                if (relativeState.closingSpeed >= 0) {
-                    return false;
-                }
+            const playerProps = matchingProps(
+                playerState,
+                behavior.match.first || {}
+            );
+            const otherPlayerProps = matchingProps(
+                otherPlayerState,
+                behavior.match.second || {}
+            );
 
-                for (let i = 0; i < behaviors.length; i++) {
-                    behavior = behaviors[i];
+            if (
+                playerProps.actual === playerProps.target &&
+                otherPlayerProps.actual === otherPlayerProps.target
+            ) {
+                console.log(`hit behavior ${i}`);
 
-                    const playerProps = matchingProps(
-                        playerState,
-                        behavior.match.first || {}
-                    );
-                    const otherPlayerProps = matchingProps(
-                        otherPlayerState,
-                        behavior.match.second || {}
-                    );
+                behavior.update(playerSnapshot, otherPlayerSnapshot);
 
-                    if (
-                        playerProps.actual === playerProps.target &&
-                        otherPlayerProps.actual === otherPlayerProps.target
-                    ) {
-                        return true;
-                    }
-                }
+                player.lastPlayerCollision = now();
+                otherPlayer.lastPlayerCollision = now();
 
-                return false;
+                return;
             }
-        );
+        }
     });
 };
 

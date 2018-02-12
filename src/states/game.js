@@ -71,7 +71,7 @@ function update() {
         playerSnapshot.player.updateEvents();
     });
 
-    debugRender(players[1].getDebugState());
+    //debugRender(players[1].getDebugState());
 }
 
 export default { create: create, update: update };
