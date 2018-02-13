@@ -10,5 +10,6 @@ export default {
     verticalOffset: 80,
     horizontalSpacing: 32,
     horizontalOffset: 32,
-    wallThreshold: 16
+    wallThreshold: 16,
+    powerupSpeed: 20
 };
