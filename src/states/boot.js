@@ -17,6 +17,12 @@ function preload() {
 
     game.load.bitmapFont(
         "mduel",
+        "assets/fonts/marshmallowduel.png",
+        "assets/fonts/marshmallowduel.fnt"
+    );
+
+    game.load.bitmapFont(
+        "mduel",
         "assets/fonts/pc-senior.png",
         "assets/fonts/pc-senior.fnt"
     );
@@ -26,7 +32,7 @@ function create() {
     game.scale.pageAlignHorizontally = true;
     game.scale.pageAlignVertically = true;
 
-    game.state.start("Game");
+    game.state.start("Sandbox");
 }
 
 export default { preload: preload, create: create };
