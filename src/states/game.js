@@ -15,6 +15,8 @@ let level;
 const players = [];
 
 function create() {
+    game.time.advancedTiming = true;
+
     game.stage.disableVisibilityChange = true;
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.physics.arcade.gravity.y = cfg.gravity;
@@ -74,4 +76,8 @@ function update() {
     //debugRender(players[1].getDebugState());
 }
 
-export default { create: create, update: update };
+function render() {
+    game.debug.text("FPS: " + game.time.fps || "FPS: --", 40, 40, "#00ff00");
+}
+
+export default { create: create, update: update, render: render };
