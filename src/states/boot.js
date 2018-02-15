@@ -32,7 +32,7 @@ function create() {
     game.scale.pageAlignHorizontally = true;
     game.scale.pageAlignVertically = true;
 
-    game.state.start("Sandbox");
+    game.state.start("Game");
 }
 
 export default { preload: preload, create: create };
