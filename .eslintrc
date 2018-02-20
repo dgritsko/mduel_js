@@ -11,5 +11,10 @@
 
     "rules": {},
 
-    "extends": "eslint:recommended"
+    "extends": "eslint:recommended",
+
+    "globals": {
+        "game": true,
+        "Phaser": true
+    }
 }
