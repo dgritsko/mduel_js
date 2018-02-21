@@ -1,5 +1,7 @@
-import cfg from "./config";
+import { levelConfig } from "./config";
 import { generatePlatforms, generateRopes } from "./level";
+import { makePlatform } from "./platform";
+import { platform_types } from "../enums/platform_types";
 
 function makeLevel() {
     const {
@@ -7,7 +9,7 @@ function makeLevel() {
         verticalOffset,
         horizontalSpacing,
         horizontalOffset
-    } = cfg;
+    } = levelConfig;
 
     const levelHeight = 5;
     const levelWidth = 18;
@@ -20,8 +22,13 @@ function makeLevel() {
     platformInfos.forEach(info => {
         const x = info.column * horizontalSpacing + horizontalOffset;
         const y = info.row * verticalSpacing + verticalOffset;
-        const spriteName = info.isSpawn ? "spawn_platform" : "main_platform";
-        const platform = game.add.sprite(x, y, spriteName);
+
+        const platform = makePlatform(
+            x,
+            y,
+            info.isSpawn ? platform_types.SPAWN : platform_types.DEFAULT
+        );
+
         platforms.add(platform);
     });
 

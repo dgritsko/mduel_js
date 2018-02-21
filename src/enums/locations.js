@@ -1,4 +1,3 @@
-
 export const locations = {
     PLATFORM: 0,
     ROPE: 1,

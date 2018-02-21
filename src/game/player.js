@@ -4,7 +4,7 @@ import { locations } from "../enums/locations";
 import { positions } from "../enums/positions";
 import { directions } from "../enums/directions";
 import { animations } from "../enums/animations";
-import cfg from "./config";
+import { playerConfig } from "./config";
 
 export class Player {
     constructor(spriteName, x, y, id) {
@@ -197,16 +197,21 @@ export class Player {
 
         game.physics.enable(this.sprite);
 
+        const { top, right, bottom, left } = playerConfig.STANDING_BOUNDS;
+
+        const width = Math.abs(right) + Math.abs(left);
+        const height = Math.abs(top) + Math.abs(bottom);
+
         this.sprite.body.setSize(
-            this.sprite.width / 2,
-            this.sprite.height - 16,
-            this.sprite.width / 4,
-            8
+            width,
+            height,
+            playerConfig.SPRITE_WIDTH / 2 + left,
+            playerConfig.SPRITE_HEIGHT / 2 + top
         );
 
         this.sprite.body.maxVelocity = new Phaser.Point(
-            cfg.runSpeed,
-            cfg.gravity
+            playerConfig.RUN_SPEED,
+            playerConfig.TERMINAL_VELOCITY
         );
     }
 
