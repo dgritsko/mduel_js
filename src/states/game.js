@@ -16,8 +16,6 @@ import { platform_types } from "../enums/platform_types";
 let level;
 const players = [];
 
-let temp1, temp2;
-
 function create() {
     game.time.advancedTiming = true;
 
@@ -45,9 +43,6 @@ function create() {
     //     32
     // );
     // text.tint = 0xa439a4;
-
-    temp1 = makePlatform(300, 250, platform_types.DEFAULT);
-    temp2 = makePlatform(300, 275, platform_types.SPAWN);
 }
 
 function except(items, index) {
@@ -58,6 +53,30 @@ function except(items, index) {
 }
 
 function update() {
+    players.forEach(player => {
+        const input = player.getInput();
+
+        if (input.left) {
+            player.update({ xVelocity: -playerConfig.RUN_SPEED });
+        } else if (input.right) {
+            player.update({ xVelocity: playerConfig.RUN_SPEED });
+        } else {
+            player.update({ xVelocity: 0 });
+        }
+
+        debugRender(input);
+
+        if (input.up) {
+            player.update({ yVelocity: -playerConfig.JUMP_IMPULSE });
+        }
+
+        const hitPlatform = game.physics.arcade.collide(
+            player.sprite,
+            level.platforms,
+            (_, platform) => {},
+            player => player.body.velocity.y > 0
+        );
+    });
     // const playerSnapshots = players.map(p => new PlayerSnapshot(p));
     // playerSnapshots.forEach((playerSnapshot, index) => {
     //     const otherPlayerSnapshots = except(playerSnapshots, index);
@@ -76,9 +95,9 @@ function update() {
 function render() {
     game.debug.text("FPS: " + game.time.fps || "FPS: --", 40, 40, "#00ff00");
 
-    game.debug.body(temp1);
-    game.debug.body(temp2);
     game.debug.body(players[0].sprite);
+
+    level.platforms.forEach(p => game.debug.body(p));
 }
 
 export default { create: create, update: update, render: render };
