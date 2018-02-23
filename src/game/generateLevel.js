@@ -32,12 +32,6 @@ function makeLevel() {
         platforms.add(platform);
     });
 
-    platforms.children.forEach(p => {
-        game.physics.enable(p);
-        p.body.moves = false;
-        p.body.immovable = true;
-    });
-
     // Ropes
     const ropes = generateRopes(platformInfos);
 
