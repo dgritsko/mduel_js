@@ -1,8 +1,8 @@
 // import Queue from "tinyqueue";
-import { now, isBool, isNumber, isString } from "./util";
+import { now, isBool, isNumber, isString, debugRender } from "./util";
 // import { locations } from "../enums/locations";
 // import { positions } from "../enums/positions";
-import { directions } from "../enums/directions";
+// import { directions } from "../enums/directions";
 import { animations } from "../enums/animations";
 import { collisions } from "../enums/collisions";
 import { playerConfig } from "./config";
@@ -31,7 +31,8 @@ export class Player {
             lastWeaponChangeTime: 0,
             weaponJustCleared: false,
             nettedStrength: 0,
-            justUnwarped: false
+            justUnwarped: false,
+            inputInterrupt: 0
         };
 
         this.input = this.configureInput(id);
@@ -133,18 +134,18 @@ export class Player {
         //     false
         // );
         // //this.sprite.animations.add(animations.JUMP, [11,12,13,14,15,16,17], 10, true);
-        // this.sprite.animations.add(
-        //     animations.STAND_JUMP,
-        //     [6, 12, 13, 14, 15, 16, 6],
-        //     10,
-        //     false
-        // );
-        // this.sprite.animations.add(
-        //     animations.RUN_JUMP,
-        //     [17, 18, 19, 20],
-        //     10,
-        //     false
-        // );
+        this.sprite.animations.add(
+            animations.STAND_JUMP,
+            [6, 12, 13, 14, 15, 16, 17, 21],
+            FRAMERATE,
+            false
+        );
+        this.sprite.animations.add(
+            animations.RUN_JUMP,
+            [17, 18, 19, 20, 20, 21],
+            FRAMERATE,
+            false
+        );
         // this.sprite.animations.add(animations.STAND_FALL, [21], 0, true);
         // this.sprite.animations.add(
         //     animations.FALL_ROLL,
@@ -251,7 +252,7 @@ export class Player {
     configureInput(id) {
         if (id === 1) {
             return {
-                action: game.input.keyboard.addKey(Phaser.Keyboard.Q),
+                fire: game.input.keyboard.addKey(Phaser.Keyboard.Q),
                 up: game.input.keyboard.addKey(Phaser.Keyboard.W),
                 down: game.input.keyboard.addKey(Phaser.Keyboard.S),
                 left: game.input.keyboard.addKey(Phaser.Keyboard.A),
@@ -259,7 +260,7 @@ export class Player {
             };
         } else if (id === 2) {
             return {
-                action: game.input.keyboard.addKey(Phaser.Keyboard.U),
+                fire: game.input.keyboard.addKey(Phaser.Keyboard.U),
                 up: game.input.keyboard.addKey(Phaser.Keyboard.I),
                 down: game.input.keyboard.addKey(Phaser.Keyboard.K),
                 left: game.input.keyboard.addKey(Phaser.Keyboard.J),
@@ -267,7 +268,7 @@ export class Player {
             };
         } else {
             const input = game.input.keyboard.createCursorKeys();
-            input.action = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+            input.fire = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
             return input;
         }
     }
@@ -306,26 +307,27 @@ export class Player {
     // }
 
     getInput() {
-        const left = this.input.left.isDown;
-        const right = this.input.right.isDown;
-        const up = this.input.up.isDown;
-        const down = this.input.down.isDown;
-        const anyInput = left || right || up || down;
+        const hl = this.input.left.isDown;
+        const hr = this.input.right.isDown;
+        const hu = this.input.up.isDown;
+        const hd = this.input.down.isDown;
+        const hf = this.input.fire.isDown;
+
+        const i = x => (x ? 1 : 0);
 
         const current = {
-            left,
-            right,
-            up,
-            down,
-            anyInput
+            hl: i(hl),
+            hr: i(hr),
+            hu: i(hu),
+            hd: i(hd),
+            hf: i(hf)
         };
 
         const newPresses = {};
 
-        const makeKey = k =>
-            `new${k.substring(0, 1).toUpperCase()}${k.substring(1)}`;
+        const makeKey = k => `n${k.substring(1)}`;
         Object.keys(this.prevInput || []).forEach(k => {
-            newPresses[makeKey(k)] = !this.prevInput[k] && current[k];
+            newPresses[makeKey(k)] = i(!this.prevInput[k] && current[k]);
         });
 
         this.prevInput = Object.assign({}, current);
@@ -358,11 +360,9 @@ export class Player {
             dx,
             dy,
             inputEnabled,
-            xVelocity,
-            yVelocity,
-            location,
-            position,
-            direction,
+            vx,
+            vy,
+            isFlipped,
             animation
         } = newState;
         if (isNumber(x)) {
@@ -385,12 +385,12 @@ export class Player {
             this.inputEnabled = inputEnabled;
         }
 
-        if (isNumber(xVelocity)) {
-            this.sprite.body.velocity.x = xVelocity;
+        if (isNumber(vx)) {
+            this.sprite.body.velocity.x = vx;
         }
 
-        if (isNumber(yVelocity)) {
-            this.sprite.body.velocity.y = yVelocity;
+        if (isNumber(vy)) {
+            this.sprite.body.velocity.y = vy;
         }
 
         // if (isNumber(location)) {
@@ -410,15 +410,8 @@ export class Player {
         //     this.position = position;
         // }
 
-        if (isNumber(direction)) {
-            switch (direction) {
-                case directions.LEFT:
-                    this.sprite.scale.setTo(-1, 1);
-                    break;
-                case directions.RIGHT:
-                    this.sprite.scale.setTo(1, 1);
-                    break;
-            }
+        if (isBool(isFlipped)) {
+            this.sprite.scale.setTo(isFlipped ? -1 : 1, 1);
         }
 
         if (isString(animation)) {
@@ -433,157 +426,253 @@ export class Player {
         }
     }
 
-    handleInput() {
-        const input = this.getInput();
-        const state = this.getState();
+    update() {
+        this.state.wasOnGround = this.state.grounded;
+    }
 
-        // //weapon animation refreshes
+    handleInput() {
+        const { hr, hl, hu, hd, nr, nl, nu, nd, hf, nf } = this.getInput();
+
+        const {
+            inputInterrupt,
+            climbingRope,
+            touchingRope,
+            crouching,
+            rolling
+        } = this.state;
+        //weapon animation refreshes
         // if (inputInterrupt == 0 && forceAnimUpdate)
         // {
-        //     if (isOnRope()) {
-        //         if (vy > 0)
-        //             playClimbingDown();
-        //         else
-        //             playClimbingUp();
-        //     }
-        //     else if (isOnGround())
-        //         playRunning();
-        //     else if (bUnstable)
-        //         playPushedForward();
-        //     else
-        //         playFalling();
-        //     if (hl || hr)
-        //         setFlipped(hl, getFlippedv());
-        //     forceAnimUpdate = false;
+        // 	if (isOnRope()) {
+        // 		if (vy > 0)
+        // 			playClimbingDown();
+        // 		else
+        // 			playClimbingUp();
+        // 	}
+        // 	else if (isOnGround())
+        // 		playRunning();
+        // 	else if (bUnstable)
+        // 		playPushedForward();
+        // 	else
+        // 		playFalling();
+
+        // 	if (hl || hr)
+        // 		setFlipped(hl, getFlippedv());
+
+        // 	forceAnimUpdate = false;
         // }
+
         // //netted physics
         // if (nettedStrength > 0)
         // {
-        //     handleNetted(nu);
-        //     return;
+        // 	handleNetted(nu);
+        // 	return;
         // }
+
         if (this.sprite.body.left <= 0) {
-            // bounce off left wall
-            //     setFlipped(true);
-            //     bounce();
+            //bouncing off the left wall
+            this.setFlipped(true);
+            this.bounce();
         } else if (this.sprite.body.right >= game.world.width) {
-            // bounce off right wall
-            //     setFlipped(false);
-            //     bounce();
-        } else if (state.inputEnabled || true) {
+            //bouncing off the right wall
+            this.setFlipped(false);
+            this.bounce();
+        } else if (inputInterrupt < now()) {
             //regular controls
-            if (false) {
-                //     if (bClimbingRope)
-                //     {
-                //         if (touchingRope == NULL)
-                //         {
-                //             vy = 0;
-                //             vx = (hr - hl) * WALKSPEED;
-                //             bClimbingRope = false;
-                //             justfell();
-                //         } else {
-                //             vy = (hd - hu) * CLIMBSPEED;
-                //             //don't allow to climb off rope via up/down keys
-                //             if (touchingRope->childRopes[touchingRope->childRopes.size()-1]->getBottom() < getBottom() && vy > 0)
-                //                 vy = 0;
-                //             else if (touchingRope->childRopes[0]->getTop() > getTop() && vy < 0)
-                //                 vy = 0;
-                //             if (nd)
-                //                 playClimbingDown();
-                //             else if (nu)
-                //                 playClimbingUp();
-                //             if (vy == 0) setFrame(frame);
-                //             if (hr || hl)	//jump off!
-                //             {
-                //                 vx = (hr - hl) * WALKSPEED;
-                //                 vy = 0;
-                //                 bClimbingRope = false;
-                //                 setFlipped(hl);
-                //                 justfell();
-                //             }
-                //         }
-            } else if (true) {
-                // if (!wasOnGround) {
-                //  justlanded(hr, hl);	//reset collision bounds, etc
-                // }
-                //         bUnstable = false;
-                //         if (touchingRope != NULL && (hu || nu || hd || nd) && !(hl || hr) && !bCrouching && !bRolling)
-                //         {
-                //             climbRope(hd);
-                //         } else if (bRolling)
-                //         {
-                //             if (arbitraryAnim == 0)	//anim finished, so stop moving (PROBABLY A BAD IDEA)
-                //             {
-                //                 bRolling = false;
-                //                 bCrouching = true;
-                //                 //recovered from a roll, so reset collision & warp usage state
-                //                 lastCollision = CS_NONE;
-                //                 bJustUnwarped = false;
-                //             }
-                //         } else if (bCrouching)
-                //         {
-                //             vx = 0;
-                //             if (!hd)
-                //                 uncrouch(hr, hl);
-                //         } else {
-                //             vx = (hr - hl) * WALKSPEED;		//walking speed
-
-                if (state.crouching) {
-                    this.sprite.body.velocity.x = 0;
-                    if (!input.down) {
-                        this.uncrouch(input.right, input.left);
-                    }
+            if (climbingRope) {
+                // 		if (touchingRope == NULL)
+                // 		{
+                // 			vy = 0;
+                // 			vx = (hr - hl) * WALKSPEED;
+                // 			bClimbingRope = false;
+                // 			justfell();
+                // 		} else {
+                // 			vy = (hd - hu) * CLIMBSPEED;
+                // 			//don't allow to climb off rope via up/down keys
+                // 			if (touchingRope->childRopes[touchingRope->childRopes.size()-1]->getBottom() < getBottom() && vy > 0)
+                // 				vy = 0;
+                // 			else if (touchingRope->childRopes[0]->getTop() > getTop() && vy < 0)
+                // 				vy = 0;
+                // 			if (nd)
+                // 				playClimbingDown();
+                // 			else if (nu)
+                // 				playClimbingUp();
+                // 			if (vy == 0) setFrame(frame);
+                // 			if (hr || hl)	//jump off!
+                // 			{
+                // 				vx = (hr - hl) * WALKSPEED;
+                // 				vy = 0;
+                // 				bClimbingRope = false;
+                // 				setFlipped(hl);
+                // 				justfell();
+                // 			}
+                // 		}
+            } else if (this.isOnGround()) {
+                if (!this.wasOnGround()) {
+                    //reset collision bounds, etc
+                    this.justLanded(hr, hl);
+                }
+                this.state.unstable = false;
+                if (
+                    touchingRope != null &&
+                    (hu || nu || hd || nd) &&
+                    !(hl || hr) &&
+                    !crouching &&
+                    !rolling
+                ) {
+                    this.climbRope(hd);
+                } else if (rolling) {
+                    // 			if (arbitraryAnim == 0)	//anim finished, so stop moving (PROBABLY A BAD IDEA)
+                    // 			{
+                    // 				bRolling = false;
+                    // 				bCrouching = true;
+                    // 				//recovered from a roll, so reset collision & warp usage state
+                    // 				lastCollision = CS_NONE;
+                    // 				bJustUnwarped = false;
+                    // 			}
+                } else if (crouching) {
+                    // 			vx = 0;
+                    // 			if (!hd)
+                    // 				uncrouch(hr, hl);
                 } else {
-                    const asInt = b => (b ? 1 : 0);
+                    this.applyState({ vx: (hr - hl) * playerConfig.RUN_SPEED });
 
-                    this.sprite.body.velocity.x =
-                        (asInt(input.right) - asInt(input.left)) *
-                        playerConfig.RUN_SPEED;
-
-                    if (input.newRight) {
-                        this.sprite.scale.setTo(1, 1);
-                        this.sprite.animations.play(animations.RUN);
-                    } else if (input.newLeft) {
-                        this.sprite.scale.setTo(-1, 1);
-                        this.sprite.animations.play(animations.RUN);
-                    } else if (input.down) {
+                    if (nr) {
+                        this.setFlipped(false);
+                        this.playRunning();
+                    } else if (nl) {
+                        this.setFlipped(true);
+                        this.playRunning();
+                    } else if (hd)
+                        //crouch
                         this.crouch();
-                    } else if (!input.right && !input.left) {
-                        this.sprite.animations.play(animations.STAND);
+                    else if (!hr && !hl) {
+                        //standing still
+                        this.playIdle();
                     }
-
-                    if (input.newUp) {
+                    if (nu) {
                         this.jump();
                     }
                 }
             } else {
-                //     } else {
-                //         if (wasOnGround() && !justJumped)
-                //             justfell();
-                //         justJumped = false;
-                //         if (usingChut())		//parachut midair controls
-                //         {
-                //             vx = (vx==0 && !hr && !hl ? 0 : (flippedh ? WALKSPEED*-1 : WALKSPEED));
-                //             //vx = (flippedh ? WALKSPEED*-1 : WALKSPEED);
-                //             //vx = (hr - hl) * WALKSPEED;
-                //             if (nr)
-                //                 setFlipped(false);
-                //             else if (nl)
-                //                 setFlipped(true);
-                //         }
-                //     }
+                // 		if (wasOnGround() && !justJumped)
+                // 			justfell();
+                // 		justJumped = false;
+                // 		if (usingChut())		//parachut midair controls
+                // 		{
+                // 			vx = (vx==0 && !hr && !hl ? 0 : (flippedh ? WALKSPEED*-1 : WALKSPEED));
+                // 			//vx = (flippedh ? WALKSPEED*-1 : WALKSPEED);
+                // 			//vx = (hr - hl) * WALKSPEED;
+                // 			if (nr)
+                // 				setFlipped(false);
+                // 			else if (nl)
+                // 				setFlipped(true);
+                // 		}
             }
         }
+
         // //weapon stuffs
         // if (currWeapon != NULL)
         // {
-        //     if (nf && !currWeapon->isFiring())
-        //         currWeapon->fire();
-        //     if (!hf && currWeapon->isFiring())
-        //         currWeapon->stopFiring();
+        // 	if (nf && !currWeapon->isFiring())
+        // 		currWeapon->fire();
+        // 	if (!hf && currWeapon->isFiring())
+        // 		currWeapon->stopFiring();
         // }
+        debugRender({ y: this.sprite.body.velocity.y });
     }
 
+    isOnGround() {
+        return this.state.grounded;
+    }
+
+    wasOnGround() {
+        return this.state.wasGrounded;
+    }
+
+    justLanded(hr, hl) {
+        this.setBounds(playerConfig.STANDING_BOUNDS);
+        this.setFlipped(hr - hl == 0 ? null : hr - hl < 0, null);
+        if (this.state.unstable) {
+            // roll((vx > 0 && flippedh) || (vx < 0 && !flippedh));
+        } else {
+            this.applyState({ vx: 0 });
+            this.playRunning();
+            this.state.lastCollision = collisions.NONE; // back to normal!
+            this.state.justUnwarped = false; //reset the warp usage state.
+        }
+    }
+
+    jump(bootsJump) {
+        if (!this.isOnGround()) {
+            return false;
+        }
+        //setBasePos(getBottom() - 1);	//move off the ground
+        this.state.justJumped = true; //stops routine 'just airborne' checks happening
+        this.state.crouching = false;
+        this.state.rolling = false;
+
+        let vy = -playerConfig.JUMP_IMPULSE;
+        if (bootsJump) {
+            vy = vy * 3 / 2;
+        }
+        this.applyState({ vy });
+
+        if (this.sprite.body.velocity.x === 0) {
+            this.playJumpedStanding();
+        } else {
+            this.playJumpedMoving();
+        }
+
+        this.setBounds(playerConfig.FALLING_BOUNDS);
+        return true;
+    }
+
+    setFlipped(fh, fv) {
+        // if (bRotating && rotSetID != -1)	//cant be flipped if rotating at the same time
+        //     return;
+
+        // flippedh = fh;
+        // flippedv = fv;
+        // if (oldFliph != flippedh)
+        // {
+        //     swapHBounds();
+        //     oldFliph = flippedh;
+        // }
+        // if (oldFlipv != flippedv)
+        // {
+        //     swapVBounds();
+        //     oldFlipv = flippedv;
+        // }
+        // UPDATEDflip = true;
+        this.applyState({ isFlipped: fh });
+    }
+
+    /////////////////////////////////////////
+    /////////////////////////////////////////
+    /////////////////////////////////////////
+    /////////////////////////////////////////
+
+    playIdle() {
+        this.applyState({ animation: animations.STAND });
+    }
+
+    playRunning() {
+        this.applyState({ animation: animations.RUN });
+    }
+
+    playJumpedStanding() {
+        this.applyState({ animation: animations.STAND_JUMP });
+    }
+
+    playJumpedMoving() {
+        this.applyState({ animation: animations.RUN_JUMP });
+    }
+
+    /////////////////////////////////////////
+    /////////////////////////////////////////
+    /////////////////////////////////////////
+    /////////////////////////////////////////
     crouch() {
         // TODO
         // if (!isOnGround()) return false;
