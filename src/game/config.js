@@ -8,7 +8,8 @@ const playerConfig = {
     SPRITE_HEIGHT: 64,
     STANDING_BOUNDS: { top: -22, right: 10, bottom: 24, left: -10 },
     FALLING_BOUNDS: { top: -22, right: 10, bottom: 24, left: -10 },
-    CROUCHING_BOUNDS: { top: -4, right: 10, bottom: 24, left: -10 }
+    CROUCHING_BOUNDS: { top: -4, right: 10, bottom: 24, left: -10 },
+    FRAMERATE: 10
 };
 
 const itemConfig = {

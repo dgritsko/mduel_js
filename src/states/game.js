@@ -54,21 +54,27 @@ function except(items, index) {
 
 function update() {
     players.forEach(player => {
-        const input = player.getInput();
+        player.handleInput();
 
-        if (input.left) {
-            player.update({ xVelocity: -playerConfig.RUN_SPEED });
-        } else if (input.right) {
-            player.update({ xVelocity: playerConfig.RUN_SPEED });
-        } else {
-            player.update({ xVelocity: 0 });
-        }
+        // debugRender({
+        //     center: player.sprite.body.center,
+        //     left: player.sprite.body.left,
+        //     right: player.sprite.body.right
+        // });
 
-        debugRender(input);
+        // if (input.left) {
+        //     player.update({ xVelocity: -playerConfig.RUN_SPEED });
+        // } else if (input.right) {
+        //     player.update({ xVelocity: playerConfig.RUN_SPEED });
+        // } else {
+        //     player.update({ xVelocity: 0 });
+        // }
 
-        if (input.up) {
-            player.update({ yVelocity: -playerConfig.JUMP_IMPULSE });
-        }
+        // debugRender(input);
+
+        // if (input.up) {
+        //     player.update({ yVelocity: -playerConfig.JUMP_IMPULSE });
+        // }
 
         const hitPlatform = game.physics.arcade.collide(
             player.sprite,
