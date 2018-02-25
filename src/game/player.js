@@ -102,6 +102,41 @@ export class Player {
             false
         );
 
+        this.sprite.animations.add(
+            animations.UNCROUCH,
+            [5, 6],
+            FRAMERATE,
+            false
+        );
+        this.sprite.animations.add(
+            animations.STAND_JUMP,
+            [6, 12, 13, 14, 15, 16, 17, 21],
+            FRAMERATE,
+            false
+        );
+        this.sprite.animations.add(
+            animations.RUN_JUMP,
+            [17, 18, 19, 20, 20, 21],
+            FRAMERATE,
+            false
+        );
+        this.sprite.animations.add(
+            animations.FORWARD_FALL,
+            [26, 27],
+            FRAMERATE / 2,
+            true
+        );
+        this.sprite.animations.add(
+            animations.BACKWARD_FALL,
+            [28, 29],
+            FRAMERATE / 2,
+            true
+        );
+
+        // void playPushedForward() {setAnim(26, 27, ANIMSPEED/2);}
+        // ///play an animation for falling when unstable and leaning backwards
+        // void playPushedBackward() {setAnim(28, 29, ANIMSPEED/2);}
+
         // this.sprite.animations.add(
         //     animations.CROUCH,
         //     [10, 5],
@@ -109,12 +144,6 @@ export class Player {
         //     false
         // );
         // this.sprite.animations.add(animations.CROUCHED, [5], 0, false);
-        this.sprite.animations.add(
-            animations.UNCROUCH,
-            [5, 6],
-            FRAMERATE,
-            false
-        );
         // this.sprite.animations.add(
         //     animations.TRANSITION,
         //     [6],
@@ -134,18 +163,6 @@ export class Player {
         //     false
         // );
         // //this.sprite.animations.add(animations.JUMP, [11,12,13,14,15,16,17], 10, true);
-        this.sprite.animations.add(
-            animations.STAND_JUMP,
-            [6, 12, 13, 14, 15, 16, 17, 21],
-            FRAMERATE,
-            false
-        );
-        this.sprite.animations.add(
-            animations.RUN_JUMP,
-            [17, 18, 19, 20, 20, 21],
-            FRAMERATE,
-            false
-        );
         // this.sprite.animations.add(animations.STAND_FALL, [21], 0, true);
         // this.sprite.animations.add(
         //     animations.FALL_ROLL,
@@ -153,18 +170,7 @@ export class Player {
         //     4,
         //     false
         // );
-        // this.sprite.animations.add(
-        //     animations.FORWARD_FALL,
-        //     [26, 27],
-        //     FRAMERATE / 2,
-        //     true
-        // );
-        // this.sprite.animations.add(
-        //     animations.BACKWARD_FALL,
-        //     [28, 29],
-        //     FRAMERATE / 2,
-        //     true
-        // );
+
         // this.sprite.animations.add(animations.SHOOT, [30, 31], 2, false);
         // this.sprite.animations.add(animations.GRENADE_TOSS, [32, 33], 3, true);
         // this.sprite.animations.add(animations.PUCK_TOSS, [34, 35], 2, true);
@@ -579,7 +585,6 @@ export class Player {
         // 	if (!hf && currWeapon->isFiring())
         // 		currWeapon->stopFiring();
         // }
-        debugRender({ y: this.sprite.body.velocity.y });
     }
 
     isOnGround() {
@@ -648,6 +653,42 @@ export class Player {
         this.applyState({ isFlipped: fh });
     }
 
+    bounce(pushedForwards) {
+        if (this.state.currWeapon != null && this.state.currWeapon.isFiring()) {
+            this.state.currWeapon.stopFiring();
+        }
+
+        this.state.justJumped = true;
+        this.state.unstable = true;
+        this.state.crouching = false;
+        this.state.rolling = false;
+        this.state.climbingRope = false;
+        this.setBounds(playerConfig.FALLING_BOUNDS);
+
+        let vx = null;
+        let vy = null;
+
+        if (pushedForwards) {
+            vx =
+                this.sprite.scale.x < 0
+                    ? -playerConfig.RUN_SPEED
+                    : playerConfig.RUN_SPEED;
+            this.playPushedForward();
+        } else {
+            vx =
+                this.sprite.scale.x < 0
+                    ? playerConfig.RUN_SPEED
+                    : -playerConfig.RUN_SPEED;
+            this.playPushedBackward();
+        }
+        //setBasePos(getBottom() - 1);
+        if (this.isOnGround()) {
+            vy = playerConfig.JUMP_IMPULSE * 2 / 3;
+        }
+
+        this.applyState({ vx, vy });
+    }
+
     /////////////////////////////////////////
     /////////////////////////////////////////
     /////////////////////////////////////////
@@ -667,6 +708,14 @@ export class Player {
 
     playJumpedMoving() {
         this.applyState({ animation: animations.RUN_JUMP });
+    }
+
+    playPushedBackward() {
+        this.applyState({ animation: animations.BACKWARD_FALL });
+    }
+
+    playPushedForward() {
+        this.applyState({ animation: animations.FORWARD_FALL });
     }
 
     /////////////////////////////////////////
