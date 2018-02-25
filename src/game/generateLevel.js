@@ -38,14 +38,43 @@ function makeLevel() {
     ropes.forEach(r => {
         r.x = r.column * horizontalSpacing + 47;
         r.y = r.row * verticalSpacing + 32;
-        r.height = verticalSpacing * r.length - 15;
 
-        const graphics = game.add.graphics(r.x + 0.5, r.y);
-        graphics.lineStyle(2, 0x8c6414, 1);
-        graphics.lineTo(0, r.height);
+        const anchor = game.add.sprite(r.x, r.y, "rope", 0);
+        anchor.anchor.setTo(0.5, 1);
 
-        const anchor = game.add.sprite(r.x, r.y, "rope_anchor");
-        anchor.anchor.setTo(0.5);
+        const total = r.length * 2;
+
+        const segments = game.add.group();
+
+        for (let si = 0; si < total; si++) {
+            const sy = si * 32;
+
+            const segment = game.add.sprite(r.x, r.y + sy, "rope", 1);
+            segment.anchor.setTo(0.5, 0);
+
+            if (si === total - 1) {
+                segment.scale.setTo(1, 0.5);
+            }
+            segments.add(segment);
+        }
+
+        game.physics.enable(anchor);
+        anchor.body.moves = false;
+        anchor.body.immovable = true;
+
+        // TODO: Move these hitbox adjustments to constants elsewhere
+        anchor.body.setSize(11, 11, 11, 21);
+
+        segments.children.forEach(s => {
+            game.physics.enable(s);
+            s.body.moves = false;
+            s.body.immovable = true;
+            // TODO: Move these hitbox adjustments to constants elsewhere
+            s.body.setSize(4, 32, 15);
+        });
+
+        r.anchor = anchor;
+        r.segments = segments;
     });
 
     // Powerup spawns

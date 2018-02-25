@@ -101,6 +101,20 @@ export class Player {
         );
         this.sprite.animations.add(animations.STAND_FALL, [21], 0, true);
 
+        this.sprite.animations.add(
+            animations.CLIMB_UP,
+            [39, 40, 41, 42],
+            FRAMERATE,
+            true
+        );
+
+        this.sprite.animations.add(
+            animations.CLIMB_DOWN,
+            [41, 40, 39, 42],
+            FRAMERATE,
+            true
+        );
+
         // void playPushedForward() {setAnim(26, 27, ANIMSPEED/2);}
         // ///play an animation for falling when unstable and leaning backwards
         // void playPushedBackward() {setAnim(28, 29, ANIMSPEED/2);}
@@ -311,12 +325,13 @@ export class Player {
 
     update() {
         this.state.wasGrounded = this.state.grounded;
+        this.state.wasTouchingRope = this.state.touchingRope;
     }
 
     handleInput() {
         const { hr, hl, hu, hd, nr, nl, nu, nd, hf, nf } = this.getInput();
 
-        debugRender(this.getState());
+        //debugRender(this.getState());
         //weapon animation refreshes
         // if (inputInterrupt == 0 && forceAnimUpdate)
         // {
@@ -365,12 +380,16 @@ export class Player {
                     this.state.climbingRope = false;
                     this.justfell();
                 } else {
-                    // 			vy = (hd - hu) * CLIMBSPEED;
+                    this.apply({ vy: (hd - hu) * playerConfig.CLIMB_SPEED });
                     // 			//don't allow to climb off rope via up/down keys
                     // 			if (touchingRope->childRopes[touchingRope->childRopes.size()-1]->getBottom() < getBottom() && vy > 0)
                     // 				vy = 0;
                     // 			else if (touchingRope->childRopes[0]->getTop() > getTop() && vy < 0)
                     // 				vy = 0;
+                    if (!hd && !hu) {
+                        this.apply({ animation: animations.NONE });
+                    }
+
                     if (nd) {
                         this.playClimbingDown();
                     } else if (nu) {
@@ -622,8 +641,8 @@ export class Player {
     justfell() {
         const { unstable, vx, flippedh } = this.getState();
 
-        //if (bRolling)
-        //	bUnstable = true;
+        this.sprite.body.allowGravity = true;
+
         this.state.rolling = false;
         this.state.crouching = false;
         //if (vx == 0)
@@ -636,6 +655,20 @@ export class Player {
                 ? this.playPushedForward()
                 : this.playPushedBackward();
         }
+    }
+
+    climbRope(hd) {
+        if (this.state.touchingRope !== null) {
+            this.apply({ x: this.state.touchingRope.x });
+        } else if (this.state.wasTouchingRope !== null) {
+            //this is mainly for the hook's way of doing it
+            this.apply({ x: this.state.wasTouchingRope.x });
+        } else {
+            return;
+        }
+        this.sprite.body.allowGravity = false;
+        this.state.climbingRope = true;
+        hd ? this.playClimbingDown() : this.playClimbingUp();
     }
 
     // Animations
@@ -678,5 +711,13 @@ export class Player {
 
     playCrouching() {
         this.apply({ animation: animations.CROUCHING });
+    }
+
+    playClimbingDown() {
+        this.apply({ animation: animations.CLIMB_DOWN });
+    }
+
+    playClimbingUp() {
+        this.apply({ animation: animations.CLIMB_UP });
     }
 }

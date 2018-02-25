@@ -11,6 +11,8 @@ export const animations = {
     STAND_FALL: "stand_fall",
     FORWARD_FALL: "forward_fall",
     BACKWARD_FALL: "backward_fall",
+    CLIMB_UP: "climb_up",
+    CLIMB_DOWN: "climb_down",
 
     FALL_ROLL: "fall_roll",
     SHOOT: "shoot",

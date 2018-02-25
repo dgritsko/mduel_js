@@ -47,7 +47,32 @@ function update() {
     players.forEach(player => {
         player.update();
 
-        handlePlatformCollisions(player, level);
+        if (!player.state.climbingRope) {
+            handlePlatformCollisions(player, level);
+        }
+
+        let hitRope = false;
+        level.ropes.forEach(r => {
+            const hitCurrentRope = game.physics.arcade.overlap(
+                player.sprite,
+                r.segments,
+                () => {
+                    player.state.touchingRope = r;
+                },
+                (player, segment) => {
+                    const dist = player.body.center.x - segment.body.center.x;
+
+                    // TODO: move this to a constant
+                    return Math.abs(dist) <= 5;
+                }
+            );
+
+            hitRope = hitRope || hitCurrentRope;
+        });
+
+        if (!hitRope) {
+            player.state.touchingRope = null;
+        }
 
         player.handleInput();
     });
@@ -57,6 +82,9 @@ function render() {
     //game.debug.text("FPS: " + game.time.fps || "FPS: --", 40, 40, "#00ff00");
     //game.debug.body(players[0].sprite);
     //level.platforms.forEach(p => game.debug.body(p));
+
+    game.debug.body(level.ropes[0].anchor);
+    level.ropes[0].segments.children.forEach(s => game.debug.body(s));
 }
 
 export default { create: create, update: update, render: render };
