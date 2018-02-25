@@ -1,8 +1,4 @@
-// import Queue from "tinyqueue";
 import { now, isBool, isNumber, isString, debugRender } from "./util";
-// import { locations } from "../enums/locations";
-// import { positions } from "../enums/positions";
-// import { directions } from "../enums/directions";
 import { animations } from "../enums/animations";
 import { collisions } from "../enums/collisions";
 import { playerConfig } from "./config";
@@ -36,51 +32,7 @@ export class Player {
         };
 
         this.input = this.configureInput(id);
-        // this.eventQueue = new Queue();
-
-        // this.applyState({
-        //     // location: locations.PLATFORM,
-        //     // position: positions.DEFAULT,
-        //     animation: animations.STAND,
-        //     inputEnabled: true
-        // });
     }
-
-    // updateEvents() {
-    //     if (this.eventQueue.length === 0) {
-    //         return;
-    //     }
-
-    //     const next = this.eventQueue.peek();
-
-    //     const shouldAdvance =
-    //         (typeof next.after === "undefined" &&
-    //             this.sprite.animations.currentAnim.isFinished) ||
-    //         next.after < now();
-
-    //     if (shouldAdvance) {
-    //         this.eventQueue.pop();
-    //         this.applyState(next);
-    //     }
-    // }
-
-    // clearQueue() {
-    //     this.eventQueue = new Queue();
-    // }
-
-    // queueEvents(events) {
-    //     if (events.length === 0) {
-    //         this.clearQueue();
-    //         return;
-    //     }
-
-    //     const head = events[0];
-    //     const tail = events.slice(1);
-
-    //     this.applyState(head);
-
-    //     this.eventQueue = new Queue(tail);
-    // }
 
     configureSprite() {
         this.sprite.anchor.setTo(0.5, 0.5);
@@ -210,30 +162,6 @@ export class Player {
         // this.sprite.animations.add(animations.EMPTY, [66], 0, false);
         // this.sprite.animations.add(animations.TRAPPED, [67], 0, false);
 
-        // Jump up
-        //this.sprite.animations.add('custom1', [6, 12, 13, 14, 15, 16, 6], 8, true);
-
-        // Jump forward
-        // 17, 18, 19, 20
-
-        // Jump start/end, land from fall/jump
-        // 6
-
-        // Backward roll (land from backward fall)
-        // 9, 8, 7
-
-        // Forward roll
-        // 7, 8, 9
-
-        // Crouch down
-        // 10, 5
-
-        // Uncrouch
-        // 5, 6
-
-        // Hit platform
-        // 7, 8
-
         game.physics.enable(this.sprite);
 
         this.setBounds(playerConfig.STANDING_BOUNDS);
@@ -282,39 +210,6 @@ export class Player {
         }
     }
 
-    // getState() {
-    //     return {
-    //         x: this.sprite.x,
-    //         y: this.sprite.y,
-    //         inputEnabled: this.inputEnabled,
-    //         xVelocity: this.sprite.body.velocity.x,
-    //         yVelocity: this.sprite.body.velocity.y,
-    //         location: this.location,
-    //         position: this.position,
-    //         direction:
-    //             this.sprite.scale.x < 0 ? directions.LEFT : directions.RIGHT,
-    //         animation: this.sprite.animations.name
-    //     };
-    // }
-
-    // getDebugState() {
-    //     const state = this.getState();
-
-    //     const fixValue = (k, d) => {
-    //         const entries = Object.entries(d);
-
-    //         state[k] = entries
-    //             .filter(e => e[1] === state[k])[0][0]
-    //             .toLowerCase();
-    //     };
-
-    //     // fixValue("location", locations);
-    //     // fixValue("position", positions);
-    //     fixValue("direction", directions);
-
-    //     return state;
-    // }
-
     getInput() {
         const hl = this.input.left.isDown;
         const hr = this.input.right.isDown;
@@ -355,18 +250,6 @@ export class Player {
 
         return Object.assign({}, this.state, position, velocity, { flippedh });
     }
-
-    // update(toUpdate, level, state) {
-    //     this.clearQueue();
-
-    //     if (Array.isArray(toUpdate)) {
-    //         this.queueEvents(toUpdate);
-    //     } else if (typeof toUpdate === "function") {
-    //         toUpdate(this, level, state);
-    //     } else if (typeof toUpdate === "object") {
-    //         this.applyState(toUpdate);
-    //     }
-    // }
 
     applyState(newState) {
         const {
@@ -431,18 +314,7 @@ export class Player {
     handleInput() {
         const { hr, hl, hu, hd, nr, nl, nu, nd, hf, nf } = this.getInput();
 
-        const state = this.getState();
-        const {
-            inputInterrupt,
-            climbingRope,
-            touchingRope,
-            crouching,
-            rolling,
-            flippedh,
-            justJumped
-        } = state;
-
-        debugRender(state);
+        debugRender(this.getState());
         //weapon animation refreshes
         // if (inputInterrupt == 0 && forceAnimUpdate)
         // {
@@ -480,16 +352,16 @@ export class Player {
             //bouncing off the right wall
             this.setFlipped(false);
             this.bounce();
-        } else if (inputInterrupt < now()) {
+        } else if (this.state.inputInterrupt < now()) {
             //regular controls
-            if (climbingRope) {
-                if (touchingRope === null) {
+            if (this.state.climbingRope) {
+                if (this.state.touchingRope === null) {
                     this.applyState({
                         vy: 0,
                         vx: (hr - hl) * playerConfig.RUN_SPEED
                     });
                     this.state.climbingRope = false;
-                    this.justfell(state);
+                    this.justfell();
                 } else {
                     // 			vy = (hd - hu) * CLIMBSPEED;
                     // 			//don't allow to climb off rope via up/down keys
@@ -512,24 +384,24 @@ export class Player {
 
                         this.state.climbingRope = false;
                         this.setFlipped(hl);
-                        this.justfell(state);
+                        this.justfell();
                     }
                 }
             } else if (this.isOnGround()) {
                 if (!this.wasOnGround()) {
                     //reset collision bounds, etc
-                    this.justLanded(hr, hl, state);
+                    this.justLanded(hr, hl);
                 }
                 this.state.unstable = false;
                 if (
-                    touchingRope !== null &&
+                    this.state.touchingRope !== null &&
                     (hu || nu || hd || nd) &&
                     !(hl || hr) &&
-                    !crouching &&
-                    !rolling
+                    !this.state.crouching &&
+                    !this.state.rolling
                 ) {
                     this.climbRope(hd);
-                } else if (rolling) {
+                } else if (this.state.rolling) {
                     //anim finished, so stop moving (PROBABLY A BAD IDEA)
                     if (this.sprite.animations.currentAnim.isFinished) {
                         this.state.rolling = false;
@@ -538,7 +410,7 @@ export class Player {
                         this.state.lastCollision = collisions.NONE;
                         this.state.justUnwarped = false;
                     }
-                } else if (crouching) {
+                } else if (this.state.crouching) {
                     this.applyState({ vx: 0 });
                     if (!hd) {
                         this.uncrouch(hr, hl);
@@ -554,7 +426,7 @@ export class Player {
                         this.playRunning();
                     } else if (hd)
                         //crouch
-                        this.crouch(state);
+                        this.crouch();
                     else if (!hr && !hl) {
                         //standing still
                         this.playIdle();
@@ -564,8 +436,8 @@ export class Player {
                     }
                 }
             } else {
-                if (this.wasOnGround() && !justJumped) {
-                    this.justfell(state);
+                if (this.wasOnGround() && !this.state.justJumped) {
+                    this.justfell();
                 }
                 this.state.justJumped = false;
 
@@ -600,14 +472,18 @@ export class Player {
         return this.state.wasGrounded;
     }
 
-    justLanded(hr, hl, state) {
-        const { unstable, vx, flippedh } = state;
+    justLanded(hr, hl) {
+        const { unstable, vx, flippedh } = this.getState();
 
         this.setBounds(playerConfig.STANDING_BOUNDS);
-        this.setFlipped(hr - hl == 0 ? null : hr - hl < 0, null);
+
         if (unstable) {
             this.roll((vx > 0 && flippedh) || (vx < 0 && !flippedh));
         } else {
+            // NOTE: Moved this within the "else" block as otherwise it would let
+            // the player horizontally flip as they rolled after being unstable
+            this.setFlipped(hr - hl == 0 ? null : hr - hl < 0, null);
+
             this.applyState({ vx: 0 });
             this.playRunning();
             this.state.lastCollision = collisions.NONE; // back to normal!
@@ -712,8 +588,8 @@ export class Player {
         return true;
     }
 
-    crouch(state) {
-        const { vx, unstable } = state;
+    crouch() {
+        const { vx, unstable } = this.getState();
         if (!this.isOnGround()) {
             return false;
         }
@@ -739,8 +615,8 @@ export class Player {
         this.playRunning();
     }
 
-    justfell(state) {
-        const { unstable, vx, flippedh } = state;
+    justfell() {
+        const { unstable, vx, flippedh } = this.getState();
 
         //if (bRolling)
         //	bUnstable = true;
