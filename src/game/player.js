@@ -253,7 +253,7 @@ export class Player {
         return Object.assign({}, this.state, position, velocity, { flippedh });
     }
 
-    applyState(newState) {
+    apply(newState) {
         const {
             x,
             y,
@@ -358,7 +358,7 @@ export class Player {
             //regular controls
             if (this.state.climbingRope) {
                 if (this.state.touchingRope === null) {
-                    this.applyState({
+                    this.apply({
                         vy: 0,
                         vx: (hr - hl) * playerConfig.RUN_SPEED
                     });
@@ -379,7 +379,7 @@ export class Player {
                     // 			if (vy == 0) setFrame(frame);
                     if (hr || hl) {
                         //jump off!
-                        this.applyState({
+                        this.apply({
                             vx: (hr - hl) * playerConfig.RUN_SPEED,
                             vy: 0
                         });
@@ -412,15 +412,15 @@ export class Player {
                         this.state.lastCollision = collisions.NONE;
                         this.state.justUnwarped = false;
 
-                        this.applyState({ animation: animations.CROUCHED });
+                        this.apply({ animation: animations.CROUCHED });
                     }
                 } else if (this.state.crouching) {
-                    this.applyState({ vx: 0 });
+                    this.apply({ vx: 0 });
                     if (!hd) {
                         this.uncrouch(hr, hl);
                     }
                 } else {
-                    this.applyState({ vx: (hr - hl) * playerConfig.RUN_SPEED });
+                    this.apply({ vx: (hr - hl) * playerConfig.RUN_SPEED });
 
                     if (nr) {
                         this.setFlipped(false);
@@ -488,7 +488,7 @@ export class Player {
             // the player horizontally flip as they rolled after being unstable
             this.setFlipped(hr - hl == 0 ? null : hr - hl < 0, null);
 
-            this.applyState({ vx: 0 });
+            this.apply({ vx: 0 });
             this.playRunning();
             this.state.lastCollision = collisions.NONE; // back to normal!
             this.state.justUnwarped = false; //reset the warp usage state.
@@ -508,7 +508,7 @@ export class Player {
         if (bootsJump) {
             vy = vy * 3 / 2;
         }
-        this.applyState({ vy });
+        this.apply({ vy });
 
         if (this.sprite.body.velocity.x === 0) {
             this.playJumpedStanding();
@@ -537,7 +537,7 @@ export class Player {
         //     oldFlipv = flippedv;
         // }
         // UPDATEDflip = true;
-        this.applyState({ isFlipped: fh });
+        this.apply({ isFlipped: fh });
     }
 
     bounce(pushedForwards) {
@@ -573,7 +573,7 @@ export class Player {
             vy = playerConfig.JUMP_IMPULSE * 2 / 3;
         }
 
-        this.applyState({ vx, vy });
+        this.apply({ vx, vy });
     }
 
     roll(backwards) {
@@ -638,48 +638,45 @@ export class Player {
         }
     }
 
-    /////////////////////////////////////////
-    /////////////////////////////////////////
-    /////////////////////////////////////////
-    /////////////////////////////////////////
+    // Animations
 
     playIdle() {
-        this.applyState({ animation: animations.STAND });
+        this.apply({ animation: animations.STAND });
     }
 
     playRunning() {
-        this.applyState({ animation: animations.RUN });
+        this.apply({ animation: animations.RUN });
     }
 
     playJumpedStanding() {
-        this.applyState({ animation: animations.STAND_JUMP });
+        this.apply({ animation: animations.STAND_JUMP });
     }
 
     playJumpedMoving() {
-        this.applyState({ animation: animations.RUN_JUMP });
+        this.apply({ animation: animations.RUN_JUMP });
     }
 
     playPushedBackward() {
-        this.applyState({ animation: animations.BACKWARD_FALL });
+        this.apply({ animation: animations.BACKWARD_FALL });
     }
 
     playPushedForward() {
-        this.applyState({ animation: animations.FORWARD_FALL });
+        this.apply({ animation: animations.FORWARD_FALL });
     }
 
     playRolling() {
-        this.applyState({ animation: animations.FORWARD_ROLL });
+        this.apply({ animation: animations.FORWARD_ROLL });
     }
 
     playRollingBack() {
-        this.applyState({ animation: animations.BACKWARD_ROLL });
+        this.apply({ animation: animations.BACKWARD_ROLL });
     }
 
     playFalling() {
-        this.applyState({ animation: animations.STAND_FALL });
+        this.apply({ animation: animations.STAND_FALL });
     }
 
     playCrouching() {
-        this.applyState({ animation: animations.CROUCHING });
+        this.apply({ animation: animations.CROUCHING });
     }
 }

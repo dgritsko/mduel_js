@@ -1,5 +1,0 @@
-const handleItemCollisions = () => {
-
-}
-
-export { handleItemCollisions }

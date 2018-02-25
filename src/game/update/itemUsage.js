@@ -1,5 +1,0 @@
-const handleItemUsage = () => {
-
-}
-
-export { handleItemUsage }

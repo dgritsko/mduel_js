@@ -1,5 +1,0 @@
-const handlePowerupCollisions = () => {
-
-}
-
-export { handlePowerupCollisions }
