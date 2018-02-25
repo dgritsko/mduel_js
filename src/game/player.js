@@ -54,6 +54,8 @@ export class Player {
             false
         );
 
+        this.sprite.animations.add(animations.CROUCHED, [5], 0, false);
+
         this.sprite.animations.add(
             animations.UNCROUCH,
             [5, 6],
@@ -87,13 +89,13 @@ export class Player {
 
         this.sprite.animations.add(
             animations.FORWARD_ROLL,
-            [7, 8, 9, 10, 5],
+            [7, 8, 9, 10],
             FRAMERATE,
             false
         );
         this.sprite.animations.add(
             animations.BACKWARD_ROLL,
-            [6, 22, 23, 24, 25, 5],
+            [6, 22, 23, 24, 25],
             FRAMERATE,
             false
         );
@@ -409,6 +411,8 @@ export class Player {
                         //recovered from a roll, so reset collision & warp usage state
                         this.state.lastCollision = collisions.NONE;
                         this.state.justUnwarped = false;
+
+                        this.applyState({ animation: animations.CROUCHED });
                     }
                 } else if (this.state.crouching) {
                     this.applyState({ vx: 0 });

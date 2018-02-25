@@ -1,7 +1,7 @@
 export const animations = {
     STAND: "stand",
     RUN: "run",
-    CROUCH: "crouch",
+    CROUCHED: "crouched",
     CROUCHING: "crouching",
     UNCROUCH: "uncrouch",
     TRANSITION: "transition",
