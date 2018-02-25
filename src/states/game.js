@@ -54,8 +54,6 @@ function except(items, index) {
 
 function update() {
     players.forEach(player => {
-        player.handleInput();
-
         player.update();
 
         // debugRender({
@@ -92,6 +90,7 @@ function update() {
         if (!hitPlatform) {
             player.state.grounded = false;
         }
+        player.handleInput();
     });
     // const playerSnapshots = players.map(p => new PlayerSnapshot(p));
     // playerSnapshots.forEach((playerSnapshot, index) => {
@@ -109,11 +108,9 @@ function update() {
 }
 
 function render() {
-    game.debug.text("FPS: " + game.time.fps || "FPS: --", 40, 40, "#00ff00");
-
-    game.debug.body(players[0].sprite);
-
-    level.platforms.forEach(p => game.debug.body(p));
+    //game.debug.text("FPS: " + game.time.fps || "FPS: --", 40, 40, "#00ff00");
+    //game.debug.body(players[0].sprite);
+    //level.platforms.forEach(p => game.debug.body(p));
 }
 
 export default { create: create, update: update, render: render };

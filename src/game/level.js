@@ -67,7 +67,7 @@ function generatePlatforms() {
     let result = [];
 
     // Left spawn
-    for (let j = 0; j < 18; j++) {
+    for (let j = -1; j < 18; j++) {
         result.push({ row: 4, column: j + 0.5, isSpawn: true });
     }
 
