@@ -381,11 +381,27 @@ export class Player {
                     this.justfell();
                 } else {
                     this.apply({ vy: (hd - hu) * playerConfig.CLIMB_SPEED });
-                    // 			//don't allow to climb off rope via up/down keys
-                    // 			if (touchingRope->childRopes[touchingRope->childRopes.size()-1]->getBottom() < getBottom() && vy > 0)
-                    // 				vy = 0;
-                    // 			else if (touchingRope->childRopes[0]->getTop() > getTop() && vy < 0)
-                    // 				vy = 0;
+                    //don't allow to climb off rope via up/down keys
+                    const touchingRope = this.state.touchingRope;
+                    const topSegment = touchingRope.segments.children[0];
+                    const bottomSegment =
+                        touchingRope.segments.children[
+                            touchingRope.segments.children.length - 1
+                        ];
+
+                    if (
+                        bottomSegment.body.bottom < this.sprite.body.bottom &&
+                        this.sprite.body.velocity.y > 0
+                    ) {
+                        // TODO: maybe allow falling off the bottom segment if the platform immediately below it is gone?
+                        this.apply({ vy: 0 });
+                    } else if (
+                        topSegment.body.top > this.sprite.body.top &&
+                        this.sprite.body.velocity.y < 0
+                    ) {
+                        this.apply({ vy: 0 });
+                    }
+
                     if (!hd && !hu) {
                         this.apply({ animation: animations.NONE });
                     }
