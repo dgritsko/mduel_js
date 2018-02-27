@@ -341,7 +341,7 @@ export class Player {
         // 		else
         // 			playClimbingUp();
         // 	}
-        // 	else if (isOnGround())
+        // 	else if (this.state.grounded)
         // 		playRunning();
         // 	else if (bUnstable)
         // 		playPushedForward();
@@ -424,7 +424,7 @@ export class Player {
                         this.justfell();
                     }
                 }
-            } else if (this.isOnGround()) {
+            } else if (this.state.grounded) {
                 if (!this.wasOnGround()) {
                     //reset collision bounds, etc
                     this.justLanded(hr, hl);
@@ -503,10 +503,6 @@ export class Player {
         // }
     }
 
-    isOnGround() {
-        return this.state.grounded;
-    }
-
     wasOnGround() {
         return this.state.wasGrounded;
     }
@@ -530,7 +526,7 @@ export class Player {
     }
 
     jump(bootsJump) {
-        if (!this.isOnGround()) {
+        if (!this.state.grounded) {
             return false;
         }
         //setBasePos(getBottom() - 1);	//move off the ground
@@ -583,7 +579,7 @@ export class Player {
             this.playPushedBackward();
         }
         //setBasePos(getBottom() - 1);
-        if (this.isOnGround()) {
+        if (this.state.grounded) {
             vy = playerConfig.JUMP_IMPULSE * 2 / 3;
         }
 
@@ -591,7 +587,7 @@ export class Player {
     }
 
     roll(backwards) {
-        if (!this.isOnGround()) {
+        if (!this.state.grounded) {
             return false;
         }
         if (!backwards) {
@@ -608,7 +604,7 @@ export class Player {
 
     crouch() {
         const { vx, unstable } = this.getState();
-        if (!this.isOnGround()) {
+        if (!this.state.grounded) {
             return false;
         }
         this.state.crouching = true;
