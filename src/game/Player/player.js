@@ -475,7 +475,10 @@ export class Player {
                         //standing still
                         this.playIdle();
                     }
+
                     if (nu) {
+                        this.jump();
+                    } else if (this.state.wasGrounded && this.sprite.body.velocity.y === 0 && hu) {
                         this.jump();
                     }
                 }
