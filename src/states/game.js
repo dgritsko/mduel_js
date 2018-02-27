@@ -80,11 +80,17 @@ function update() {
 
 function render() {
     //game.debug.text("FPS: " + game.time.fps || "FPS: --", 40, 40, "#00ff00");
-    //game.debug.body(players[0].sprite);
-    //level.platforms.forEach(p => game.debug.body(p));
 
-    game.debug.body(level.ropes[0].anchor);
-    level.ropes[0].segments.children.forEach(s => game.debug.body(s));
+    // render hitboxes
+    if (false) {
+        players.forEach(p => game.debug.body(p.sprite));
+        level.platforms.forEach(p => game.debug.body(p));
+
+        level.ropes.forEach(r => {
+            game.debug.body(r.anchor);
+            r.segments.children.forEach(s => game.debug.body(s))
+        })
+    }
 }
 
 export default { create: create, update: update, render: render };
