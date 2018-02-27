@@ -1,4 +1,4 @@
-import { playerConfig } from "../game/config";
+import { gameConfig, playerConfig } from "../game/config";
 import { Player } from "../game/Player/player";
 import { makeLevel } from "../game/Level/makeLevel";
 import { handlePlatformCollisions } from "../game/update/platformCollisions";
@@ -79,10 +79,11 @@ function update() {
 }
 
 function render() {
-    //game.debug.text("FPS: " + game.time.fps || "FPS: --", 40, 40, "#00ff00");
+    if (gameConfig.SHOW_FPS) {
+        game.debug.text("FPS: " + game.time.fps || "FPS: --", 40, 40, "#00ff00");
+    }
 
-    // render hitboxes
-    if (false) {
+    if (gameConfig.SHOW_HITBOXES) {
         players.forEach(p => game.debug.body(p.sprite));
         level.platforms.forEach(p => game.debug.body(p));
 

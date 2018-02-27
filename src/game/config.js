@@ -1,3 +1,8 @@
+const gameConfig = {
+    SHOW_HITBOXES: false,
+    SHOW_FPS: false
+}
+
 const playerConfig = {
     GRAVITY: 600,
     JUMP_IMPULSE: 240,
@@ -26,4 +31,4 @@ const levelConfig = {
     wallThreshold: 16
 };
 
-export { playerConfig, itemConfig, levelConfig };
+export { gameConfig, playerConfig, itemConfig, levelConfig };
