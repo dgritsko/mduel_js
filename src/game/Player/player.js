@@ -479,6 +479,7 @@ export class Player {
                     if (nu) {
                         this.jump();
                     } else if (this.state.wasGrounded && this.sprite.body.velocity.y === 0 && hu) {
+                        this.apply({ flippedh: hr - hl == 0 ? null : hr - hl < 0 });
                         this.jump();
                     }
                 }
