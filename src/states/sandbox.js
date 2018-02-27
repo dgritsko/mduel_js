@@ -1,6 +1,6 @@
 import { now } from "../game/util";
 import cfg from "../game/config";
-import { Player } from "../game/player";
+import { Player } from "../game/Player/player";
 import { range } from "ramda";
 import ItemManager from "../game/itemManager";
 

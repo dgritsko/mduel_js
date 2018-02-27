@@ -1,6 +1,6 @@
 import { playerConfig } from "../game/config";
-import { Player } from "../game/player";
-import { makeLevel } from "../game/generateLevel";
+import { Player } from "../game/Player/player";
+import { makeLevel } from "../game/Level/makeLevel";
 import { handlePlatformCollisions } from "../game/update/platformCollisions";
 import { debugRender } from "../game/util";
 

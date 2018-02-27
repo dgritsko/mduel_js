@@ -1,7 +1,7 @@
-import { levelConfig } from "./config";
+import { levelConfig } from "../config";
 import { generatePlatforms, generateRopes } from "./level";
 import { makePlatform } from "./platform";
-import { platform_types } from "../enums/platform_types";
+import { platform_types } from "../../enums/platform_types";
 
 function makeLevel() {
     const {

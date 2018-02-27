@@ -1,7 +1,7 @@
-import { now, isBool, isNumber, isString, debugRender } from "./util";
-import { animations } from "../enums/animations";
-import { collisions } from "../enums/collisions";
-import { playerConfig } from "./config";
+import { now, isBool, isNumber, isString, debugRender } from "../util";
+import { animations } from "../../enums/animations";
+import { collisions } from "../../enums/collisions";
+import { playerConfig } from "../config";
 
 export class Player {
     constructor(spriteName, x, y, id) {
@@ -265,6 +265,11 @@ export class Player {
         const flippedh = this.sprite.scale.x < 0;
 
         return Object.assign({}, this.state, position, velocity, { flippedh });
+    }
+
+    updateState(existing, update) {
+        this.apply(update);
+        return Object.assign({}, existing, update);
     }
 
     apply(newState) {

@@ -1,4 +1,4 @@
-import cfg from "./config";
+import cfg from "../config";
 
 function generateRopes(platforms) {
     const result = [];

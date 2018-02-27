@@ -1,4 +1,4 @@
-import { platform_types } from "../enums/platform_types";
+import { platform_types } from "../../enums/platform_types";
 
 const makePlatform = (x, y, type) => {
     const spriteName =
