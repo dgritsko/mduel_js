@@ -425,7 +425,7 @@ export class Player {
                     }
                 }
             } else if (this.state.grounded) {
-                if (!this.wasOnGround()) {
+                if (!this.state.wasGrounded) {
                     //reset collision bounds, etc
                     this.justLanded(hr, hl);
                 }
@@ -475,7 +475,7 @@ export class Player {
                     }
                 }
             } else {
-                if (this.wasOnGround() && !this.state.justJumped) {
+                if (this.state.wasGrounded && !this.state.justJumped) {
                     this.justfell();
                 }
                 this.state.justJumped = false;
@@ -501,10 +501,6 @@ export class Player {
         // 	if (!hf && currWeapon->isFiring())
         // 		currWeapon->stopFiring();
         // }
-    }
-
-    wasOnGround() {
-        return this.state.wasGrounded;
     }
 
     justLanded(hr, hl) {
