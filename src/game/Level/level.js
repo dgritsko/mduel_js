@@ -1,4 +1,4 @@
-import cfg from "../config";
+import { levelConfig } from "../config";
 
 function generateRopes(platforms) {
     const result = [];
@@ -64,7 +64,79 @@ function generateRopes(platforms) {
 }
 
 function generatePlatforms() {
+    if (levelConfig.TEST_LEVEL) {
+        return generateTestPlatforms();
+    }
+
     let result = [];
+
+    const {
+        LEVEL_WIDTH,
+        LEVEL_HEIGHT,
+        MAX_SECTION_WIDTH,
+        MIN_SECTION_WIDTH,
+        MAX_GAP_WIDTH,
+        MIN_GAP_WIDTH } = levelConfig;
+
+    levelConfig.FIXED_PLATFORMS.forEach(p => {
+        for (let j = p.column; j < p.column + p.width; j++) {
+            result.push({ row: p.row, column: j, isSpawn: p.isSpawn })
+        }
+    })
+
+    // Randomized platforms
+    for (let i = 1; i < LEVEL_HEIGHT - 1; i++) {
+        let curr = [];
+        while (curr.length < LEVEL_WIDTH) {
+            // 50% of the time, choose to start the level with a gap
+            if (curr.length == 0 && game.rnd.integerInRange(0, 1) == 1) {
+                for (
+                    var j = 0;
+                    j < game.rnd.integerInRange(0, MAX_GAP_WIDTH);
+                    j++
+                ) {
+                    curr.push(false);
+                }
+            } else {
+                for (
+                    let j = 0;
+                    j <
+                    game.rnd.integerInRange(MIN_SECTION_WIDTH, MAX_SECTION_WIDTH);
+                    j++
+                ) {
+                    curr.push(true);
+                }
+                for (
+                    let j = 0;
+                    j < game.rnd.integerInRange(MIN_GAP_WIDTH, MAX_GAP_WIDTH);
+                    j++
+                ) {
+                    curr.push(false);
+                }
+            }
+        }
+        curr = curr.slice(0, LEVEL_WIDTH);
+
+        // Since we can run past the max level width, slicing off the extra can result in a
+        // 1-width platform at the end of the level. In this case, make sure it's at least
+        // length 2
+        if (curr[LEVEL_WIDTH - 1] && !curr[LEVEL_WIDTH - 2]) {
+            curr[LEVEL_WIDTH - 2] = true;
+        }
+
+        const temp = curr
+            .map((value, index) => ({ value, index }))
+            .filter(item => item.value)
+            .map(item => ({ row: i, column: item.index, isSpawn: false }));
+
+        result = result.concat(temp);
+    }
+
+    return result;
+}
+
+function generateTestPlatforms() {
+    const result = [];
 
     // Left spawn
     for (let j = -1; j < 18; j++) {
@@ -74,93 +146,6 @@ function generatePlatforms() {
     for (let j = 1; j < 4; j++) {
         result.push({ row: 2, column: j, isSpawn: false });
         result.push({ row: 3, column: j, isSpawn: false });
-    }
-
-    return result;
-
-    const {
-        verticalSpacing,
-        verticalOffset,
-        horizontalSpacing,
-        horizontalOffset
-    } = cfg;
-
-    const levelHeight = 5;
-    const levelWidth = 18;
-
-    const spawnWidth = 4;
-
-    // Left spawn
-    for (let j = 0; j < spawnWidth; j++) {
-        result.push({ row: 4, column: j + 0.5, isSpawn: true });
-    }
-
-    // Right spawn
-    for (let j = levelWidth - spawnWidth + 1; j < levelWidth + 1; j++) {
-        result.push({ row: 4, column: j - 1.5, isSpawn: true });
-    }
-
-    // Top left
-    for (let j = 2; j < 6; j++) {
-        result.push({ row: 0, column: j, isSpawn: false });
-    }
-
-    // Top right
-    for (let j = 12; j < 16; j++) {
-        result.push({ row: 0, column: j, isSpawn: false });
-    }
-
-    // Randomized platforms
-    for (let i = 1; i < 4; i++) {
-        const maxPlatformWidth = 7;
-        const minPlatformWidth = 2;
-        const maxGapWidth = 2;
-        const minGapWidth = 1;
-
-        let curr = [];
-        while (curr.length < levelWidth) {
-            // 50% of the time, choose to start the level with a gap
-            if (curr.length == 0 && game.rnd.integerInRange(0, 1) == 1) {
-                for (
-                    var j = 0;
-                    j < game.rnd.integerInRange(0, maxGapWidth);
-                    j++
-                ) {
-                    curr.push(false);
-                }
-            } else {
-                for (
-                    let j = 0;
-                    j <
-                    game.rnd.integerInRange(minPlatformWidth, maxPlatformWidth);
-                    j++
-                ) {
-                    curr.push(true);
-                }
-                for (
-                    let j = 0;
-                    j < game.rnd.integerInRange(minGapWidth, maxGapWidth);
-                    j++
-                ) {
-                    curr.push(false);
-                }
-            }
-        }
-        curr = curr.slice(0, levelWidth);
-
-        // Since we can run past the max level width, slicing off the extra can result in a
-        // 1-width platform at the end of the level. In this case, make sure it's at least
-        // length 2
-        if (curr[levelWidth - 1] && !curr[levelWidth - 2]) {
-            curr[levelWidth - 2] = true;
-        }
-
-        const temp = curr
-            .map((value, index) => ({ value, index }))
-            .filter(item => item.value)
-            .map(item => ({ row: i, column: item.index, isSpawn: false }));
-
-        result = result.concat(temp);
     }
 
     return result;
