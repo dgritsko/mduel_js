@@ -276,7 +276,7 @@ export class Player {
             inputEnabled,
             vx,
             vy,
-            isFlipped,
+            flippedh,
             animation
         } = newState;
         if (isNumber(x)) {
@@ -307,8 +307,8 @@ export class Player {
             this.sprite.body.velocity.y = vy;
         }
 
-        if (isBool(isFlipped)) {
-            this.sprite.scale.setTo(isFlipped ? -1 : 1, 1);
+        if (isBool(flippedh)) {
+            this.sprite.scale.setTo(flippedh ? -1 : 1, 1);
         }
 
         if (isString(animation)) {
@@ -363,11 +363,11 @@ export class Player {
 
         if (this.sprite.body.left <= 0) {
             //bouncing off the left wall
-            this.setFlipped(true);
+            this.apply({ flippedh: true });
             this.bounce();
         } else if (this.sprite.body.right >= game.world.width) {
             //bouncing off the right wall
-            this.setFlipped(false);
+            this.apply({ flippedh: false });
             this.bounce();
         } else if (this.state.inputInterrupt < now()) {
             //regular controls
@@ -420,7 +420,7 @@ export class Player {
                         });
 
                         this.state.climbingRope = false;
-                        this.setFlipped(hl);
+                        this.apply({ flippedh: hl });
                         this.justfell();
                     }
                 }
@@ -458,10 +458,10 @@ export class Player {
                     this.apply({ vx: (hr - hl) * playerConfig.RUN_SPEED });
 
                     if (nr) {
-                        this.setFlipped(false);
+                        this.apply({ flippedh: false });
                         this.playRunning();
                     } else if (nl) {
-                        this.setFlipped(true);
+                        this.apply({ flippedh: true });
                         this.playRunning();
                     } else if (hd)
                         //crouch
@@ -521,9 +521,8 @@ export class Player {
         } else {
             // NOTE: Moved this within the "else" block as otherwise it would let
             // the player horizontally flip as they rolled after being unstable
-            this.setFlipped(hr - hl == 0 ? null : hr - hl < 0, null);
+            this.apply({ flippedh: hr - hl == 0 ? null : hr - hl < 0, vx: 0 });
 
-            this.apply({ vx: 0 });
             this.playRunning();
             this.state.lastCollision = collisions.NONE; // back to normal!
             this.state.justUnwarped = false; //reset the warp usage state.
@@ -553,26 +552,6 @@ export class Player {
 
         this.setBounds(playerConfig.FALLING_BOUNDS);
         return true;
-    }
-
-    setFlipped(fh, fv) {
-        // if (bRotating && rotSetID != -1)	//cant be flipped if rotating at the same time
-        //     return;
-
-        // flippedh = fh;
-        // flippedv = fv;
-        // if (oldFliph != flippedh)
-        // {
-        //     swapHBounds();
-        //     oldFliph = flippedh;
-        // }
-        // if (oldFlipv != flippedv)
-        // {
-        //     swapVBounds();
-        //     oldFlipv = flippedv;
-        // }
-        // UPDATEDflip = true;
-        this.apply({ isFlipped: fh });
     }
 
     bounce(pushedForwards) {
@@ -650,7 +629,8 @@ export class Player {
         //ignoreUntilUntouched = NULL; //stop the whole tripping thing
 
         this.setBounds(playerConfig.STANDING_BOUNDS);
-        this.setFlipped(hr - hl == 0 ? null : hr - hl < 0);
+
+        this.apply({ flippedh: hr - hl == 0 ? null : hr - hl < 0 });
         this.playRunning();
     }
 
