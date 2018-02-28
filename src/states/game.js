@@ -1,6 +1,6 @@
 import { gameConfig, playerConfig } from "../game/config";
 import { Player } from "../game/Player/player";
-import { makeLevel } from "../game/Level/makeLevel";
+import { createNewLevel } from "../game/Level/level";
 import { handlePlatformCollisions } from "../game/update/platformCollisions";
 import { debugRender } from "../game/util";
 
@@ -14,7 +14,7 @@ function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.physics.arcade.gravity.y = playerConfig.GRAVITY;
 
-    level = makeLevel();
+    level = createNewLevel();
 
     // const player1 = new Player('player1', 100, 100);
     // const player2 = new Player('player2', game.world.width - 100, 100);
@@ -80,7 +80,12 @@ function update() {
 
 function render() {
     if (gameConfig.SHOW_FPS) {
-        game.debug.text("FPS: " + game.time.fps || "FPS: --", 40, 40, "#00ff00");
+        game.debug.text(
+            "FPS: " + game.time.fps || "FPS: --",
+            40,
+            40,
+            "#00ff00"
+        );
     }
 
     if (gameConfig.SHOW_HITBOXES) {
@@ -89,8 +94,8 @@ function render() {
 
         level.ropes.forEach(r => {
             game.debug.body(r.anchor);
-            r.segments.children.forEach(s => game.debug.body(s))
-        })
+            r.segments.children.forEach(s => game.debug.body(s));
+        });
     }
 }
 

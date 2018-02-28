@@ -1,21 +1,17 @@
 import { levelConfig } from "../config";
-import { generatePlatforms, generateRopes } from "./level";
 import { makePlatform } from "./platform";
 import { platform_types } from "../../enums/platform_types";
 import { setBounds } from "../util";
 
-function makeLevel() {
-    const platformInfos = generatePlatforms();
+function render(spec) {
+    const { platformSpec, ropeSpec } = spec;
 
-    const platforms = renderPlatforms(platformInfos);
+    const platforms = renderPlatforms(platformSpec);
 
-    const ropeInfos = generateRopes(platformInfos);
-
-    const ropes = renderRopes(ropeInfos);
+    const ropes = renderRopes(ropeSpec);
 
     const itemSpawns = renderItemSpawns();
 
-    // Marshmallows
     const marshmallows = renderMarshmallows();
 
     return {
@@ -162,4 +158,4 @@ function renderMarshmallows() {
     return marshmallows;
 }
 
-export { makeLevel };
+export { render };

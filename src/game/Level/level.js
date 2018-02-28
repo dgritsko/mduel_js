@@ -1,4 +1,5 @@
 import { levelConfig } from "../config";
+import { render } from "./render";
 
 function generateRopes(platforms) {
     const {
@@ -19,7 +20,6 @@ function generateRopes(platforms) {
         result.push(Object.assign({}, r));
     });
 
-    const leftRopes = [];
     const otherRopes = [];
 
     const isPlatform = (column, row) =>
@@ -67,10 +67,6 @@ function generateRopes(platforms) {
 }
 
 function generatePlatforms() {
-    if (levelConfig.TEST_LEVEL) {
-        return generateTestPlatforms();
-    }
-
     let result = [];
 
     const {
@@ -157,4 +153,19 @@ function generateTestPlatforms() {
     return result;
 }
 
-export { generateRopes, generatePlatforms };
+function createNewLevel() {
+    const platformSpec = levelConfig.TEST_LEVEL
+        ? generateTestPlatforms()
+        : generatePlatforms();
+
+    const ropeSpec = generateRopes(platformSpec);
+
+    const spec = {
+        platformSpec,
+        ropeSpec
+    };
+
+    return render(spec);
+}
+
+export { createNewLevel };
