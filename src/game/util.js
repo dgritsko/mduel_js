@@ -31,11 +31,14 @@ const setBounds = (sprite, bounds) => {
     const width = Math.abs(right) + Math.abs(left);
     const height = Math.abs(top) + Math.abs(bottom);
 
+    const spriteWidth = Math.abs(sprite.width);
+    const spriteHeight = Math.abs(sprite.height);
+
     sprite.body.setSize(
         width,
         height,
-        sprite.width / 2 + left,
-        sprite.height / 2 + top
+        spriteWidth / 2 + left,
+        spriteHeight / 2 + top
     );
 };
 
