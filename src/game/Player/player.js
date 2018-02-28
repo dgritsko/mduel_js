@@ -9,6 +9,7 @@ import {
 import { animations } from "../../enums/animations";
 import { collisions } from "../../enums/collisions";
 import { playerConfig } from "../config";
+import { addAnimations } from "./animations";
 
 export class Player {
     constructor(spriteName, x, y, id) {
@@ -44,146 +45,9 @@ export class Player {
     configureSprite() {
         this.sprite.anchor.setTo(0.5, 0.5);
 
-        const { FRAMERATE } = playerConfig;
+        this.sprite.scale.setTo(this.sprite.x < game.world.centerX ? 1 : -1, 1);
 
-        this.sprite.animations.add(animations.STAND, [0], 0, false);
-        this.sprite.animations.add(
-            animations.RUN,
-            [1, 2, 3, 4],
-            FRAMERATE,
-            true
-        );
-
-        this.sprite.animations.add(
-            animations.CROUCHING,
-            [6, 5],
-            FRAMERATE,
-            false
-        );
-
-        this.sprite.animations.add(animations.CROUCHED, [5], 0, false);
-
-        this.sprite.animations.add(
-            animations.UNCROUCH,
-            [5, 6],
-            FRAMERATE,
-            false
-        );
-        this.sprite.animations.add(
-            animations.STAND_JUMP,
-            [6, 12, 13, 14, 15, 16, 17, 21],
-            FRAMERATE,
-            false
-        );
-        this.sprite.animations.add(
-            animations.RUN_JUMP,
-            [17, 18, 19, 20, 20, 21],
-            FRAMERATE,
-            false
-        );
-        this.sprite.animations.add(
-            animations.FORWARD_FALL,
-            [26, 27],
-            FRAMERATE / 2,
-            true
-        );
-        this.sprite.animations.add(
-            animations.BACKWARD_FALL,
-            [28, 29],
-            FRAMERATE / 2,
-            true
-        );
-
-        this.sprite.animations.add(
-            animations.FORWARD_ROLL,
-            [7, 8, 9, 10],
-            FRAMERATE,
-            false
-        );
-        this.sprite.animations.add(
-            animations.BACKWARD_ROLL,
-            [6, 22, 23, 24, 25],
-            FRAMERATE,
-            false
-        );
-        this.sprite.animations.add(animations.STAND_FALL, [21], 0, true);
-
-        this.sprite.animations.add(
-            animations.CLIMB_UP,
-            [39, 40, 41, 42],
-            FRAMERATE,
-            true
-        );
-
-        this.sprite.animations.add(
-            animations.CLIMB_DOWN,
-            [41, 40, 39, 42],
-            FRAMERATE,
-            true
-        );
-
-        // void playPushedForward() {setAnim(26, 27, ANIMSPEED/2);}
-        // ///play an animation for falling when unstable and leaning backwards
-        // void playPushedBackward() {setAnim(28, 29, ANIMSPEED/2);}
-
-        // this.sprite.animations.add(
-        //     animations.CROUCH,
-        //     [10, 5],
-        //     FRAMERATE,
-        //     false
-        // );
-        // this.sprite.animations.add(animations.CROUCHED, [5], 0, false);
-        // this.sprite.animations.add(
-        //     animations.TRANSITION,
-        //     [6],
-        //     FRAMERATE,
-        //     false
-        // );
-
-        // //this.sprite.animations.add(animations.JUMP, [11,12,13,14,15,16,17], 10, true);
-        // this.sprite.animations.add(animations.STAND_FALL, [21], 0, true);
-        // this.sprite.animations.add(
-        //     animations.FALL_ROLL,
-        //     [22, 23, 24, 25],
-        //     4,
-        //     false
-        // );
-
-        // this.sprite.animations.add(animations.SHOOT, [30, 31], 2, false);
-        // this.sprite.animations.add(animations.GRENADE_TOSS, [32, 33], 3, true);
-        // this.sprite.animations.add(animations.PUCK_TOSS, [34, 35], 2, true);
-        // this.sprite.animations.add(animations.PARACHUTE, [36], 0, false);
-        // this.sprite.animations.add(animations.HOOK, [37, 38], 2, true); // not sure if this is the right animation name
-        // this.sprite.animations.add(
-        //     animations.CLIMB,
-        //     [39, 40, 41, 42, 43],
-        //     FRAMERATE,
-        //     true
-        // );
-        // this.sprite.animations.add(animations.VICTORY, [44, 45], 2, true);
-        // this.sprite.animations.add(animations.ROPE_VICTORY, [46, 47], 2, true);
-        // this.sprite.animations.add(
-        //     animations.DISINTEGRATE,
-        //     [48, 49, 50, 51, 52, 53],
-        //     FRAMERATE,
-        //     true
-        // );
-        // this.sprite.animations.add(
-        //     animations.VAPORIZE,
-        //     [54, 55, 56, 57],
-        //     FRAMERATE,
-        //     true
-        // );
-        // this.sprite.animations.add(
-        //     animations.TAUNT,
-        //     [58, 59, 60, 61],
-        //     FRAMERATE,
-        //     true
-        // );
-        // this.sprite.animations.add(animations.FLEX, [62, 63], 2, false);
-        // this.sprite.animations.add(animations.MAGNET, [64, 65], 2, false);
-        // this.sprite.animations.add(animations.EMPTY, [66], 0, false);
-        // this.sprite.animations.add(animations.TRAPPED, [67], 0, false);
+        addAnimations(this.sprite);
 
         game.physics.enable(this.sprite);
 
@@ -360,15 +224,15 @@ export class Player {
         // }
 
         if (this.sprite.body.left <= 0) {
-            //bouncing off the left wall
+            // bouncing off the left wall
             this.apply({ flippedh: true });
             this.bounce();
         } else if (this.sprite.body.right >= game.world.width) {
-            //bouncing off the right wall
+            // bouncing off the right wall
             this.apply({ flippedh: false });
             this.bounce();
         } else if (this.state.inputInterrupt < now()) {
-            //regular controls
+            // regular controls
             if (this.state.climbingRope) {
                 if (this.state.touchingRope === null) {
                     this.apply({
@@ -379,7 +243,7 @@ export class Player {
                     this.justfell();
                 } else {
                     this.apply({ vy: (hd - hu) * playerConfig.CLIMB_SPEED });
-                    //don't allow to climb off rope via up/down keys
+                    // don't allow to climb off rope via up/down keys
                     const touchingRope = this.state.touchingRope;
                     const topSegment = touchingRope.segments.children[0];
                     const bottomSegment =
@@ -424,7 +288,7 @@ export class Player {
                 }
             } else if (this.state.grounded) {
                 if (!this.state.wasGrounded) {
-                    //reset collision bounds, etc
+                    // reset collision bounds, etc
                     this.justLanded(hr, hl);
                 }
                 this.state.unstable = false;
@@ -437,11 +301,11 @@ export class Player {
                 ) {
                     this.climbRope(hd);
                 } else if (this.state.rolling) {
-                    //anim finished, so stop moving (PROBABLY A BAD IDEA)
+                    // anim finished, so stop moving (PROBABLY A BAD IDEA)
                     if (this.sprite.animations.currentAnim.isFinished) {
                         this.state.rolling = false;
                         this.state.crouching = true;
-                        //recovered from a roll, so reset collision & warp usage state
+                        // recovered from a roll, so reset collision & warp usage state
                         this.state.lastCollision = collisions.NONE;
                         this.state.justUnwarped = false;
 
@@ -462,10 +326,10 @@ export class Player {
                         this.apply({ flippedh: true });
                         this.playRunning();
                     } else if (hd)
-                        //crouch
+                        // crouch
                         this.crouch();
                     else if (!hr && !hl) {
-                        //standing still
+                        // standing still
                         this.playIdle();
                     }
 
@@ -524,8 +388,10 @@ export class Player {
             this.apply({ flippedh: hr - hl == 0 ? null : hr - hl < 0, vx: 0 });
 
             this.playRunning();
-            this.state.lastCollision = collisions.NONE; // back to normal!
-            this.state.justUnwarped = false; //reset the warp usage state.
+            // back to normal!
+            this.state.lastCollision = collisions.NONE;
+            //reset the warp usage state.
+            this.state.justUnwarped = false;
         }
     }
 
@@ -533,8 +399,10 @@ export class Player {
         if (!this.state.grounded) {
             return false;
         }
-        //setBasePos(getBottom() - 1);	//move off the ground
-        this.state.justJumped = true; //stops routine 'just airborne' checks happening
+        //move off the ground
+        //setBasePos(getBottom() - 1);
+        //stops routine 'just airborne' checks happening
+        this.state.justJumped = true;
         this.state.crouching = false;
         this.state.rolling = false;
 
@@ -657,7 +525,7 @@ export class Player {
         if (this.state.touchingRope !== null) {
             this.apply({ x: this.state.touchingRope.x });
         } else if (this.state.wasTouchingRope !== null) {
-            //this is mainly for the hook's way of doing it
+            // this is mainly for the hook's way of doing it
             this.apply({ x: this.state.wasTouchingRope.x });
         } else {
             return;
