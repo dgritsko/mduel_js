@@ -1,7 +1,7 @@
 const gameConfig = {
     SHOW_HITBOXES: false,
     SHOW_FPS: false
-}
+};
 
 const playerConfig = {
     GRAVITY: 600,
@@ -36,6 +36,14 @@ const levelConfig = {
         { row: 4, column: 0.5, width: 4, isSpawn: true },
         { row: 4, column: 13.5, width: 4, isSpawn: true }
     ],
+
+    FIXED_ROPES: [
+        { column: 3.5, row: 0, length: 5 },
+        { column: 13.5, row: 0, length: 5 }
+    ],
+
+    MIN_RANDOM_ROPES: 2,
+    MAX_RANDOM_ROPES: 5,
 
     verticalSpacing: 64,
     verticalOffset: 80,

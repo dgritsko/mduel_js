@@ -1,11 +1,23 @@
 import { levelConfig } from "../config";
 
 function generateRopes(platforms) {
+    const {
+        LEVEL_HEIGHT,
+        LEVEL_WIDTH,
+        MIN_RANDOM_ROPES,
+        MAX_RANDOM_ROPES,
+        FIXED_ROPES
+    } = levelConfig;
+
     const result = [];
 
     // Fixed top ropes
-    result.push({ column: 3.5, row: 0, length: 5 });
-    result.push({ column: 13.5, row: 0, length: 5 });
+    const fixedRopeColumns = [];
+    FIXED_ROPES.forEach(r => {
+        fixedRopeColumns.push(Math.floor(r.column));
+        fixedRopeColumns.push(Math.ceil(r.column));
+        result.push(Object.assign({}, r));
+    });
 
     const leftRopes = [];
     const otherRopes = [];
@@ -13,43 +25,34 @@ function generateRopes(platforms) {
     const isPlatform = (column, row) =>
         platforms.filter(p => p.row == row && p.column == column).length > 0;
 
-    for (let i = 1; i < 18; i++) {
+    for (let i = 1; i < LEVEL_WIDTH; i++) {
         // Make sure the ropes don't spawn directly next to the fixed ropes
-        if ([3, 4, 13, 14].indexOf(i) > -1) {
+        if (fixedRopeColumns.indexOf(i) > -1) {
             continue;
         }
 
         const options = [];
-        if (isPlatform(i, 1) && isPlatform(i, 2)) {
-            options.push({ column: i, row: 1, length: 2 });
-        }
-        if (isPlatform(i, 2) && isPlatform(i, 3)) {
-            options.push({ column: i, row: 2, length: 2 });
-        }
-        if (isPlatform(i, 1) && isPlatform(i, 3)) {
-            options.push({ column: i, row: 1, length: 3 });
+
+        for (let j = 1; j < LEVEL_HEIGHT; j++) {
+            for (let k = j + 1; k < LEVEL_HEIGHT; k++) {
+                if (isPlatform(i, j) && isPlatform(i, k)) {
+                    options.push({ column: i, row: j, length: k - j + 1 });
+                }
+            }
         }
 
         if (options.length > 0) {
             const item = Phaser.ArrayUtils.getRandomItem(options);
 
-            if (i < 4) {
-                leftRopes.push(item);
-            } else if (i > 4 && i != 14) {
-                otherRopes.push(item);
-            }
+            otherRopes.push(item);
         }
     }
 
-    if (leftRopes.length > 0) {
-        result.push(Phaser.ArrayUtils.getRandomItem(leftRopes));
-    }
-
     if (otherRopes.length > 0) {
-        // Hard max of other ropes is 4
         const max = Math.min(
             otherRopes.length,
-            Math.floor(Math.random() * 3) + 1
+            Math.random() * (MAX_RANDOM_ROPES - MIN_RANDOM_ROPES) +
+                MIN_RANDOM_ROPES
         );
 
         let count = 0;
@@ -76,13 +79,14 @@ function generatePlatforms() {
         MAX_SECTION_WIDTH,
         MIN_SECTION_WIDTH,
         MAX_GAP_WIDTH,
-        MIN_GAP_WIDTH } = levelConfig;
+        MIN_GAP_WIDTH
+    } = levelConfig;
 
     levelConfig.FIXED_PLATFORMS.forEach(p => {
         for (let j = p.column; j < p.column + p.width; j++) {
-            result.push({ row: p.row, column: j, isSpawn: p.isSpawn })
+            result.push({ row: p.row, column: j, isSpawn: p.isSpawn });
         }
-    })
+    });
 
     // Randomized platforms
     for (let i = 1; i < LEVEL_HEIGHT - 1; i++) {
@@ -101,7 +105,10 @@ function generatePlatforms() {
                 for (
                     let j = 0;
                     j <
-                    game.rnd.integerInRange(MIN_SECTION_WIDTH, MAX_SECTION_WIDTH);
+                    game.rnd.integerInRange(
+                        MIN_SECTION_WIDTH,
+                        MAX_SECTION_WIDTH
+                    );
                     j++
                 ) {
                     curr.push(true);
@@ -138,7 +145,6 @@ function generatePlatforms() {
 function generateTestPlatforms() {
     const result = [];
 
-    // Left spawn
     for (let j = -1; j < 18; j++) {
         result.push({ row: 4, column: j + 0.5, isSpawn: true });
     }
