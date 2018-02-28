@@ -1,37 +1,38 @@
 {
-  "name": "mduel_js",
-  "version": "1.0.0",
-  "description": "This is intended to be a clone of the old DOS game Marshmallow Duel written with HTML5 + Canvas.",
-  "main": "index.js",
-  "scripts": {
-    "webpack": "webpack",
-    "start:dev": "webpack-dev-server --content-base dist/",
-    "test": "jest src"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dgritsko/mduel_js.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/dgritsko/mduel_js/issues"
-  },
-  "homepage": "https://github.com/dgritsko/mduel_js#readme",
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-env": "^1.6.1",
-    "eslint": "^4.17.0",
-    "expose-loader": "^0.7.4",
-    "jest": "^22.4.2",
-    "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.11.1"
-  },
-  "dependencies": {
-    "phaser-ce": "^2.10.0",
-    "ramda": "^0.25.0",
-    "tinyqueue": "^1.2.3"
-  }
+    "name": "mduel_js",
+    "version": "1.0.0",
+    "description":
+        "This is intended to be a clone of the old DOS game Marshmallow Duel written with HTML5 + Canvas.",
+    "main": "index.js",
+    "scripts": {
+        "webpack": "webpack",
+        "dev": "webpack-dev-server --content-base dist/",
+        "test": "jest src"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/dgritsko/mduel_js.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/dgritsko/mduel_js/issues"
+    },
+    "homepage": "https://github.com/dgritsko/mduel_js#readme",
+    "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-core": "^6.26.0",
+        "babel-loader": "^7.1.2",
+        "babel-preset-env": "^1.6.1",
+        "eslint": "^4.17.0",
+        "expose-loader": "^0.7.4",
+        "jest": "^22.4.2",
+        "webpack": "^3.10.0",
+        "webpack-dev-server": "^2.11.1"
+    },
+    "dependencies": {
+        "phaser-ce": "^2.10.0",
+        "ramda": "^0.25.0",
+        "tinyqueue": "^1.2.3"
+    }
 }
