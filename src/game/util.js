@@ -25,6 +25,20 @@ const dist = (a, b) => {
     return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
 };
 
+const setBounds = (sprite, bounds) => {
+    const { top, right, bottom, left } = bounds;
+
+    const width = Math.abs(right) + Math.abs(left);
+    const height = Math.abs(top) + Math.abs(bottom);
+
+    sprite.body.setSize(
+        width,
+        height,
+        sprite.width / 2 + left,
+        sprite.height / 2 + top
+    );
+};
+
 const debugRender = obj => {
     //const text = JSON.stringify(obj);
     // const width = 66;
@@ -34,7 +48,6 @@ const debugRender = obj => {
     // }
 
     const keys = Object.keys(obj);
-    let text = "";
     let parts = keys.map(k => `${k}: ${obj[k]}`);
 
     for (let i = 0; i < parts.length; i++) {
@@ -42,4 +55,13 @@ const debugRender = obj => {
     }
 };
 
-export { now, isNumber, isBool, isString, matchingProps, dist, debugRender };
+export {
+    now,
+    isNumber,
+    isBool,
+    isString,
+    matchingProps,
+    dist,
+    setBounds,
+    debugRender
+};

@@ -45,10 +45,15 @@ const levelConfig = {
     MIN_RANDOM_ROPES: 2,
     MAX_RANDOM_ROPES: 5,
 
-    verticalSpacing: 64,
-    verticalOffset: 80,
-    horizontalSpacing: 32,
-    horizontalOffset: 32
+    COLUMN_WIDTH: 32,
+    COLUMN_OFFSET: 32,
+    ROW_HEIGHT: 64,
+    ROW_OFFSET: 80,
+
+    ROPE_ANCHOR_BOUNDS: { top: 6, bottom: 5, left: -5.5, right: 6.5 },
+    ROPE_SEGMENT_BOUNDS: { top: -16, bottom: 16, left: -1, right: 3 },
+
+    MARSHMALLOW_FRAMERATE: 0.25
 };
 
 export { gameConfig, playerConfig, itemConfig, levelConfig };

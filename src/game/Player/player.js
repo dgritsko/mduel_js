@@ -1,4 +1,11 @@
-import { now, isBool, isNumber, isString, debugRender } from "../util";
+import {
+    now,
+    isBool,
+    isNumber,
+    isString,
+    setBounds,
+    debugRender
+} from "../util";
 import { animations } from "../../enums/animations";
 import { collisions } from "../../enums/collisions";
 import { playerConfig } from "../config";
@@ -180,25 +187,11 @@ export class Player {
 
         game.physics.enable(this.sprite);
 
-        this.setBounds(playerConfig.STANDING_BOUNDS);
+        setBounds(this.sprite, playerConfig.STANDING_BOUNDS);
 
         this.sprite.body.maxVelocity = new Phaser.Point(
             playerConfig.RUN_SPEED,
             playerConfig.TERMINAL_VELOCITY
-        );
-    }
-
-    setBounds(bounds) {
-        const { top, right, bottom, left } = bounds;
-
-        const width = Math.abs(right) + Math.abs(left);
-        const height = Math.abs(top) + Math.abs(bottom);
-
-        this.sprite.body.setSize(
-            width,
-            height,
-            playerConfig.SPRITE_WIDTH / 2 + left,
-            playerConfig.SPRITE_HEIGHT / 2 + top
         );
     }
 
@@ -478,8 +471,14 @@ export class Player {
 
                     if (nu) {
                         this.jump();
-                    } else if (this.state.wasGrounded && this.sprite.body.velocity.y === 0 && hu) {
-                        this.apply({ flippedh: hr - hl == 0 ? null : hr - hl < 0 });
+                    } else if (
+                        this.state.wasGrounded &&
+                        this.sprite.body.velocity.y === 0 &&
+                        hu
+                    ) {
+                        this.apply({
+                            flippedh: hr - hl == 0 ? null : hr - hl < 0
+                        });
                         this.jump();
                     }
                 }
@@ -515,7 +514,7 @@ export class Player {
     justLanded(hr, hl) {
         const { unstable, vx, flippedh } = this.getState();
 
-        this.setBounds(playerConfig.STANDING_BOUNDS);
+        setBounds(this.sprite, playerConfig.STANDING_BOUNDS);
 
         if (unstable) {
             this.roll((vx > 0 && flippedh) || (vx < 0 && !flippedh));
@@ -551,7 +550,7 @@ export class Player {
             this.playJumpedMoving();
         }
 
-        this.setBounds(playerConfig.FALLING_BOUNDS);
+        setBounds(this.sprite, playerConfig.FALLING_BOUNDS);
         return true;
     }
 
@@ -565,7 +564,7 @@ export class Player {
         this.state.crouching = false;
         this.state.rolling = false;
         this.state.climbingRope = false;
-        this.setBounds(playerConfig.FALLING_BOUNDS);
+        setBounds(this.sprite, playerConfig.FALLING_BOUNDS);
 
         let vx = null;
         let vy = null;
@@ -603,7 +602,7 @@ export class Player {
         this.state.rolling = true;
         this.state.crouching = false;
         this.state.unstable = false;
-        this.setBounds(playerConfig.CROUCHING_BOUNDS);
+        setBounds(this.sprite, playerConfig.CROUCHING_BOUNDS);
         return true;
     }
 
@@ -619,7 +618,7 @@ export class Player {
         } else {
             this.roll();
         }
-        this.setBounds(playerConfig.CROUCHING_BOUNDS);
+        setBounds(this.sprite, playerConfig.CROUCHING_BOUNDS);
         return true;
     }
 
@@ -629,7 +628,7 @@ export class Player {
         // TODO: wtf is this
         //ignoreUntilUntouched = NULL; //stop the whole tripping thing
 
-        this.setBounds(playerConfig.STANDING_BOUNDS);
+        setBounds(this.sprite, playerConfig.STANDING_BOUNDS);
 
         this.apply({ flippedh: hr - hl == 0 ? null : hr - hl < 0 });
         this.playRunning();
@@ -644,7 +643,7 @@ export class Player {
         this.state.crouching = false;
         //if (vx == 0)
         //	vx = (flippedh ? -WALKSPEED : WALKSPEED);
-        this.setBounds(playerConfig.FALLING_BOUNDS);
+        setBounds(this.sprite, playerConfig.FALLING_BOUNDS);
         if (!unstable) {
             this.playFalling();
         } else {

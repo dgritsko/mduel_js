@@ -2,26 +2,37 @@ import { levelConfig } from "../config";
 import { generatePlatforms, generateRopes } from "./level";
 import { makePlatform } from "./platform";
 import { platform_types } from "../../enums/platform_types";
+import { setBounds } from "../util";
 
 function makeLevel() {
-    const {
-        verticalSpacing,
-        verticalOffset,
-        horizontalSpacing,
-        horizontalOffset
-    } = levelConfig;
-
-    const levelHeight = 5;
-    const levelWidth = 18;
-
-    const spawnWidth = 4;
-
-    const platforms = game.add.group();
     const platformInfos = generatePlatforms();
 
+    const platforms = renderPlatforms(platformInfos);
+
+    const ropeInfos = generateRopes(platformInfos);
+
+    const ropes = renderRopes(ropeInfos);
+
+    const itemSpawns = renderItemSpawns();
+
+    // Marshmallows
+    const marshmallows = renderMarshmallows();
+
+    return {
+        platforms,
+        marshmallows,
+        ropes,
+        itemSpawns
+    };
+}
+
+function renderPlatforms(platformInfos) {
+    const { COLUMN_WIDTH, COLUMN_OFFSET, ROW_HEIGHT, ROW_OFFSET } = levelConfig;
+
+    const platforms = game.add.group();
     platformInfos.forEach(info => {
-        const x = info.column * horizontalSpacing + horizontalOffset;
-        const y = info.row * verticalSpacing + verticalOffset;
+        const x = info.column * COLUMN_WIDTH + COLUMN_OFFSET;
+        const y = info.row * ROW_HEIGHT + ROW_OFFSET;
 
         const platform = makePlatform(
             x,
@@ -32,12 +43,27 @@ function makeLevel() {
         platforms.add(platform);
     });
 
-    // Ropes
-    const ropes = generateRopes(platformInfos);
+    return platforms;
+}
 
-    ropes.forEach(r => {
-        r.x = r.column * horizontalSpacing + 47;
-        r.y = r.row * verticalSpacing + 32;
+function renderRopes(ropeInfos) {
+    const {
+        COLUMN_WIDTH,
+        ROW_HEIGHT,
+        ROPE_ANCHOR_BOUNDS,
+        ROPE_SEGMENT_BOUNDS
+    } = levelConfig;
+
+    const ropes = [];
+
+    ropeInfos.forEach(ropeInfo => {
+        const r = Object.assign({}, ropeInfo);
+
+        r.x =
+            r.column * COLUMN_WIDTH +
+            Math.floor(COLUMN_WIDTH * 1.5) -
+            (ROPE_SEGMENT_BOUNDS.right - ROPE_SEGMENT_BOUNDS.left) / 2;
+        r.y = r.row * ROW_HEIGHT + ROW_HEIGHT / 2;
 
         const anchor = game.add.sprite(r.x, r.y, "rope", 0);
         anchor.anchor.setTo(0.5, 1);
@@ -47,7 +73,7 @@ function makeLevel() {
         const segments = game.add.group();
 
         for (let si = 0; si < total; si++) {
-            const sy = si * 32;
+            const sy = si * (ROW_HEIGHT / 2);
 
             const segment = game.add.sprite(r.x, r.y + sy, "rope", 1);
             segment.anchor.setTo(0.5, 0);
@@ -62,26 +88,30 @@ function makeLevel() {
         anchor.body.moves = false;
         anchor.body.immovable = true;
 
-        // TODO: Move these hitbox adjustments to constants elsewhere
-        anchor.body.setSize(11, 11, 11, 21);
+        setBounds(anchor, ROPE_ANCHOR_BOUNDS);
 
         segments.children.forEach(s => {
             game.physics.enable(s);
             s.body.moves = false;
             s.body.immovable = true;
-            // TODO: Move these hitbox adjustments to constants elsewhere
-            s.body.setSize(4, 32, 15);
+            setBounds(s, ROPE_SEGMENT_BOUNDS);
         });
 
         r.anchor = anchor;
         r.segments = segments;
+
+        ropes.push(r);
     });
 
+    return ropes;
+}
+
+function renderItemSpawns() {
     // Powerup spawns
     const topSpawn = game.add.sprite(game.world.centerX, 0, "powerup_spawn");
     topSpawn.anchor.setTo(0.5, 0);
 
-    const powerupYOffset = -32;
+    const powerupYOffset = -topSpawn.height;
     const leftSpawn = game.add.sprite(
         0,
         game.world.height / 2 + powerupYOffset,
@@ -99,39 +129,37 @@ function makeLevel() {
     rightSpawn.scale.setTo(-1, 1);
     rightSpawn.angle = 90;
 
-    // Marshmallows
+    return [topSpawn, leftSpawn, rightSpawn];
+}
+
+function renderMarshmallows() {
+    const { COLUMN_WIDTH, MARSHMALLOW_FRAMERATE } = levelConfig;
+
     const marshmallows = game.add.group();
-    for (let j = 0; j < game.world.width / horizontalSpacing; j++) {
+    for (let j = 0; j < game.world.width / COLUMN_WIDTH; j++) {
         const mallowSurface = game.add.sprite(
-            j * horizontalSpacing,
-            game.world.height - horizontalSpacing * 1.75,
+            j * COLUMN_WIDTH,
+            game.world.height - COLUMN_WIDTH * 1.75,
             "mallow_surface"
         );
         mallowSurface.animations.add(
             "default",
             [j % 4, (j + 1) % 4, (j + 2) % 4, (j + 3) % 4],
-            0.25,
+            MARSHMALLOW_FRAMERATE,
             true
         );
         mallowSurface.animations.play("default");
         marshmallows.add(mallowSurface);
 
         const marshmallow = game.add.sprite(
-            j * horizontalSpacing,
-            game.world.height - horizontalSpacing,
+            j * COLUMN_WIDTH,
+            game.world.height - COLUMN_WIDTH,
             "mallow"
         );
         marshmallows.add(marshmallow);
     }
 
-    return {
-        platforms,
-        topSpawn,
-        leftSpawn,
-        rightSpawn,
-        marshmallows,
-        ropes
-    };
+    return marshmallows;
 }
 
 export { makeLevel };
