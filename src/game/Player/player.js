@@ -139,6 +139,7 @@ export class Player {
             vx,
             vy,
             flippedh,
+            allowGravity,
             animation
         } = newState;
         if (isNumber(x)) {
@@ -171,6 +172,10 @@ export class Player {
 
         if (isBool(flippedh)) {
             this.sprite.scale.setTo(flippedh ? -1 : 1, 1);
+        }
+
+        if (isBool(allowGravity)) {
+            this.sprite.body.allowGravity = allowGravity;
         }
 
         if (isString(animation)) {

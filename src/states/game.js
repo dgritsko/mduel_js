@@ -2,6 +2,7 @@ import { gameConfig, playerConfig } from "../game/config";
 import { Player } from "../game/Player/player";
 import { createNewLevel } from "../game/Level/level";
 import { handlePlatformCollisions } from "../game/update/platformCollisions";
+import { handlePlayerCollisions } from "../game/update/playerCollisions";
 import { debugRender } from "../game/util";
 
 let level;
@@ -19,11 +20,11 @@ function create() {
     // const player1 = new Player('player1', 100, 100);
     // const player2 = new Player('player2', game.world.width - 100, 100);
     const player1 = new Player("player1", 60, 300, 1);
-    //const player2 = new Player("player2", 160, 300, 2);
+    const player2 = new Player("player2", 160, 300, 2);
     // const player3 = new Player("player3", 400, 300, 3);
 
     players.push(player1);
-    //players.push(player2);
+    players.push(player2);
     // players.push(player3);
 
     // const text = game.add.bitmapText(
@@ -34,13 +35,6 @@ function create() {
     //     32
     // );
     // text.tint = 0xa439a4;
-}
-
-function except(items, index) {
-    const before = items.slice(0, index);
-    const after = items.slice(index + 1);
-
-    return [...before, ...after];
 }
 
 function update() {
@@ -76,6 +70,8 @@ function update() {
 
         player.handleInput();
     });
+
+    handlePlayerCollisions(players);
 }
 
 function render() {
