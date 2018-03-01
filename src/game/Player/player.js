@@ -42,6 +42,61 @@ export class Player {
         this.input = this.configureInput(id);
     }
 
+    get x() {
+        return this.sprite.x;
+    }
+
+    set x(value) {
+        this.sprite.x = value;
+    }
+
+    get vx() {
+        return this.sprite.body.velocity.x;
+    }
+
+    set vx(value) {
+        this.sprite.body.velocity.x = value;
+    }
+
+    get vy() {
+        return this.sprite.body.velocity.y;
+    }
+
+    set vy(value) {
+        this.sprite.body.velocity.y = value;
+    }
+
+    get animation() {
+        return this.sprite.animations.currentAnim.name;
+    }
+
+    set animation(value) {
+        if (value === animations.NONE) {
+            this.sprite.animations.stop();
+        } else if (
+            this.sprite.animations.currentAnim.name !== value ||
+            this.sprite.animations.currentAnim.loop
+        ) {
+            this.sprite.animations.play(value);
+        }
+    }
+
+    get flippedh() {
+        return this.sprite.scale.x === -1;
+    }
+
+    set flippedh(value) {
+        this.sprite.scale.setTo(value ? -1 : 1, this.sprite.scale.y);
+    }
+
+    get allowGravity() {
+        return this.sprite.body.allowGravity;
+    }
+
+    set allowGravity(value) {
+        this.sprite.body.allowGravity = value;
+    }
+
     configureSprite() {
         this.sprite.anchor.setTo(0.5, 0.5);
 
@@ -113,81 +168,15 @@ export class Player {
     }
 
     getState() {
-        const position = { x: this.sprite.x, y: this.sprite.y };
+        const position = { x: this.x, y: this.y };
         const velocity = {
-            vx: this.sprite.body.velocity.x,
-            vy: this.sprite.body.velocity.y
+            vx: this.vx,
+            vy: this.vy
         };
 
-        const flippedh = this.sprite.scale.x < 0;
+        const flippedh = this.flippedh;
 
         return Object.assign({}, this.state, position, velocity, { flippedh });
-    }
-
-    updateState(existing, update) {
-        this.apply(update);
-        return Object.assign({}, existing, update);
-    }
-
-    apply(newState) {
-        const {
-            x,
-            y,
-            dx,
-            dy,
-            inputEnabled,
-            vx,
-            vy,
-            flippedh,
-            allowGravity,
-            animation
-        } = newState;
-        if (isNumber(x)) {
-            this.sprite.x = x;
-        }
-
-        if (isNumber(y)) {
-            this.sprite.y = y;
-        }
-
-        if (isNumber(dx)) {
-            this.sprite.x += dx;
-        }
-
-        if (isNumber(dy)) {
-            this.sprite.y += dy;
-        }
-
-        if (isBool(inputEnabled)) {
-            this.inputEnabled = inputEnabled;
-        }
-
-        if (isNumber(vx)) {
-            this.sprite.body.velocity.x = vx;
-        }
-
-        if (isNumber(vy)) {
-            this.sprite.body.velocity.y = vy;
-        }
-
-        if (isBool(flippedh)) {
-            this.sprite.scale.setTo(flippedh ? -1 : 1, 1);
-        }
-
-        if (isBool(allowGravity)) {
-            this.sprite.body.allowGravity = allowGravity;
-        }
-
-        if (isString(animation)) {
-            if (animation === animations.NONE) {
-                this.sprite.animations.stop();
-            } else if (
-                this.sprite.animations.currentAnim.name !== animation ||
-                this.sprite.animations.currentAnim.loop
-            ) {
-                this.sprite.animations.play(animation);
-            }
-        }
     }
 
     update() {
@@ -230,24 +219,23 @@ export class Player {
 
         if (this.sprite.body.left <= 0) {
             // bouncing off the left wall
-            this.apply({ flippedh: true });
+            this.flippedh = true;
             this.bounce();
         } else if (this.sprite.body.right >= game.world.width) {
             // bouncing off the right wall
-            this.apply({ flippedh: false });
+            this.flippedh = false;
             this.bounce();
         } else if (this.state.inputInterrupt < now()) {
             // regular controls
             if (this.state.climbingRope) {
                 if (this.state.touchingRope === null) {
-                    this.apply({
-                        vy: 0,
-                        vx: (hr - hl) * playerConfig.RUN_SPEED
-                    });
+                    this.vy = 0;
+                    this.vx = (hr - hl) * playerConfig.RUN_SPEED;
+
                     this.state.climbingRope = false;
                     this.justfell();
                 } else {
-                    this.apply({ vy: (hd - hu) * playerConfig.CLIMB_SPEED });
+                    this.vy = (hd - hu) * playerConfig.CLIMB_SPEED;
                     // don't allow to climb off rope via up/down keys
                     const touchingRope = this.state.touchingRope;
                     const topSegment = touchingRope.segments.children[0];
@@ -261,16 +249,16 @@ export class Player {
                         this.sprite.body.velocity.y > 0
                     ) {
                         // TODO: maybe allow falling off the bottom segment if the platform immediately below it is gone?
-                        this.apply({ vy: 0 });
+                        this.vy = 0;
                     } else if (
                         topSegment.body.top > this.sprite.body.top &&
                         this.sprite.body.velocity.y < 0
                     ) {
-                        this.apply({ vy: 0 });
+                        this.vy = 0;
                     }
 
                     if (!hd && !hu) {
-                        this.apply({ animation: animations.NONE });
+                        this.animation = animations.NONE;
                     }
 
                     if (nd) {
@@ -281,13 +269,11 @@ export class Player {
                     // 			if (vy == 0) setFrame(frame);
                     if (hr || hl) {
                         //jump off!
-                        this.apply({
-                            vx: (hr - hl) * playerConfig.RUN_SPEED,
-                            vy: 0
-                        });
+                        this.vx = (hr - hl) * playerConfig.RUN_SPEED;
+                        this.vy = 0;
 
                         this.state.climbingRope = false;
-                        this.apply({ flippedh: hl });
+                        this.flippedh = hl;
                         this.justfell();
                     }
                 }
@@ -314,21 +300,21 @@ export class Player {
                         this.state.lastCollision = collisions.NONE;
                         this.state.justUnwarped = false;
 
-                        this.apply({ animation: animations.CROUCHED });
+                        this.animation = animations.CROUCHED;
                     }
                 } else if (this.state.crouching) {
-                    this.apply({ vx: 0 });
+                    this.vx = 0;
                     if (!hd) {
                         this.uncrouch(hr, hl);
                     }
                 } else {
-                    this.apply({ vx: (hr - hl) * playerConfig.RUN_SPEED });
+                    this.vx = (hr - hl) * playerConfig.RUN_SPEED;
 
                     if (nr) {
-                        this.apply({ flippedh: false });
+                        this.flippedh = false;
                         this.playRunning();
                     } else if (nl) {
-                        this.apply({ flippedh: true });
+                        this.flippedh = true;
                         this.playRunning();
                     } else if (hd)
                         // crouch
@@ -345,9 +331,7 @@ export class Player {
                         this.sprite.body.velocity.y === 0 &&
                         hu
                     ) {
-                        this.apply({
-                            flippedh: hr - hl == 0 ? null : hr - hl < 0
-                        });
+                        this.flippedh = hr - hl == 0 ? null : hr - hl < 0;
                         this.jump();
                     }
                 }
@@ -390,7 +374,8 @@ export class Player {
         } else {
             // NOTE: Moved this within the "else" block as otherwise it would let
             // the player horizontally flip as they rolled after being unstable
-            this.apply({ flippedh: hr - hl == 0 ? null : hr - hl < 0, vx: 0 });
+            this.flippedh = hr - hl == 0 ? null : hr - hl < 0;
+            this.vx = 0;
 
             this.playRunning();
             // back to normal!
@@ -415,7 +400,7 @@ export class Player {
         if (bootsJump) {
             vy = vy * 3 / 2;
         }
-        this.apply({ vy });
+        this.vy = vy;
 
         if (this.sprite.body.velocity.x === 0) {
             this.playJumpedStanding();
@@ -460,7 +445,8 @@ export class Player {
             vy = playerConfig.JUMP_IMPULSE * 2 / 3;
         }
 
-        this.apply({ vx, vy });
+        this.vx = vx;
+        this.vy = vy;
     }
 
     roll(backwards) {
@@ -503,7 +489,7 @@ export class Player {
 
         setBounds(this.sprite, playerConfig.STANDING_BOUNDS);
 
-        this.apply({ flippedh: hr - hl == 0 ? null : hr - hl < 0 });
+        this.flippedh = hr - hl == 0 ? null : hr - hl < 0;
         this.playRunning();
     }
 
@@ -528,10 +514,10 @@ export class Player {
 
     climbRope(hd) {
         if (this.state.touchingRope !== null) {
-            this.apply({ x: this.state.touchingRope.x });
+            this.x = this.state.touchingRope.x;
         } else if (this.state.wasTouchingRope !== null) {
             // this is mainly for the hook's way of doing it
-            this.apply({ x: this.state.wasTouchingRope.x });
+            this.x = this.state.wasTouchingRope.x;
         } else {
             return;
         }
@@ -543,50 +529,50 @@ export class Player {
     // Animations
 
     playIdle() {
-        this.apply({ animation: animations.STAND });
+        this.animation = animations.STAND;
     }
 
     playRunning() {
-        this.apply({ animation: animations.RUN });
+        this.animation = animations.RUN;
     }
 
     playJumpedStanding() {
-        this.apply({ animation: animations.STAND_JUMP });
+        this.animation = animations.STAND_JUMP;
     }
 
     playJumpedMoving() {
-        this.apply({ animation: animations.RUN_JUMP });
+        this.animation = animations.RUN_JUMP;
     }
 
     playPushedBackward() {
-        this.apply({ animation: animations.BACKWARD_FALL });
+        this.animation = animations.BACKWARD_FALL;
     }
 
     playPushedForward() {
-        this.apply({ animation: animations.FORWARD_FALL });
+        this.animation = animations.FORWARD_FALL;
     }
 
     playRolling() {
-        this.apply({ animation: animations.FORWARD_ROLL });
+        this.animation = animations.FORWARD_ROLL;
     }
 
     playRollingBack() {
-        this.apply({ animation: animations.BACKWARD_ROLL });
+        this.animation = animations.BACKWARD_ROLL;
     }
 
     playFalling() {
-        this.apply({ animation: animations.STAND_FALL });
+        this.animation = animations.STAND_FALL;
     }
 
     playCrouching() {
-        this.apply({ animation: animations.CROUCHING });
+        this.animation = animations.CROUCHING;
     }
 
     playClimbingDown() {
-        this.apply({ animation: animations.CLIMB_DOWN });
+        this.animation = animations.CLIMB_DOWN;
     }
 
     playClimbingUp() {
-        this.apply({ animation: animations.CLIMB_UP });
+        this.animation = animations.CLIMB_UP;
     }
 }

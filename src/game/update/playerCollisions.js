@@ -32,15 +32,11 @@ const collideNormally = (playerA, playerB) => {
         }
     }
 
-    playerA.apply({
-        allowGravity: true,
-        vy: -playerConfig.JUMP_IMPULSE * 2 / 3
-    });
+    playerA.allowGravity = true;
+    playerA.vy = -playerConfig.JUMP_IMPULSE * 2 / 3;
 
-    playerB.apply({
-        allowGravity: true,
-        vy: -playerConfig.JUMP_IMPULSE * 2 / 3
-    });
+    playerB.allowGravity = true;
+    playerB.vy = -playerConfig.JUMP_IMPULSE * 2 / 3;
 };
 
 const updateAfterCollision = (player, otherPlayer) => {
