@@ -251,13 +251,13 @@ export class Player {
 
                     if (
                         bottomSegment.body.bottom < this.sprite.body.bottom &&
-                        this.sprite.body.velocity.y > 0
+                        this.vy > 0
                     ) {
                         // TODO: maybe allow falling off the bottom segment if the platform immediately below it is gone?
                         this.vy = 0;
                     } else if (
                         topSegment.body.top > this.sprite.body.top &&
-                        this.sprite.body.velocity.y < 0
+                        this.vy < 0
                     ) {
                         this.vy = 0;
                     }
@@ -331,11 +331,8 @@ export class Player {
 
                     if (nu) {
                         this.jump();
-                    } else if (
-                        this.state.wasGrounded &&
-                        this.sprite.body.velocity.y === 0 &&
-                        hu
-                    ) {
+                    } else if (this.state.wasGrounded && this.vy === 0 && hu) {
+                        // Make sure you can't "float" after landing on a platform while holding up
                         this.flippedh = hr - hl == 0 ? null : hr - hl < 0;
                         this.jump();
                     }
@@ -407,7 +404,7 @@ export class Player {
         }
         this.vy = vy;
 
-        if (this.sprite.body.velocity.x === 0) {
+        if (this.vx === 0) {
             this.playJumpedStanding();
         } else {
             this.playJumpedMoving();
@@ -433,16 +430,14 @@ export class Player {
         let vy = null;
 
         if (pushedForwards) {
-            vx =
-                this.sprite.scale.x < 0
-                    ? -playerConfig.RUN_SPEED
-                    : playerConfig.RUN_SPEED;
+            vx = this.flippedh
+                ? -playerConfig.RUN_SPEED
+                : playerConfig.RUN_SPEED;
             this.playPushedForward();
         } else {
-            vx =
-                this.sprite.scale.x < 0
-                    ? playerConfig.RUN_SPEED
-                    : -playerConfig.RUN_SPEED;
+            vx = this.flippedh
+                ? playerConfig.RUN_SPEED
+                : -playerConfig.RUN_SPEED;
             this.playPushedBackward();
         }
         //setBasePos(getBottom() - 1);
@@ -501,7 +496,7 @@ export class Player {
     justfell() {
         const { unstable, vx, flippedh } = this.getState();
 
-        this.sprite.body.allowGravity = true;
+        this.allowGravity = true;
 
         this.state.rolling = false;
         this.state.crouching = false;
@@ -526,7 +521,7 @@ export class Player {
         } else {
             return;
         }
-        this.sprite.body.allowGravity = false;
+        this.allowGravity = false;
         this.state.climbingRope = true;
         hd ? this.playClimbingDown() : this.playClimbingUp();
     }
@@ -660,7 +655,7 @@ export class Player {
         this.state.climbingRope = false;
         this.allowGravity = true;
 
-        if (this.x == otherPlayer.x) {
+        if (this.x === otherPlayer.x) {
             this.y < otherPlayer.y
                 ? this.bounce(this.flippedh)
                 : this.bounce(!this.flippedh);
