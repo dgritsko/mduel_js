@@ -36,7 +36,8 @@ export class Player {
             weaponJustCleared: false,
             nettedStrength: 0,
             justUnwarped: false,
-            inputInterrupt: 0
+            inputInterrupt: 0,
+            recentCollisionIds: []
         };
 
         this.input = this.configureInput(id);
@@ -95,6 +96,10 @@ export class Player {
 
     set allowGravity(value) {
         this.sprite.body.allowGravity = value;
+    }
+
+    get recentCollisionIds() {
+        return this.state.recentCollisionIds;
     }
 
     configureSprite() {
@@ -524,6 +529,147 @@ export class Player {
         this.sprite.body.allowGravity = false;
         this.state.climbingRope = true;
         hd ? this.playClimbingDown() : this.playClimbingUp();
+    }
+
+    // Collisions
+    collideWithPlayer(otherPlayer) {
+        // Stop current weapon stuff
+        // if (currWeapon != NULL && currWeapon->isFiring())
+        // 	currWeapon->stopFiring();
+        // if (o->currWeapon != NULL && o->currWeapon->isFiring())
+        // 	o->currWeapon->stopFiring();
+        // //shield handling
+        // if (o->hasShield() && hasShield())
+        // {
+        // 	if (isFacing(o) && !o->isFacing(this))
+        // 	{
+        // 		o->collideNormally(this);
+        // 		o->lastCollision = CS_SHIELDPLAYER;
+        // 	}
+        // 	else if (o->isFacing(this) && !isFacing(o))
+        // 	{
+        // 		collideNormally(o);
+        // 		lastCollision = CS_SHIELDPLAYER;
+        // 	}
+        // 	else {
+        // 		o->collideNormally(this);
+        // 		collideNormally(o);
+        // 		o->lastCollision = CS_SHIELDPLAYER;
+        // 		lastCollision = CS_SHIELDPLAYER;
+        // 	}
+        // 	return;
+        // }
+        // else if (o->hasShield() && !hasShield() && o->isFacing(this))
+        // {
+        // 	collideNormally(o);
+        // 	lastCollision = CS_SHIELDPLAYER;
+        // 	return;
+        // }
+        // else if (hasShield() && !o->hasShield() && isFacing(o))
+        // {
+        // o->collideNormally(this);
+        // o->lastCollision = CS_SHIELDPLAYER;
+        // return;
+        // }
+        // //lightning handling
+        // if (o->has1000V() && !has1000V())	//we die
+        // {
+        // 	gm->playerLightningd(this);
+        // 	return;
+        // }
+        // else if (has1000V() && !o->has1000V())	//they die
+        // {
+        // 	gm->playerLightningd(o);
+        // 	return;
+        // }
+        // else if (has1000V() && o->has1000V())	//nobody dies, weapons destroyed
+        // {
+        // 	clearWeapon();
+        // 	o->clearWeapon();
+        // }
+
+        if (
+            !this.state.crouching ||
+            (this.state.crouching &&
+                (otherPlayer.state.rolling || !otherPlayer.state.wasGrounded))
+        ) {
+            if (
+                (otherPlayer.state.crouching || otherPlayer.state.rolling) &&
+                this.state.wasGrounded &&
+                !this.state.crouching &&
+                !this.state.rolling
+            ) {
+                // if other player gets under your feet
+                const dontMove = this.vx === 0 && otherPlayer.state.rolling;
+                this.bounce(true);
+                if (dontMove) {
+                    this.vx = 0;
+                }
+                this.vy = -playerConfig.JUMP_IMPULSE * 2 / 3;
+                // if (o->usingInvis())
+                // 	lastCollision = CS_INVISPLAYER;
+                // else if (o->bJustUnwarped)
+                // 	lastCollision = CS_WARPEDPLAYER;
+                // else
+                // 	lastCollision = CS_BASICHIT;
+            } else if (
+                this.state.rolling &&
+                otherPlayer.state.wasGrounded &&
+                !otherPlayer.state.crouching &&
+                !otherPlayer.state.rolling
+            ) {
+                // if you get under other player's feet
+                const dontMove = otherPlayer.vx == 0;
+                otherPlayer.bounce(true);
+
+                if (dontMove) {
+                    otherPlayer.vx = 0;
+                }
+                // 		ignoreUntilUntouched = other;
+                otherPlayer.vy = -playerConfig.JUMP_IMPULSE * 2 / 3;
+                // if (usingInvis())
+                // 	o->lastCollision = CS_INVISPLAYER;
+                // else if (bJustUnwarped)
+                // 	o->lastCollision = CS_WARPEDPLAYER;
+                // else
+                // 	o->lastCollision = CS_BASICHIT;
+            } else {
+                // otherwise we must be talking a normal bump!
+                otherPlayer.collideNormally(this);
+                this.collideNormally(otherPlayer);
+                // if (o->usingInvis())
+                // 	lastCollision = CS_INVISPLAYER;
+                // else if (o->bJustUnwarped)
+                // 	lastCollision = CS_WARPEDPLAYER;
+                // else
+                this.state.lastCollision = collisions.BASICHIT;
+                // 	lastCollision = CS_BASICHIT;
+
+                // if (usingInvis())
+                // 	o->lastCollision = CS_INVISPLAYER;
+                // else if (bJustUnwarped)
+                // 	o->lastCollision = CS_WARPEDPLAYER;
+                // else
+                // 	o->lastCollision = CS_BASICHIT;
+                otherPlayer.state.lastCollision = collisions.BASICHIT;
+            }
+        }
+    }
+
+    collideNormally(otherPlayer) {
+        this.state.climbingRope = false;
+        this.allowGravity = true;
+
+        if (this.x == otherPlayer.x) {
+            this.y < otherPlayer.y
+                ? this.bounce(this.flippedh)
+                : this.bounce(!this.flippedh);
+        } else {
+            this.x < otherPlayer.x
+                ? this.bounce(this.flippedh)
+                : this.bounce(!this.flippedh);
+        }
+        this.vy = -playerConfig.JUMP_IMPULSE * 2 / 3;
     }
 
     // Animations

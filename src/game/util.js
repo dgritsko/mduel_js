@@ -42,6 +42,17 @@ const setBounds = (sprite, bounds) => {
     );
 };
 
+const exceptIndex = (items, index) => {
+    const before = items.slice(0, index);
+    const after = items.slice(index + 1);
+
+    return [...before, ...after];
+};
+
+const removeAtIndex = (items, index) => {
+    items.splice(index, 1);
+};
+
 const debugRender = obj => {
     //const text = JSON.stringify(obj);
     // const width = 66;
@@ -66,5 +77,7 @@ export {
     matchingProps,
     dist,
     setBounds,
+    exceptIndex,
+    removeAtIndex,
     debugRender
 };

@@ -3,7 +3,7 @@ import { Player } from "../game/Player/player";
 import { createNewLevel } from "../game/Level/level";
 import { handlePlatformCollisions } from "../game/update/platformCollisions";
 import { handlePlayerCollisions } from "../game/update/playerCollisions";
-import { debugRender } from "../game/util";
+import { exceptIndex, debugRender } from "../game/util";
 
 let level;
 const players = [];
@@ -38,7 +38,7 @@ function create() {
 }
 
 function update() {
-    players.forEach(player => {
+    players.forEach((player, index) => {
         player.update();
 
         if (!player.state.climbingRope) {
@@ -69,9 +69,10 @@ function update() {
         }
 
         player.handleInput();
-    });
 
-    handlePlayerCollisions(players);
+        const otherPlayers = exceptIndex(players, index);
+        handlePlayerCollisions(player, otherPlayers);
+    });
 }
 
 function render() {
