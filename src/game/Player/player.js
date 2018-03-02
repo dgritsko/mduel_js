@@ -1,11 +1,4 @@
-import {
-    now,
-    isBool,
-    isNumber,
-    isString,
-    setBounds,
-    debugRender
-} from "../util";
+import { now, isBool, isNumber, setBounds, debugRender } from "../util";
 import { animations } from "../../enums/animations";
 import { collisions } from "../../enums/collisions";
 import { playerConfig } from "../config";
@@ -87,7 +80,9 @@ export class Player {
     }
 
     set flippedh(value) {
-        this.sprite.scale.setTo(value ? -1 : 1, this.sprite.scale.y);
+        if (isNumber(value) || isBool(value)) {
+            this.sprite.scale.setTo(value ? -1 : 1, this.sprite.scale.y);
+        }
     }
 
     get allowGravity() {

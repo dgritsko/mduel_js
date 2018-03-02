@@ -6,7 +6,13 @@ const handlePlayerCollisions = (player, otherPlayers) => {
             player.sprite,
             otherPlayer.sprite,
             () => {
-                if (player.recentCollisionIds.indexOf(otherPlayer.id) !== -1) {
+                const playerJustLanded =
+                    !player.state.wasGrounded && player.state.grounded;
+
+                if (
+                    player.recentCollisionIds.indexOf(otherPlayer.id) !== -1 &&
+                    !playerJustLanded
+                ) {
                     return;
                 }
 
