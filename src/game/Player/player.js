@@ -44,6 +44,14 @@ export class Player {
         this.sprite.x = value;
     }
 
+    get y() {
+        return this.sprite.y;
+    }
+
+    set y(value) {
+        this.sprite.y = value;
+    }
+
     get vx() {
         return this.sprite.body.velocity.x;
     }
