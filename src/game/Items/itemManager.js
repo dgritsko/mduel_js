@@ -1,9 +1,7 @@
 import { Item } from "./item";
 import { items } from "../../enums/items";
 import { spawnOrientations } from "../../enums/spawnOrientations";
-
-const ITEM_VELOCITY = 100;
-const MAX_ITEMS = 3;
+import { itemConfig } from "../config";
 
 class ItemManager {
     constructor(level) {
@@ -31,7 +29,7 @@ class ItemManager {
     }
 
     getVelocity(θ) {
-        const v = ITEM_VELOCITY;
+        const v = itemConfig.ITEM_SPEED;
         return { x: Math.cos(θ) * v, y: Math.sin(θ) * v };
     }
 
@@ -63,7 +61,7 @@ class ItemManager {
     }
 
     update() {
-        while (this.activeItems.countLiving() < MAX_ITEMS) {
+        while (this.activeItems.countLiving() < itemConfig.MAX_ITEMS) {
             const item = this.spawnItem();
 
             this.activeItems.add(item.sprite);

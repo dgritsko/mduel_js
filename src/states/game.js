@@ -56,6 +56,15 @@ function update() {
 
         const otherPlayers = exceptIndex(players, index);
         handlePlayerCollisions(player, otherPlayers);
+
+        game.physics.arcade.overlap(
+            player.sprite,
+            itemManager.activeItems,
+            (_, item) => {
+                console.log(`Player ${player.id} collided with item`);
+                item.destroy();
+            }
+        );
     });
 
     itemManager.update();
@@ -79,6 +88,8 @@ function render() {
             game.debug.body(r.anchor);
             r.segments.children.forEach(s => game.debug.body(s));
         });
+
+        itemManager.activeItems.children.forEach(i => game.debug.body(i));
     }
 }
 

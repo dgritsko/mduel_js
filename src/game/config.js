@@ -18,7 +18,9 @@ const playerConfig = {
 };
 
 const itemConfig = {
-    powerupSpeed: 20
+    ITEM_BOUNDS: { top: -6, bottom: 6, left: -6, right: 6 },
+    MAX_ITEMS: 3,
+    ITEM_SPEED: 100
 };
 
 const levelConfig = {
