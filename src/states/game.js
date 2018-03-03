@@ -4,6 +4,7 @@ import { ItemManager } from "../game/Items/itemManager";
 import { createNewLevel } from "../game/Level/level";
 import { handlePlatformCollisions } from "../game/update/platformCollisions";
 import { handlePlayerCollisions } from "../game/update/playerCollisions";
+import { handleRopeCollisions } from "../game/update/ropeCollisions";
 import { exceptIndex, debugRender } from "../game/util";
 
 let level;
@@ -49,28 +50,7 @@ function update() {
             handlePlatformCollisions(player, level);
         }
 
-        let hitRope = false;
-        level.ropes.forEach(r => {
-            const hitCurrentRope = game.physics.arcade.overlap(
-                player.sprite,
-                r.segments,
-                () => {
-                    player.state.touchingRope = r;
-                },
-                (player, segment) => {
-                    const dist = player.body.center.x - segment.body.center.x;
-
-                    // TODO: move this to a constant
-                    return Math.abs(dist) <= 5;
-                }
-            );
-
-            hitRope = hitRope || hitCurrentRope;
-        });
-
-        if (!hitRope) {
-            player.state.touchingRope = null;
-        }
+        handleRopeCollisions(player, level);
 
         player.handleInput();
 
