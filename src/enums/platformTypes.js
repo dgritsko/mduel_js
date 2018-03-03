@@ -1,4 +1,4 @@
-export const platform_types = {
+export const platformTypes = {
     DEFAULT: 0,
     SPAWN: 1
 };

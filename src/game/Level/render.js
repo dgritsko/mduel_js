@@ -1,16 +1,17 @@
 import { levelConfig } from "../config";
 import { makePlatform } from "./platform";
-import { platform_types } from "../../enums/platform_types";
+import { platformTypes } from "../../enums/platformTypes";
+import { spawnOrientations } from "../../enums/spawnOrientations";
 import { setBounds } from "../util";
 
 function render(spec) {
-    const { platformSpec, ropeSpec } = spec;
+    const { platformSpec, ropeSpec, spawnSpec } = spec;
 
     const platforms = renderPlatforms(platformSpec);
 
     const ropes = renderRopes(ropeSpec);
 
-    const itemSpawns = renderItemSpawns();
+    const itemSpawns = renderItemSpawns(spawnSpec);
 
     const marshmallows = renderMarshmallows();
 
@@ -33,7 +34,7 @@ function renderPlatforms(platformInfos) {
         const platform = makePlatform(
             x,
             y,
-            info.isSpawn ? platform_types.SPAWN : platform_types.DEFAULT
+            info.isSpawn ? platformTypes.SPAWN : platformTypes.DEFAULT
         );
 
         platforms.add(platform);
@@ -102,30 +103,38 @@ function renderRopes(ropeInfos) {
     return ropes;
 }
 
-function renderItemSpawns() {
-    // Powerup spawns
-    const topSpawn = game.add.sprite(game.world.centerX, 0, "powerup_spawn");
-    topSpawn.anchor.setTo(0.5, 0);
+function renderItemSpawns(spawnInfos) {
+    return spawnInfos.map(s => {
+        const sprite = game.add.sprite(s.x, s.y, "powerup_spawn");
 
-    const powerupYOffset = -topSpawn.height;
-    const leftSpawn = game.add.sprite(
-        0,
-        game.world.height / 2 + powerupYOffset,
-        "powerup_spawn"
-    );
-    leftSpawn.anchor.setTo(0.5, 0);
-    leftSpawn.angle = -90;
+        const spawnPoint = { x: 0, y: 0 };
 
-    const rightSpawn = game.add.sprite(
-        game.world.width,
-        game.world.height / 2 + powerupYOffset,
-        "powerup_spawn"
-    );
-    rightSpawn.anchor.setTo(0.5, 0);
-    rightSpawn.scale.setTo(-1, 1);
-    rightSpawn.angle = 90;
+        switch (s.orientation) {
+            case spawnOrientations.TOP:
+                sprite.anchor.setTo(0.5, 0);
 
-    return [topSpawn, leftSpawn, rightSpawn];
+                spawnPoint.x = sprite.centerX;
+                spawnPoint.y = sprite.bottom;
+                break;
+            case spawnOrientations.LEFT:
+                sprite.anchor.setTo(0.5, 0);
+                sprite.angle = -90;
+
+                spawnPoint.x = sprite.height;
+                spawnPoint.y = sprite.y;
+                break;
+            case spawnOrientations.RIGHT:
+                sprite.anchor.setTo(0.5, 0);
+                sprite.scale.setTo(-1, 1);
+                sprite.angle = 90;
+
+                spawnPoint.x = game.world.width - sprite.height;
+                spawnPoint.y = sprite.y;
+                break;
+        }
+
+        return { sprite, spawnPoint, orientation: s.orientation };
+    });
 }
 
 function renderMarshmallows() {

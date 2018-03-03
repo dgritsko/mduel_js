@@ -1,8 +1,8 @@
-import { platform_types } from "../../enums/platform_types";
+import { platformTypes } from "../../enums/platformTypes";
 
 const makePlatform = (x, y, type) => {
     const spriteName =
-        type === platform_types.DEFAULT ? "main_platform" : "spawn_platform";
+        type === platformTypes.DEFAULT ? "main_platform" : "spawn_platform";
 
     const sprite = game.add.sprite(x, y, spriteName);
 

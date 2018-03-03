@@ -1,5 +1,6 @@
 import { gameConfig, playerConfig } from "../game/config";
 import { Player } from "../game/Player/player";
+import { ItemManager } from "../game/Items/itemManager";
 import { createNewLevel } from "../game/Level/level";
 import { handlePlatformCollisions } from "../game/update/platformCollisions";
 import { handlePlayerCollisions } from "../game/update/playerCollisions";
@@ -7,6 +8,7 @@ import { exceptIndex, debugRender } from "../game/util";
 
 let level;
 const players = [];
+let itemManager;
 
 function create() {
     game.time.advancedTiming = true;
@@ -35,6 +37,8 @@ function create() {
     //     32
     // );
     // text.tint = 0xa439a4;
+
+    itemManager = new ItemManager(level);
 }
 
 function update() {
@@ -73,6 +77,8 @@ function update() {
         const otherPlayers = exceptIndex(players, index);
         handlePlayerCollisions(player, otherPlayers);
     });
+
+    itemManager.update();
 }
 
 function render() {

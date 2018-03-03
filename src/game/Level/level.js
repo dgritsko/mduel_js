@@ -1,5 +1,6 @@
 import { levelConfig } from "../config";
 import { render } from "./render";
+import { spawnOrientations } from "../../enums/spawnOrientations";
 
 function generateRopes(platforms) {
     const {
@@ -138,6 +139,20 @@ function generatePlatforms() {
     return result;
 }
 
+function generateItemSpawns() {
+    const makeSpawn = (orientation, x, y) => ({ orientation, x, y });
+
+    const top = makeSpawn(spawnOrientations.TOP, game.world.centerX, 0);
+    const left = makeSpawn(spawnOrientations.LEFT, 0, game.world.height / 2);
+    const right = makeSpawn(
+        spawnOrientations.RIGHT,
+        game.world.width,
+        game.world.height / 2
+    );
+
+    return [top, left, right];
+}
+
 function generateTestPlatforms() {
     const result = [];
 
@@ -160,9 +175,12 @@ function createNewLevel() {
 
     const ropeSpec = generateRopes(platformSpec);
 
+    const spawnSpec = generateItemSpawns();
+
     const spec = {
         platformSpec,
-        ropeSpec
+        ropeSpec,
+        spawnSpec
     };
 
     return render(spec);
