@@ -1,4 +1,5 @@
 import { setBounds } from "../util";
+import { itemConfig } from "../config";
 
 export class Item {
     constructor(x, y, id) {
@@ -28,7 +29,7 @@ export class Item {
         sprite.body.collideWorldBounds = true;
         sprite.body.bounce.setTo(1, 1);
 
-        setBounds(sprite, { top: -6, bottom: 6, left: -6, right: 6 });
+        setBounds(sprite, itemConfig.ITEM_BOUNDS);
 
         this.sprite = sprite;
     }
