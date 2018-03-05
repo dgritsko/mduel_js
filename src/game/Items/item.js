@@ -1,8 +1,11 @@
 import { setBounds } from "../util";
 import { itemConfig } from "../config";
+import { SpriteObject } from "../spriteObject";
 
-export class Item {
+export class Item extends SpriteObject {
     constructor(x, y, id) {
+        super();
+
         this.id = id;
         this.setupSprite(x, y);
     }
@@ -32,21 +35,5 @@ export class Item {
         setBounds(sprite, itemConfig.ITEM_BOUNDS);
 
         this.sprite = sprite;
-    }
-
-    get vx() {
-        return this.sprite.body.velocity.x;
-    }
-
-    set vx(value) {
-        this.sprite.body.velocity.x = value;
-    }
-
-    get vy() {
-        return this.sprite.body.velocity.y;
-    }
-
-    set vy(value) {
-        this.sprite.body.velocity.y = value;
     }
 }

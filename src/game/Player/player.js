@@ -3,9 +3,12 @@ import { animations } from "../../enums/animations";
 import { collisions } from "../../enums/collisions";
 import { playerConfig } from "../config";
 import { addAnimations } from "./animations";
+import { SpriteObject } from "../spriteObject";
 
-export class Player {
+export class Player extends SpriteObject {
     constructor(spriteName, x, y, id) {
+        super();
+
         this.id = id;
 
         this.sprite = game.add.sprite(x, y, spriteName);
@@ -34,42 +37,6 @@ export class Player {
         };
 
         this.input = this.configureInput(id);
-    }
-
-    get x() {
-        return this.sprite.x;
-    }
-
-    set x(value) {
-        this.sprite.x = value;
-    }
-
-    get y() {
-        return this.sprite.y;
-    }
-
-    set y(value) {
-        this.sprite.y = value;
-    }
-
-    get vx() {
-        return this.sprite.body.velocity.x;
-    }
-
-    set vx(value) {
-        this.sprite.body.velocity.x = value;
-    }
-
-    get vy() {
-        return this.sprite.body.velocity.y;
-    }
-
-    set vy(value) {
-        this.sprite.body.velocity.y = value;
-    }
-
-    get animation() {
-        return this.sprite.animations.currentAnim.name;
     }
 
     set animation(value) {
