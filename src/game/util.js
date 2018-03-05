@@ -87,6 +87,8 @@ const playEffect = (id, x, y) => {
 
     const sprite = game.add.sprite(x, y, "effects", frames[0]);
 
+    sprite.anchor.setTo(0.5);
+
     const animation = sprite.animations.add(
         "default",
         frames,

@@ -2,6 +2,8 @@ import { Item } from "./item";
 import { items } from "../../enums/items";
 import { spawnOrientations } from "../../enums/spawnOrientations";
 import { itemConfig } from "../config";
+import { playEffect } from "../util";
+import { effects } from "../../enums/effects";
 
 class ItemManager {
     constructor(level) {
@@ -63,6 +65,8 @@ class ItemManager {
     update() {
         while (this.activeItems.countLiving() < itemConfig.MAX_ITEMS) {
             const item = this.spawnItem();
+
+            playEffect(effects.PURPLE_PUFF, item.x, item.y);
 
             this.activeItems.add(item.sprite);
         }

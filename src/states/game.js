@@ -5,7 +5,8 @@ import { createNewLevel } from "../game/Level/level";
 import { handlePlatformCollisions } from "../game/update/platformCollisions";
 import { handlePlayerCollisions } from "../game/update/playerCollisions";
 import { handleRopeCollisions } from "../game/update/ropeCollisions";
-import { exceptIndex, debugRender } from "../game/util";
+import { exceptIndex, debugRender, playEffect } from "../game/util";
+import { effects } from "../enums/effects";
 
 let level;
 const players = [];
@@ -40,6 +41,8 @@ function create() {
     // text.tint = 0xa439a4;
 
     itemManager = new ItemManager(level);
+
+    players.forEach(p => playEffect(effects.PURPLE_PUFF, p.x, p.y));
 }
 
 function update() {
@@ -61,6 +64,8 @@ function update() {
             player.sprite,
             itemManager.activeItems,
             (_, item) => {
+                playEffect(effects.DIE, item.x, item.y);
+
                 console.log(`Player ${player.id} collided with item`);
                 item.destroy();
             }
