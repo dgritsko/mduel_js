@@ -1,3 +1,6 @@
+import { effects } from "../enums/effects";
+import { playerConfig } from "./config";
+
 const now = () => new Date().getTime();
 
 const isNumber = value => typeof value === "number";
@@ -53,6 +56,49 @@ const removeAtIndex = (items, index) => {
     items.splice(index, 1);
 };
 
+const playEffect = (id, x, y) => {
+    let frames = [];
+    switch (id) {
+        case effects.GRAY_PUFF:
+            frames = [0, 1, 2, 3];
+            break;
+        case effects.SPLASH:
+            frames = [4, 5, 6, 7];
+            break;
+        case effects.VOLTS:
+            frames = [8, 9];
+            break;
+        case effects.MINE:
+            frames = [10, 11, 12];
+            break;
+        case effects.BOOMERANG:
+            frames = [13, 14, 15];
+            break;
+        case effects.DIE:
+            frames = [16, 17];
+            break;
+        case effects.PURPLE_PUFF:
+            frames = [18, 19, 20];
+            break;
+        case effects.GREEN_PUFF:
+            frames = [21, 22, 23];
+            break;
+    }
+
+    const sprite = game.add.sprite(x, y, "effects", frames[0]);
+
+    const animation = sprite.animations.add(
+        "default",
+        frames,
+        playerConfig.FRAMERATE,
+        false
+    );
+
+    animation.killOnComplete = true;
+
+    sprite.animations.play("default");
+};
+
 const debugRender = obj => {
     //const text = JSON.stringify(obj);
     // const width = 66;
@@ -79,5 +125,6 @@ export {
     setBounds,
     exceptIndex,
     removeAtIndex,
+    playEffect,
     debugRender
 };
