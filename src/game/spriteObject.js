@@ -1,3 +1,5 @@
+import { isNumber } from "./util";
+
 export class SpriteObject {
     constructor() {}
 
@@ -6,7 +8,9 @@ export class SpriteObject {
     }
 
     set x(value) {
-        this.sprite.x = value;
+        if (isNumber(value)) {
+            this.sprite.x = value;
+        }
     }
 
     get y() {
@@ -14,7 +18,9 @@ export class SpriteObject {
     }
 
     set y(value) {
-        this.sprite.y = value;
+        if (isNumber(value)) {
+            this.sprite.y = value;
+        }
     }
 
     get vx() {
@@ -22,7 +28,9 @@ export class SpriteObject {
     }
 
     set vx(value) {
-        this.sprite.body.velocity.x = value;
+        if (isNumber(value)) {
+            this.sprite.body.velocity.x = value;
+        }
     }
 
     get vy() {
@@ -30,7 +38,9 @@ export class SpriteObject {
     }
 
     set vy(value) {
-        this.sprite.body.velocity.y = value;
+        if (isNumber(value)) {
+            this.sprite.body.velocity.y = value;
+        }
     }
 
     get animation() {
