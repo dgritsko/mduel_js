@@ -17,22 +17,12 @@ class ItemManager {
         this.availableItems = Object.values(items);
     }
 
-    getTopVelocity() {
-        let θ = Math.random() * Math.PI;
-        return this.getVelocity(θ);
-    }
+    getVelocity(a, b) {
+        a = typeof a === "undefined" ? 0 : a;
+        b = typeof b === "undefined" ? 1 : b;
 
-    getLeftVelocity() {
-        let θ = (Math.random() - 0.5) * Math.PI;
-        return this.getVelocity(θ);
-    }
+        let θ = (Math.random() + a) * Math.PI * b;
 
-    getRightVelocity() {
-        let θ = (Math.random() + 0.5) * -Math.PI;
-        return this.getVelocity(θ);
-    }
-
-    getVelocity(θ) {
         const v = itemConfig.ITEM_SPEED;
         return { x: Math.cos(θ) * v, y: Math.sin(θ) * v };
     }
@@ -50,13 +40,13 @@ class ItemManager {
 
         switch (spawn.orientation) {
             case spawnOrientations.TOP:
-                vel = this.getTopVelocity();
+                vel = this.getVelocity();
                 break;
             case spawnOrientations.RIGHT:
-                vel = this.getRightVelocity();
+                vel = this.getVelocity(0.5, -1);
                 break;
             case spawnOrientations.LEFT:
-                vel = this.getLeftVelocity();
+                vel = this.getVelocity(-0.5);
                 break;
         }
 
