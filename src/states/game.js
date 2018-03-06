@@ -51,6 +51,8 @@ function update() {
 
         if (!player.state.climbingRope) {
             handlePlatformCollisions(player, level);
+        } else {
+            player.state.grounded = false;
         }
 
         handleRopeCollisions(player, level);
