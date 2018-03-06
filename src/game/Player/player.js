@@ -637,6 +637,15 @@ export class Player extends SpriteObject {
         this.vy = -playerConfig.JUMP_IMPULSE * 2 / 3;
     }
 
+    // Items
+    setItem() {
+        console.log("TODO: set item for player " + this.id);
+    }
+
+    clearItem() {
+        console.log("TODO: clear item for player " + this.id);
+    }
+
     // Animations
 
     playIdle() {

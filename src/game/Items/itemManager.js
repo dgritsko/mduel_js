@@ -1,4 +1,4 @@
-import { Item } from "./item";
+import { PickupItem } from "./pickupItem";
 import { items } from "../../enums/items";
 import { spawnOrientations } from "../../enums/spawnOrientations";
 import { itemConfig } from "../config";
@@ -13,6 +13,8 @@ class ItemManager {
         }));
 
         this.activeItems = game.add.group();
+
+        this.availableItems = Object.values(items);
     }
 
     getTopVelocity() {
@@ -37,8 +39,12 @@ class ItemManager {
 
     spawnItem() {
         const spawn = Phaser.ArrayUtils.getRandomItem(this.spawns);
-        const type = Phaser.ArrayUtils.getRandomItem(Object.values(items));
-        const item = new Item(spawn.spawnPoint.x, spawn.spawnPoint.y, type);
+        const type = Phaser.ArrayUtils.getRandomItem(this.availableItems);
+        const item = new PickupItem(
+            spawn.spawnPoint.x,
+            spawn.spawnPoint.y,
+            type
+        );
 
         let vel;
 

@@ -5,6 +5,7 @@ import { createNewLevel } from "../game/Level/level";
 import { handlePlatformCollisions } from "../game/update/platformCollisions";
 import { handlePlayerCollisions } from "../game/update/playerCollisions";
 import { handleRopeCollisions } from "../game/update/ropeCollisions";
+import { handlePickupItemCollisions } from "../game/update/pickupItemCollisions";
 import { exceptIndex, debugRender, playEffect } from "../game/util";
 import { effects } from "../enums/effects";
 
@@ -62,16 +63,7 @@ function update() {
         const otherPlayers = exceptIndex(players, index);
         handlePlayerCollisions(player, otherPlayers);
 
-        game.physics.arcade.overlap(
-            player.sprite,
-            itemManager.activeItems,
-            (_, item) => {
-                playEffect(effects.DIE, item.x, item.y);
-
-                console.log(`Player ${player.id} collided with item`);
-                item.destroy();
-            }
-        );
+        handlePickupItemCollisions(player, itemManager);
     });
 
     itemManager.update();

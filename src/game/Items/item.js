@@ -1,39 +1,72 @@
-import { setBounds } from "../util";
-import { itemConfig } from "../config";
-import { SpriteObject } from "../spriteObject";
-
-export class Item extends SpriteObject {
-    constructor(x, y, id) {
-        super();
-
-        this.id = id;
-        this.setupSprite(x, y);
+export class Item {
+    constructor(player) {
+        this.pawn = player;
+        this.canFireStanding = false;
+        this.canFireInAir = false;
+        this.canFireCrouching = false;
+        this.canMoveWhileFiring = false;
+        this.ammo = -1;
+        this.heldFire = false;
+        this.firing = false;
+        this.wasFiring = false;
     }
 
-    setupSprite(x, y) {
-        const sprite = game.add.sprite(x, y, "powerups");
+    destroy() {
+        this.stopFiring();
+        this.pawn.weaponDestroyed();
+    }
 
-        sprite.animations.add("default", [0, 1, 2], 4, true);
+    fire() {
+        if (this.pawn.state.isOnRope) {
+            return false;
+        }
 
-        sprite.animations.play("default");
+        if (this.pawn.state.grounded && this.pawn.state.crouching) {
+            this.firing = this.canFireCrouching;
+        } else if (this.pawn.state.grounded) {
+            this.firing = this.canFireStanding;
+        } else {
+            this.firing = this.canFireInAir;
+        }
 
-        sprite.anchor.setTo(0.5);
+        if (this.firing && !this.heldFire) {
+            this.weaponFireAction();
+            if (this.firing) {
+                // this gives weaponFireAction in child classes a chance to override the animation playing
+                this.handleMovementAndAmmo();
+            }
+        }
+    }
 
-        const icon = game.add.sprite(0, 0, "powerups");
-        icon.frame = this.id + 3;
-        icon.anchor.setTo(0.5);
-        sprite.addChild(icon);
+    stopFiring() {}
 
-        game.physics.enable(sprite);
+    update() {
+        if (this.heldFire && this.firing) {
+            this.weaponFireAction();
+            this.handleMovementAndAmmo();
+        }
 
-        sprite.body.allowGravity = false;
-        icon.body.allowGravity = false;
+        this.wasFiring = this.firing;
+    }
 
-        sprite.body.collideWorldBounds = true;
-        sprite.body.bounce.setTo(1, 1);
+    handleMovementAndAmmo() {
+        if (!this.canMoveWhileFiring) {
+            this.pawn.vx = 0;
+        }
 
-        setBounds(sprite, itemConfig.ITEM_BOUNDS);
+        // TODO
+        // if (firingAnim.size() > 0 && !this.heldFire) {
+        //     // pawn->setArbitraryAnim(firingAnim, false, fireAnimSpeed);
+        //     // pawn->setInputInterrupt(fireAnimSpeed * firingAnim.size());
+        // }
 
-        this.sprite = sprite;
+        if (this.ammo !== -1) {
+            //negative 1 means unlimited ammo
+            this.ammo--;
+        }
+
+        if (this.ammo === 0) {
+            this.destroy();
+        }
     }
 }
