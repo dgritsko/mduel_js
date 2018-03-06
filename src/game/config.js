@@ -1,6 +1,8 @@
 const gameConfig = {
     SHOW_HITBOXES: false,
-    SHOW_FPS: false
+    SHOW_FPS: false,
+
+    ROPE_THRESHOLD: 8
 };
 
 const playerConfig = {

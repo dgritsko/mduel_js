@@ -1,3 +1,5 @@
+import { gameConfig } from "../config";
+
 function handleRopeCollisions(player, level) {
     let hitRope = false;
     level.ropes.forEach(r => {
@@ -9,9 +11,7 @@ function handleRopeCollisions(player, level) {
             },
             (player, segment) => {
                 const dist = player.body.center.x - segment.body.center.x;
-
-                // TODO: move this to a constant
-                return Math.abs(dist) <= 5;
+                return Math.abs(dist) <= gameConfig.ROPE_THRESHOLD;
             }
         );
 
