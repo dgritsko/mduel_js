@@ -3,7 +3,7 @@ import { effects } from "../../enums/effects";
 import { items } from "../../enums/items";
 import { ItemWarp } from "../../game/Items/itemWarp";
 
-const handlePickupItemCollisions = (player, itemManager) => {
+const handlePickupItemCollisions = (player, itemManager, gameManager) => {
     game.physics.arcade.overlap(
         player.sprite,
         itemManager.activeItems,

@@ -8,10 +8,12 @@ import { handleRopeCollisions } from "../game/update/ropeCollisions";
 import { handlePickupItemCollisions } from "../game/update/pickupItemCollisions";
 import { exceptIndex, debugRender, playEffect } from "../game/util";
 import { effects } from "../enums/effects";
+import { GameManager } from "../game/gameManager";
 
 let level;
 const players = [];
 let itemManager;
+let gameManager;
 
 function create() {
     game.time.advancedTiming = true;
@@ -40,10 +42,11 @@ function create() {
     //     32
     // );
     // text.tint = 0xa439a4;
-
     itemManager = new ItemManager(level);
 
     players.forEach(p => playEffect(effects.PURPLE_PUFF, p.x, p.y));
+
+    gameManager = new GameManager();
 }
 
 function update() {
@@ -63,7 +66,7 @@ function update() {
         const otherPlayers = exceptIndex(players, index);
         handlePlayerCollisions(player, otherPlayers);
 
-        handlePickupItemCollisions(player, itemManager);
+        handlePickupItemCollisions(player, itemManager, gameManager);
     });
 
     itemManager.update();
