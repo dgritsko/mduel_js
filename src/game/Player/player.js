@@ -27,9 +27,9 @@ export class Player extends SpriteObject {
             touchingRope: null,
             wasTouchingRope: null,
             climbingRope: false,
-            currWeapon: null,
-            lastWeaponChangeTime: 0,
-            weaponJustCleared: false,
+            currItem: null,
+            lastItemChangeTime: 0,
+            itemJustCleared: false,
             nettedStrength: 0,
             justUnwarped: false,
             inputInterrupt: 0,
@@ -157,13 +157,17 @@ export class Player extends SpriteObject {
     update() {
         this.state.wasGrounded = this.state.grounded;
         this.state.wasTouchingRope = this.state.touchingRope;
+
+        if (this.state.currItem) {
+            this.state.currItem.update();
+        }
     }
 
     handleInput() {
         const { hr, hl, hu, hd, nr, nl, nu, nd, hf, nf } = this.getInput();
 
         //debugRender(this.getState());
-        //weapon animation refreshes
+        //item animation refreshes
         // if (inputInterrupt == 0 && forceAnimUpdate)
         // {
         // 	if (isOnRope()) {
@@ -326,14 +330,16 @@ export class Player extends SpriteObject {
             }
         }
 
-        // //weapon stuffs
-        // if (currWeapon != NULL)
-        // {
-        // 	if (nf && !currWeapon->isFiring())
-        // 		currWeapon->fire();
-        // 	if (!hf && currWeapon->isFiring())
-        // 		currWeapon->stopFiring();
-        // }
+        // item stuffs
+        if (this.state.currItem) {
+            if (nf && !this.state.currItem.firing) {
+                this.state.currItem.fire();
+            }
+
+            if (!hf && !this.state.currItem.firing) {
+                this.state.currItem.stopFiring();
+            }
+        }
     }
 
     justLanded(hr, hl) {
@@ -385,8 +391,8 @@ export class Player extends SpriteObject {
     }
 
     bounce(pushedForwards) {
-        if (this.state.currWeapon != null && this.state.currWeapon.isFiring()) {
-            this.state.currWeapon.stopFiring();
+        if (this.state.currItem != null && this.state.currItem.firing) {
+            this.state.currItem.stopFiring();
         }
 
         this.state.justJumped = true;
@@ -498,11 +504,15 @@ export class Player extends SpriteObject {
 
     // Collisions
     collideWithPlayer(otherPlayer) {
-        // Stop current weapon stuff
-        // if (currWeapon != NULL && currWeapon->isFiring())
-        // 	currWeapon->stopFiring();
-        // if (o->currWeapon != NULL && o->currWeapon->isFiring())
-        // 	o->currWeapon->stopFiring();
+        // Stop current item stuff
+        if (this.state.currItem && this.state.currItem.firing) {
+            this.state.currItem.stopFiring();
+        }
+
+        if (otherPlayer.state.currItem && otherPlayer.state.currItem.firing) {
+            otherPlayer.state.currItem.stopFiring();
+        }
+
         // //shield handling
         // if (o->hasShield() && hasShield())
         // {
@@ -638,12 +648,46 @@ export class Player extends SpriteObject {
     }
 
     // Items
-    setItem() {
-        console.log("TODO: set item for player " + this.id);
+    setItem(item) {
+        this.clearItem();
+        this.state.currItem = item;
     }
 
     clearItem() {
-        console.log("TODO: clear item for player " + this.id);
+        this.itemChange();
+        this.state.itemJustCleared = true;
+        if (this.state.currItem) {
+            this.state.currItem.destroy();
+        }
+        this.state.currItem = null;
+        this.state.itemJustCleared = false;
+    }
+
+    itemChange() {
+        this.state.lastItemChangeTime = now();
+        // TODO: Not sure what this is for
+        // u32 newTime = Tick(gm->statTimerID);
+        // u16 numSecs = (newTime - lastWeaponChangeTime) / 1000;
+        // u8 playerID = (this == gm->player1 ? gm->menuBase->player1id : gm->menuBase->player2id);
+        // u8 weaponID;
+        // if (currWeapon == NULL)
+        //     weaponID = 18;
+        // else
+        //     weaponID = currWeapon->getType();
+        // if (!gm->isGamePaused())
+        // {
+        //     //if we record this when the game is paused we'll get mucho random numbers
+        //     gm->menuBase->scoreTime(playerID, weaponID, numSecs);
+        // }
+        // lastWeaponChangeTime = newTime;
+    }
+
+    itemDestroyed() {
+        if (!this.state.itemJustCleared) {
+            this.itemChange();
+        }
+
+        this.state.currItem = null;
     }
 
     // Animations

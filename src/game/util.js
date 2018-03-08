@@ -109,6 +109,10 @@ const debugRender = obj => {
     //     const substr = text.substr(i * width, (i + 1) * width);
     //     game.debug.text(substr, 2, 14 + i * 16, "#ff0000");
     // }
+    if (obj === null) {
+        game.debug.text("null", 2, 14, "#ff0000");
+        return;
+    }
 
     const keys = Object.keys(obj);
     let parts = keys.map(k => `${k}: ${obj[k]}`);

@@ -1,6 +1,7 @@
 export class Item {
-    constructor(player) {
+    constructor(player, type) {
         this.pawn = player;
+        this.type = type;
         this.canFireStanding = false;
         this.canFireInAir = false;
         this.canFireCrouching = false;
@@ -13,7 +14,7 @@ export class Item {
 
     destroy() {
         this.stopFiring();
-        this.pawn.weaponDestroyed();
+        this.pawn.itemDestroyed();
     }
 
     fire() {
@@ -30,19 +31,21 @@ export class Item {
         }
 
         if (this.firing && !this.heldFire) {
-            this.weaponFireAction();
+            this.itemFireAction();
             if (this.firing) {
-                // this gives weaponFireAction in child classes a chance to override the animation playing
+                // this gives itemFireAction in child classes a chance to override the animation playing
                 this.handleMovementAndAmmo();
             }
         }
     }
 
-    stopFiring() {}
+    stopFiring() {
+        this.firing = false;
+    }
 
     update() {
         if (this.heldFire && this.firing) {
-            this.weaponFireAction();
+            this.itemFireAction();
             this.handleMovementAndAmmo();
         }
 
@@ -61,7 +64,7 @@ export class Item {
         // }
 
         if (this.ammo !== -1) {
-            //negative 1 means unlimited ammo
+            // negative 1 means unlimited ammo
             this.ammo--;
         }
 
