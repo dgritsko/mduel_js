@@ -20,6 +20,7 @@ function handleRopeCollisions(player, level) {
 
     if (!hitRope) {
         player.state.touchingRope = null;
+        player.allowGravity = true;
     }
 }
 

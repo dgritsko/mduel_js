@@ -17,7 +17,6 @@ export class ItemWarp extends Item {
     }
 
     itemFireAction() {
-        this.pawn.allowGravity = true;
         const x = Math.random() * game.world.width;
         const y = Math.random() * game.world.height * 0.57;
         this.pawn.x = x;
