@@ -287,20 +287,21 @@ export class Player extends SpriteObject {
                         this.uncrouch(hr, hl);
                     }
                 } else {
+                    if (!hr || !hl) {
                     this.vx = (hr - hl) * playerConfig.RUN_SPEED;
 
-                    if (nr) {
+                        if (hd) {
+                            this.crouch();
+                        } else if (nr || (hr && !hl)) {
                         this.flippedh = false;
                         this.playRunning();
-                    } else if (nl) {
+                        } else if (nl || (hl && !hr)) {
                         this.flippedh = true;
                         this.playRunning();
-                    } else if (hd)
-                        // crouch
-                        this.crouch();
-                    else if (!hr && !hl) {
+                        } else if (!hr && !hl) {
                         // standing still
                         this.playIdle();
+                    }
                     }
 
                     if (nu) {
@@ -470,8 +471,6 @@ export class Player extends SpriteObject {
     }
 
     justfell() {
-        const { unstable, vx, flippedh } = this.getState();
-
         this.allowGravity = true;
 
         this.state.rolling = false;
@@ -479,10 +478,10 @@ export class Player extends SpriteObject {
         //if (vx == 0)
         //	vx = (flippedh ? -WALKSPEED : WALKSPEED);
         setBounds(this.sprite, playerConfig.FALLING_BOUNDS);
-        if (!unstable) {
+        if (!this.state.unstable) {
             this.playFalling();
         } else {
-            (vx < 0 && flippedh) || (vx > 0 && !flippedh)
+            (this.vx < 0 && this.flippedh) || (this.vx > 0 && !this.flippedh)
                 ? this.playPushedForward()
                 : this.playPushedBackward();
         }
