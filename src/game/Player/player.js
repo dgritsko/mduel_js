@@ -159,7 +159,7 @@ export class Player extends SpriteObject {
         this.state.wasTouchingRope = this.state.touchingRope;
 
         if (this.state.currItem) {
-            this.state.currItem.update();
+            this.state.currItem.update(this);
         }
     }
 
@@ -288,20 +288,20 @@ export class Player extends SpriteObject {
                     }
                 } else {
                     if (!hr || !hl) {
-                    this.vx = (hr - hl) * playerConfig.RUN_SPEED;
+                        this.vx = (hr - hl) * playerConfig.RUN_SPEED;
 
                         if (hd) {
                             this.crouch();
                         } else if (nr || (hr && !hl)) {
-                        this.flippedh = false;
-                        this.playRunning();
+                            this.flippedh = false;
+                            this.playRunning();
                         } else if (nl || (hl && !hr)) {
-                        this.flippedh = true;
-                        this.playRunning();
+                            this.flippedh = true;
+                            this.playRunning();
                         } else if (!hr && !hl) {
-                        // standing still
-                        this.playIdle();
-                    }
+                            // standing still
+                            this.playIdle();
+                        }
                     }
 
                     if (nu) {
@@ -334,11 +334,11 @@ export class Player extends SpriteObject {
         // item stuffs
         if (this.state.currItem) {
             if (nf && !this.state.currItem.firing) {
-                this.state.currItem.fire();
+                this.state.currItem.fire(this);
             }
 
-            if (!hf && !this.state.currItem.firing) {
-                this.state.currItem.stopFiring();
+            if (!hf && this.state.currItem.firing) {
+                this.state.currItem.stopFiring(this);
             }
         }
     }
@@ -393,7 +393,7 @@ export class Player extends SpriteObject {
 
     bounce(pushedForwards) {
         if (this.state.currItem != null && this.state.currItem.firing) {
-            this.state.currItem.stopFiring();
+            this.state.currItem.stopFiring(this);
         }
 
         this.state.justJumped = true;
@@ -505,11 +505,11 @@ export class Player extends SpriteObject {
     collideWithPlayer(otherPlayer) {
         // Stop current item stuff
         if (this.state.currItem && this.state.currItem.firing) {
-            this.state.currItem.stopFiring();
+            this.state.currItem.stopFiring(this);
         }
 
         if (otherPlayer.state.currItem && otherPlayer.state.currItem.firing) {
-            otherPlayer.state.currItem.stopFiring();
+            otherPlayer.state.currItem.stopFiring(this);
         }
 
         // //shield handling
@@ -653,40 +653,10 @@ export class Player extends SpriteObject {
     }
 
     clearItem() {
-        this.itemChange();
-        this.state.itemJustCleared = true;
         if (this.state.currItem) {
-            this.state.currItem.destroy();
+            this.state.currItem.destroy(this);
+            this.state.currItem = null;
         }
-        this.state.currItem = null;
-        this.state.itemJustCleared = false;
-    }
-
-    itemChange() {
-        this.state.lastItemChangeTime = now();
-        // TODO: Not sure what this is for
-        // u32 newTime = Tick(gm->statTimerID);
-        // u16 numSecs = (newTime - lastWeaponChangeTime) / 1000;
-        // u8 playerID = (this == gm->player1 ? gm->menuBase->player1id : gm->menuBase->player2id);
-        // u8 weaponID;
-        // if (currWeapon == NULL)
-        //     weaponID = 18;
-        // else
-        //     weaponID = currWeapon->getType();
-        // if (!gm->isGamePaused())
-        // {
-        //     //if we record this when the game is paused we'll get mucho random numbers
-        //     gm->menuBase->scoreTime(playerID, weaponID, numSecs);
-        // }
-        // lastWeaponChangeTime = newTime;
-    }
-
-    itemDestroyed() {
-        if (!this.state.itemJustCleared) {
-            this.itemChange();
-        }
-
-        this.state.currItem = null;
     }
 
     // Animations
