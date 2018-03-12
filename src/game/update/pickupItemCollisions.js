@@ -1,7 +1,8 @@
 import { playEffect } from "../../game/util";
 import { effects } from "../../enums/effects";
 import { items } from "../../enums/items";
-import { ItemWarp } from "../../game/Items/itemWarp";
+import { deaths } from "../../enums/deaths";
+import { ItemInvisibility } from "../../game/Items/itemInvisibility";
 
 const handlePickupItemCollisions = (player, itemManager, gameManager) => {
     game.physics.arcade.overlap(
@@ -12,8 +13,8 @@ const handlePickupItemCollisions = (player, itemManager, gameManager) => {
 
             switch (item.data.type) {
                 case items.DEATH:
-                    console.log(`TODO: Player ${player.id} hit skull`);
-                    //gm->playerSkulled(other);
+                    player.clearItem();
+                    gameManager.killPlayer(player, deaths.SKULL);
                     break;
                 case items.VOLTS:
                     player.setItem(new ItemVolts(player));

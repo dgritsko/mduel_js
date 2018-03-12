@@ -2,37 +2,18 @@ export class Item {
     constructor(type) {
         this.type = type;
 
-        this.autoFire = false;
         this.firing = false;
     }
 
-    destroy(player) {
-        console.log(`destroy called for player ${player.id}`);
-    }
+    canFire(player) {}
 
-    fire(player) {
-        console.log(`fire called for player ${player.id}`);
+    didFire(player) {}
 
-        if (this.autoFire) {
-            this.firing = true;
-        }
+    fire(player) {}
 
-        if (this.firing) {
-            this.itemFireAction(player);
-        }
+    stopFiring(player) {}
 
-        if (this.ammo === 0) {
-            player.clearItem();
-        }
-    }
+    destroy(player) {}
 
-    stopFiring(player) {
-        this.firing = false;
-    }
-
-    update(player) {
-        if ((this.heldFire && this.firing) || this.autoFire) {
-            this.fire(player);
-        }
-    }
+    update(player) {}
 }
