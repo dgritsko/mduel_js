@@ -21,12 +21,17 @@ const playerConfig = {
 
 const itemConfig = {
     ITEM_BOUNDS: { top: -6, bottom: 6, left: -6, right: 6 },
-    MAX_ITEMS: 3,
-    ITEM_SPEED: 100
+    MAX_ITEMS: 0,
+    ITEM_SPEED: 100,
+    TEST_ITEMS: [
+        { x: 100, y: 300, type: 2 },
+        { x: 200, y: 300, type: 11 },
+        { x: 300, y: 300, type: 11 }
+    ]
 };
 
 const levelConfig = {
-    TEST_LEVEL: false,
+    TEST_LEVEL: true,
     LEVEL_HEIGHT: 5,
     LEVEL_WIDTH: 18,
     SPAWN_WIDTH: 4,

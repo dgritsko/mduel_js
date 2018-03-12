@@ -15,6 +15,10 @@ class ItemManager {
         this.activeItems = game.add.group();
 
         this.availableItems = Object.values(items);
+
+        itemConfig.TEST_ITEMS.forEach(ti => {
+            this.activeItems.add(new PickupItem(ti.x, ti.y, ti.type).sprite);
+        });
     }
 
     getVelocity(a, b) {
