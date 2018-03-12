@@ -45,7 +45,8 @@ const handlePickupItemCollisions = (player, itemManager, gameManager) => {
                     player.setItem(new ItemHook(player));
                     break;
                 case items.WARP:
-                    player.setItem(new ItemWarp(player));
+                    player.clearItem();
+                    gameManager.warpPlayer(player);
                     break;
                 default:
                     player.clearItem();
