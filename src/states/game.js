@@ -66,7 +66,7 @@ function update() {
         const otherPlayers = exceptIndex(players, index);
         handlePlayerCollisions(player, otherPlayers);
 
-        handlePickupItemCollisions(player, itemManager, gameManager);
+        handlePickupItemCollisions(player, level, itemManager, gameManager);
     });
 
     itemManager.update();
