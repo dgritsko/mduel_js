@@ -55,9 +55,9 @@ const levelConfig = {
     MAX_RANDOM_ROPES: 5,
 
     COLUMN_WIDTH: 32,
-    COLUMN_OFFSET: 32,
+    COLUMN_OFFSET: 47,
     ROW_HEIGHT: 64,
-    ROW_OFFSET: 80,
+    ROW_OFFSET: 88,
 
     ROPE_ANCHOR_BOUNDS: { top: 6, bottom: 5, left: -5.5, right: 6.5 },
     ROPE_SEGMENT_BOUNDS: { top: -16, bottom: 16, left: -1, right: 3 },

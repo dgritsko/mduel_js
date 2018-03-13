@@ -5,6 +5,8 @@ const makePlatform = (x, y, type) => {
 
     const sprite = game.add.sprite(x, y, "platform", frame);
 
+    sprite.anchor.setTo(0.5);
+
     game.physics.enable(sprite);
 
     sprite.body.moves = false;
