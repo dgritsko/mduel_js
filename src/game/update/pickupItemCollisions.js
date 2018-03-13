@@ -67,12 +67,18 @@ const handlePickupItemCollisions = (
             return;
         }
 
-        game.physics.arcade.overlap(level.platforms, item, (platform, _) => {
+        const toRemove = [];
+
+        game.physics.arcade.overlap(level.platforms, item, (item, platform) => {
+            item.kill();
+            toRemove.push(platform);
+        });
+
+        // TODO: Remove adjacent platform as well
+        toRemove.forEach(platform => {
             playEffect(effects.GRAY_PUFF, platform.x, platform.y);
-
             level.platforms.remove(platform);
-
-            platform.kill();
+            platform.destroy();
         });
     });
 };
