@@ -1,10 +1,9 @@
 import { platformTypes } from "../../enums/platformTypes";
 
 const makePlatform = (x, y, type) => {
-    const spriteName =
-        type === platformTypes.DEFAULT ? "main_platform" : "spawn_platform";
+    const frame = type === platformTypes.DEFAULT ? 0 : 1;
 
-    const sprite = game.add.sprite(x, y, spriteName);
+    const sprite = game.add.sprite(x, y, "platform", frame);
 
     game.physics.enable(sprite);
 
