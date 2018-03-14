@@ -1,14 +1,14 @@
 import { Item } from "./item";
 import { items } from "../../enums/items";
 
-export class ItemInvisibility extends Item {
+export class ItemBoots extends Item {
     constructor() {
-        super(items.INVISIBILITY);
+        super(items.BOOTS);
 
         this.canFireStanding = true;
         this.canFireCrouching = false;
 
-        this.ammo = 1;
+        this.ammo = -1;
     }
 
     fire(player) {
@@ -16,11 +16,7 @@ export class ItemInvisibility extends Item {
             return;
         }
 
-        if (player.sprite.alpha) {
-            player.sprite.alpha = 0.0;
-        } else {
-            this.destroy(player);
-        }
+        player.jump(true);
     }
 
     destroy(player) {

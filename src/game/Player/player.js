@@ -368,8 +368,7 @@ export class Player extends SpriteObject {
         if (!this.state.grounded) {
             return false;
         }
-        //move off the ground
-        //setBasePos(getBottom() - 1);
+
         //stops routine 'just airborne' checks happening
         this.state.justJumped = true;
         this.state.crouching = false;
@@ -379,6 +378,7 @@ export class Player extends SpriteObject {
         if (bootsJump) {
             vy = vy * 3 / 2;
         }
+
         this.vy = vy;
 
         if (this.vx === 0) {
@@ -417,7 +417,7 @@ export class Player extends SpriteObject {
                 : -playerConfig.RUN_SPEED;
             this.playPushedBackward();
         }
-        //setBasePos(getBottom() - 1);
+
         if (this.state.grounded) {
             vy = playerConfig.JUMP_IMPULSE * 2 / 3;
         }

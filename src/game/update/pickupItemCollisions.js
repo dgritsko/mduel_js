@@ -3,6 +3,7 @@ import { effects } from "../../enums/effects";
 import { items } from "../../enums/items";
 import { deaths } from "../../enums/deaths";
 import { ItemInvisibility } from "../../game/Items/itemInvisibility";
+import { ItemBoots } from "../../game/Items/itemBoots";
 
 const handlePickupItemCollisions = (
     player,
