@@ -1,3 +1,6 @@
+import { playEffect } from "./util";
+import { effects } from "../enums/effects";
+
 export class GameManager {
     constructor() {}
 
@@ -10,6 +13,7 @@ export class GameManager {
         const y = Math.random() * game.world.height * 0.57;
         player.x = x;
         player.y = y;
-        this.ammo = 0;
+
+        playEffect(effects.GREEN_PUFF, x, y);
     }
 }
