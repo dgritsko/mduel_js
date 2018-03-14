@@ -2,8 +2,15 @@ import { playEffect } from "../../game/util";
 import { effects } from "../../enums/effects";
 import { items } from "../../enums/items";
 import { deaths } from "../../enums/deaths";
+import { ItemVolts } from "../../game/Items/itemVolts";
 import { ItemInvisibility } from "../../game/Items/itemInvisibility";
+import { ItemMine } from "../../game/Items/itemMine";
+import { ItemGun } from "../../game/Items/itemGun";
 import { ItemBoots } from "../../game/Items/itemBoots";
+import { ItemGrenade } from "../../game/Items/itemGrenade";
+import { ItemPuck } from "../../game/Items/itemPuck";
+import { ItemChute } from "../../game/Items/itemChute";
+import { ItemHook } from "../../game/Items/itemHook";
 
 const handlePickupItemCollisions = (
     player,
