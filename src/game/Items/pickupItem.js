@@ -13,7 +13,7 @@ export class PickupItem extends SpriteObject {
     }
 
     setupSprite(x, y) {
-        const sprite = game.add.sprite(x, y, "powerups");
+        const sprite = game.add.sprite(x, y, "items");
 
         sprite.animations.add("default", [0, 1, 2], 4, true);
 
@@ -21,7 +21,7 @@ export class PickupItem extends SpriteObject {
 
         sprite.anchor.setTo(0.5);
 
-        const icon = game.add.sprite(0, 0, "powerups");
+        const icon = game.add.sprite(0, 0, "items");
         icon.frame = this.type + 3;
         icon.anchor.setTo(0.5);
         sprite.addChild(icon);

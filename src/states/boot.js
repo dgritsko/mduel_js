@@ -12,7 +12,7 @@ function preload() {
         32,
         32
     );
-    game.load.spritesheet("powerups", "assets/powerups.png", 32, 32);
+    game.load.spritesheet("items", "assets/items.png", 32, 32);
     game.load.spritesheet("effects", "assets/effects.png", 32, 32);
 
     game.load.bitmapFont(
