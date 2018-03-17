@@ -1,4 +1,5 @@
 import { SpriteObject } from "../spriteObject";
+import { playerConfig } from "../config";
 
 export class ProjectilePuck extends SpriteObject {
     constructor() {
@@ -11,5 +12,9 @@ export class ProjectilePuck extends SpriteObject {
         this.sprite.animations.add("default", [24, 25], 4, true);
 
         this.sprite.animations.play("default");
+
+        game.physics.enable(this.sprite);
+
+        this.vx = playerConfig.RUN_SPEED * 2;
     }
 }

@@ -154,7 +154,7 @@ export class Player extends SpriteObject {
         return Object.assign({}, this.state, position, velocity, { flippedh });
     }
 
-    update() {
+    update(itemManager, gameManager) {
         this.state.wasGrounded = this.state.grounded;
         this.state.wasTouchingRope = this.state.touchingRope;
 
@@ -163,7 +163,7 @@ export class Player extends SpriteObject {
         }
     }
 
-    handleInput() {
+    handleInput(itemManager, gameManager) {
         const { hr, hl, hu, hd, nr, nl, nu, nd, hf, nf } = this.getInput();
 
         //debugRender(this.getState());

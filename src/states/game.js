@@ -51,7 +51,7 @@ function create() {
 
 function update() {
     players.forEach((player, index) => {
-        player.update();
+        player.update(itemManager, gameManager);
 
         if (!player.state.climbingRope) {
             handlePlatformCollisions(player, level);
@@ -61,7 +61,7 @@ function update() {
 
         handleRopeCollisions(player, level);
 
-        player.handleInput();
+        player.handleInput(itemManager, gameManager);
 
         const otherPlayers = exceptIndex(players, index);
         handlePlayerCollisions(player, otherPlayers);
