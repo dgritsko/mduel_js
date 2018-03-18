@@ -24,6 +24,8 @@ export class ItemGrenade extends Item {
         grenade.x = player.x;
         grenade.y = player.y;
 
+        grenade.vx = grenade.vx * (player.flippedh ? -1 : 1);
+
         itemManager.addProjectile(grenade);
     }
 }

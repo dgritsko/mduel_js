@@ -114,6 +114,10 @@ const debugRender = obj => {
         return;
     }
 
+    if (typeof obj !== "object") {
+        game.debug.text(obj + "", 2, 14, "#ff0000");
+    }
+
     const keys = Object.keys(obj);
     let parts = keys.map(k => `${k}: ${obj[k]}`);
 

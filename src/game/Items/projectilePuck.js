@@ -1,10 +1,11 @@
 import { SpriteObject } from "../spriteObject";
 import { playerConfig } from "../config";
 import { setBounds } from "../util";
+import { items } from "../../enums/items";
 
 export class ProjectilePuck extends SpriteObject {
     constructor() {
-        super();
+        super(items.PUCK);
 
         this.sprite = game.add.sprite(0, 0, "items", 24);
 

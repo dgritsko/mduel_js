@@ -2,7 +2,7 @@ import { PickupItem } from "./pickupItem";
 import { items } from "../../enums/items";
 import { spawnOrientations } from "../../enums/spawnOrientations";
 import { itemConfig } from "../config";
-import { playEffect } from "../util";
+import { playEffect, debugRender, removeAtIndex } from "../util";
 import { effects } from "../../enums/effects";
 
 class ItemManager {
@@ -74,13 +74,36 @@ class ItemManager {
             this.activeItems.add(item.sprite);
         }
 
-        this.activeProjectiles.forEach(projectile => {
-            game.physics.arcade.collide(
+        for (let i = this.activeProjectiles.length - 1; i >= 0; i--) {
+            const projectile = this.activeProjectiles[i];
+
+            if (!projectile.sprite.inCamera) {
+                removeAtIndex(this.activeProjectiles, i);
+                continue;
+            }
+
+            const hitPlatform = game.physics.arcade.collide(
                 projectile.sprite,
                 level.platforms,
                 () => {}
             );
-        });
+
+            if (hitPlatform) {
+                switch (projectile.type) {
+                    case items.PUCK:
+                        break;
+                    case items.MINE:
+                        break;
+                    case items.GRENADE:
+                        playEffect(
+                            effects.GRAY_PUFF,
+                            projectile.x,
+                            projectile.y
+                        );
+                        break;
+                }
+            }
+        }
     }
 
     addProjectile(projectile) {

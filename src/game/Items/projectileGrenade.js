@@ -1,10 +1,13 @@
 import { SpriteObject } from "../spriteObject";
 import { playerConfig } from "../config";
 import { setBounds } from "../util";
+import { items } from "../../enums/items";
 
 export class ProjectileGrenade extends SpriteObject {
     constructor() {
         super();
+
+        this.type = items.GRENADE;
 
         this.sprite = game.add.sprite(0, 0, "items", 26);
 

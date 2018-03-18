@@ -4,7 +4,9 @@ import { ProjectilePuck } from "./projectilePuck";
 
 export class ItemPuck extends Item {
     constructor(player) {
-        super(items.PUCK);
+        super();
+
+        this.type = items.PUCK;
 
         this.canFireStanding = true;
         this.canFireCrouching = false;
@@ -23,6 +25,7 @@ export class ItemPuck extends Item {
         const puck = new ProjectilePuck();
         puck.x = player.x;
         puck.y = player.y;
+        puck.vx = puck.vx * (player.flippedh ? -1 : 1);
 
         itemManager.addProjectile(puck);
     }
