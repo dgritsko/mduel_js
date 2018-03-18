@@ -334,7 +334,7 @@ export class Player extends SpriteObject {
         // item stuffs
         if (this.state.currItem) {
             if (nf && !this.state.currItem.firing) {
-                this.state.currItem.fire(this);
+                this.state.currItem.fire(this, itemManager);
             }
 
             if (!hf && this.state.currItem.firing) {
