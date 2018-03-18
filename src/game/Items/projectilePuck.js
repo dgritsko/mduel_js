@@ -1,5 +1,6 @@
 import { SpriteObject } from "../spriteObject";
 import { playerConfig } from "../config";
+import { setBounds } from "../util";
 
 export class ProjectilePuck extends SpriteObject {
     constructor() {
@@ -14,6 +15,8 @@ export class ProjectilePuck extends SpriteObject {
         this.sprite.animations.play("default");
 
         game.physics.enable(this.sprite);
+
+        setBounds(this.sprite, { top: 8, bottom: 0, left: -4, right: 8 });
 
         this.vx = playerConfig.RUN_SPEED * 2;
     }

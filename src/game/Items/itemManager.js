@@ -14,7 +14,10 @@ class ItemManager {
 
         this.activeItems = game.add.group();
 
-        this.availableItems = Object.values(items);
+        this.activeProjectiles = [];
+
+        // this.availableItems = Object.values(items);
+        this.availableItems = [items.BOOTS];
 
         itemConfig.TEST_ITEMS.forEach(ti => {
             this.activeItems.add(new PickupItem(ti.x, ti.y, ti.type).sprite);
@@ -62,7 +65,7 @@ class ItemManager {
         return item;
     }
 
-    update() {
+    update(level) {
         while (this.activeItems.countLiving() < itemConfig.MAX_ITEMS) {
             const item = this.spawnItem();
 
@@ -70,6 +73,18 @@ class ItemManager {
 
             this.activeItems.add(item.sprite);
         }
+
+        this.activeProjectiles.forEach(projectile => {
+            game.physics.arcade.collide(
+                projectile.sprite,
+                level.platforms,
+                () => {}
+            );
+        });
+    }
+
+    addProjectile(projectile) {
+        this.activeProjectiles.push(projectile);
     }
 }
 

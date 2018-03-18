@@ -15,7 +15,7 @@ export class ItemPuck extends Item {
         super.destroy(player);
     }
 
-    fire(player) {
+    fire(player, itemManager) {
         if (!this.canFire(player)) {
             return;
         }
@@ -23,5 +23,7 @@ export class ItemPuck extends Item {
         const puck = new ProjectilePuck();
         puck.x = player.x;
         puck.y = player.y;
+
+        itemManager.addProjectile(puck);
     }
 }

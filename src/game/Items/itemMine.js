@@ -23,5 +23,7 @@ export class ItemMine extends Item {
         const mine = new ProjectileMine();
         mine.x = player.x;
         mine.y = player.y;
+
+        itemManager.addProjectile(mine);
     }
 }

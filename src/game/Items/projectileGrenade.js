@@ -1,5 +1,6 @@
 import { SpriteObject } from "../spriteObject";
 import { playerConfig } from "../config";
+import { setBounds } from "../util";
 
 export class ProjectileGrenade extends SpriteObject {
     constructor() {
@@ -12,6 +13,8 @@ export class ProjectileGrenade extends SpriteObject {
         this.sprite.animations.play("default");
 
         game.physics.enable(this.sprite);
+
+        setBounds(this.sprite, { top: 2, right: 2, bottom: 5, left: -1 });
 
         this.vy = -playerConfig.JUMP_IMPULSE;
         this.vx = playerConfig.RUN_SPEED;

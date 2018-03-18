@@ -11,6 +11,9 @@ function create() {
     drawText("MARSHMALLOW DUEL", 100, 100);
 }
 
+function render() {
+}
+
 function drawText(text, x, y) {
     const offsetX = 2;
     const offsetY = 2;
@@ -29,4 +32,4 @@ function drawText(text, x, y) {
 
 function update() {}
 
-export default { create: create, update: update };
+export default { create: create, update: update, render: render };

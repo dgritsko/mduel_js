@@ -69,7 +69,7 @@ function update() {
         handlePickupItemCollisions(player, level, itemManager, gameManager);
     });
 
-    itemManager.update();
+    itemManager.update(level);
 }
 
 function render() {
@@ -92,7 +92,11 @@ function render() {
         });
 
         itemManager.activeItems.children.forEach(i => game.debug.body(i));
+
+        itemManager.activeProjectiles.forEach(p => game.debug.body(p.sprite));
     }
+
+    debugRender(players[0].state.currItem);
 }
 
 export default { create: create, update: update, render: render };
