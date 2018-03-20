@@ -4,6 +4,7 @@ export class Item {
 
         this.canFireStanding = false;
         this.canFireCrouching = false;
+        this.canFireInAir = false;
 
         this.firing = false;
     }
@@ -15,6 +16,10 @@ export class Item {
             }
 
             return this.canFireStanding;
+        }
+
+        if (!player.state.grounded) {
+            return this.canFireInAir;
         }
 
         return false;

@@ -7,10 +7,21 @@ export class ItemChute extends Item {
 
         this.canFireStanding = false;
         this.canFireCrouching = false;
-        this.ammo = 0;
+        this.canFireInAir = true;
+
+        this.ammo = -1;
     }
 
     destroy(player) {
         super.destroy(player);
+    }
+
+    fire(player, itemManager) {
+        if (!this.canFire(player)) {
+            return;
+        }
+    }
+
+    update(player) {
     }
 }
