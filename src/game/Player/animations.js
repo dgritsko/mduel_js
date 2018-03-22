@@ -69,6 +69,8 @@ function addAnimations(sprite) {
         FRAMERATE,
         true
     );
+
+    sprite.animations.add(animations.PARACHUTE, [36], FRAMERATE, true);
 }
 
 export { addAnimations };

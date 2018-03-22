@@ -4,6 +4,7 @@ import { collisions } from "../../enums/collisions";
 import { playerConfig } from "../config";
 import { addAnimations } from "./animations";
 import { SpriteObject } from "../spriteObject";
+import { items } from "../../enums/items";
 
 export class Player extends SpriteObject {
     constructor(spriteName, x, y, id) {
@@ -318,16 +319,24 @@ export class Player extends SpriteObject {
                 }
                 this.state.justJumped = false;
 
-                // 		if (usingChut())		//parachut midair controls
-                // 		{
-                // 			vx = (vx==0 && !hr && !hl ? 0 : (flippedh ? WALKSPEED*-1 : WALKSPEED));
-                // 			//vx = (flippedh ? WALKSPEED*-1 : WALKSPEED);
-                // 			//vx = (hr - hl) * WALKSPEED;
-                // 			if (nr)
-                // 				setFlipped(false);
-                // 			else if (nl)
-                // 				setFlipped(true);
-                // 		}
+                // parachut midair controls
+                if (
+                    this.state.currItem &&
+                    this.state.currItem.type === items.CHUTE &&
+                    this.state.currItem.firing
+                ) {
+                    this.vx =
+                        this.vx === 0 && !hr && !hl
+                            ? 0
+                            : this.flippedh
+                                ? playerConfig.RUN_SPEED * -1
+                                : playerConfig.RUN_SPEED;
+                    if (nr) {
+                        this.flippedh = false;
+                    } else if (nl) {
+                        this.flippedh = true;
+                    }
+                }
             }
         }
 

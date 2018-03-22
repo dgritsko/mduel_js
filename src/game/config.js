@@ -11,6 +11,7 @@ const playerConfig = {
     CLIMB_SPEED: 100,
     RUN_SPEED: 100,
     TERMINAL_VELOCITY: 600,
+    PARACHUTE_TERMINAL_VELOCITY: 75,
     SPRITE_WIDTH: 64,
     SPRITE_HEIGHT: 64,
     STANDING_BOUNDS: { top: -22, right: 10, bottom: 24, left: -10 },

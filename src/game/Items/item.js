@@ -27,9 +27,13 @@ export class Item {
 
     didFire(player) {}
 
-    fire(player) {}
+    fire(player) {
+        this.firing = true;
+    }
 
-    stopFiring(player) {}
+    stopFiring(player) {
+        this.firing = false;
+    }
 
     destroy(player) {
         player.state.currItem = null;
