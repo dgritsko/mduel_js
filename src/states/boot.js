@@ -2,6 +2,7 @@ function preload() {
     game.load.spritesheet("player1", "assets/player1.png", 64, 64);
     game.load.spritesheet("player2", "assets/player2.png", 64, 64);
     game.load.spritesheet("player3", "assets/player3.png", 64, 64);
+    game.load.spritesheet("player1_1000v", "assets/player_1000v.png", 32, 32);
     game.load.spritesheet("platform", "assets/platforms.png", 28, 16);
     game.load.image("powerup_spawn", "assets/powerup_spawn.png");
     game.load.spritesheet("rope", "assets/rope.png", 32, 32);
