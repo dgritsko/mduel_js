@@ -164,31 +164,37 @@ export class Player extends SpriteObject {
         }
     }
 
+    requestAnimationUpdate() {
+        this.animationUpdateRequested = true;
+    }
+
+    updateAnimation(hl, hr) {
+        // item animation refreshes
+        if (this.state.climbingRope) {
+            if (this.vy > 0) this.playClimbingDown();
+            else {
+                this.playClimbingUp();
+            }
+        } else if (this.state.grounded) {
+            this.playRunning();
+        } else if (this.state.unstable) {
+            this.playPushedForward();
+        } else {
+            this.playFalling();
+        }
+
+        if (hl || hr) {
+            this.flippedh = hl;
+        }
+    }
+
     handleInput(itemManager, gameManager) {
         const { hr, hl, hu, hd, nr, nl, nu, nd, hf, nf } = this.getInput();
 
-        //debugRender(this.getState());
-        //item animation refreshes
-        // if (inputInterrupt == 0 && forceAnimUpdate)
-        // {
-        // 	if (isOnRope()) {
-        // 		if (vy > 0)
-        // 			playClimbingDown();
-        // 		else
-        // 			playClimbingUp();
-        // 	}
-        // 	else if (this.state.grounded)
-        // 		playRunning();
-        // 	else if (bUnstable)
-        // 		playPushedForward();
-        // 	else
-        // 		playFalling();
-
-        // 	if (hl || hr)
-        // 		setFlipped(hl, getFlippedv());
-
-        // 	forceAnimUpdate = false;
-        // }
+        if (this.animationUpdateRequested) {
+            this.updateAnimation(hl, hr);
+            this.animationUpdateRequested = false;
+        }
 
         // //netted physics
         // if (nettedStrength > 0)
@@ -343,7 +349,7 @@ export class Player extends SpriteObject {
         // item stuffs
         if (this.state.currItem) {
             if (nf && !this.state.currItem.firing) {
-                this.state.currItem.fire(this, itemManager);
+                this.state.currItem.fire(this, itemManager, gameManager);
             }
 
             if (!hf && this.state.currItem.firing) {

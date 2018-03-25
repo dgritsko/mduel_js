@@ -2,7 +2,9 @@ import { playEffect } from "./util";
 import { effects } from "../enums/effects";
 
 export class GameManager {
-    constructor() {}
+    constructor(level) {
+        this.level = level;
+    }
 
     killPlayer(player, deathType) {
         console.log(`Player ${player.id} died with death type ${deathType}`);

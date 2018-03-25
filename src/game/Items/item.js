@@ -5,6 +5,7 @@ export class Item {
         this.canFireStanding = false;
         this.canFireCrouching = false;
         this.canFireInAir = false;
+        this.canMoveWhileFiring = false;
 
         this.firing = false;
     }

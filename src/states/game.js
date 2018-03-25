@@ -10,7 +10,6 @@ import { exceptIndex, debugRender, playEffect } from "../game/util";
 import { effects } from "../enums/effects";
 import { GameManager } from "../game/gameManager";
 
-let level;
 const players = [];
 let itemManager;
 let gameManager;
@@ -22,7 +21,7 @@ function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.physics.arcade.gravity.y = playerConfig.GRAVITY;
 
-    level = createNewLevel();
+    const level = createNewLevel();
 
     // const player1 = new Player('player1', 100, 100);
     // const player2 = new Player('player2', game.world.width - 100, 100);
@@ -46,7 +45,7 @@ function create() {
 
     players.forEach(p => playEffect(effects.PURPLE_PUFF, p.x, p.y));
 
-    gameManager = new GameManager();
+    gameManager = new GameManager(level);
 }
 
 function update() {
@@ -54,22 +53,27 @@ function update() {
         player.update(itemManager, gameManager);
 
         if (!player.state.climbingRope) {
-            handlePlatformCollisions(player, level);
+            handlePlatformCollisions(player, gameManager.level);
         } else {
             player.state.grounded = false;
         }
 
-        handleRopeCollisions(player, level);
+        handleRopeCollisions(player, gameManager.level);
 
         player.handleInput(itemManager, gameManager);
 
         const otherPlayers = exceptIndex(players, index);
         handlePlayerCollisions(player, otherPlayers);
 
-        handlePickupItemCollisions(player, level, itemManager, gameManager);
+        handlePickupItemCollisions(
+            player,
+            gameManager.level,
+            itemManager,
+            gameManager
+        );
     });
 
-    itemManager.update(level);
+    itemManager.update(gameManager.level);
 }
 
 function render() {
@@ -84,9 +88,9 @@ function render() {
 
     if (gameConfig.SHOW_HITBOXES) {
         players.forEach(p => game.debug.body(p.sprite));
-        level.platforms.forEach(p => game.debug.body(p));
+        gameManager.level.platforms.forEach(p => game.debug.body(p));
 
-        level.ropes.forEach(r => {
+        gameManager.level.ropes.forEach(r => {
             game.debug.body(r.anchor);
             r.segments.children.forEach(s => game.debug.body(s));
         });
