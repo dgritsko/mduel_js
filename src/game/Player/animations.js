@@ -71,6 +71,14 @@ function addAnimations(sprite) {
     );
 
     sprite.animations.add(animations.PARACHUTE, [36], FRAMERATE, true);
+
+    sprite.animations.add(animations.GRENADE_TOSS, [32, 33], FRAMERATE, false);
+
+    sprite.animations.add(animations.PUCK_TOSS, [34, 35], FRAMERATE, false);
+
+    sprite.animations.add(animations.MINE_PLANT, [6, 35], FRAMERATE, false);
+
+    sprite.animations.add(animations.SHOOT, [30, 31, 31, 30], FRAMERATE, false);
 }
 
 export { addAnimations };

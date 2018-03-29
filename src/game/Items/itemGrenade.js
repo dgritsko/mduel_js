@@ -1,6 +1,7 @@
 import { Item } from "./item";
 import { items } from "../../enums/items";
 import { ProjectileGrenade } from "./projectileGrenade";
+import { animations } from "../../enums/animations";
 
 export class ItemGrenade extends Item {
     constructor(player) {
@@ -27,5 +28,7 @@ export class ItemGrenade extends Item {
         grenade.vx = grenade.vx * (player.flippedh ? -1 : 1);
 
         itemManager.addProjectile(grenade);
+
+        player.animation = animations.GRENADE_TOSS;
     }
 }

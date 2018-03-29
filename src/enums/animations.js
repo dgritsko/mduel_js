@@ -18,6 +18,7 @@ export const animations = {
     SHOOT: "shoot",
     GRENADE_TOSS: "grenade_toss",
     PUCK_TOSS: "puck_toss",
+    MINE_PLANT: "mine_plant",
     PARACHUTE: "parachute",
     HOOK: "hook",
     CLIMB: "climb",

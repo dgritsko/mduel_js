@@ -30,6 +30,10 @@ export class Item {
 
     fire(player) {
         this.firing = true;
+
+        if (this.ammo > 0) {
+            this.ammo -= 1;
+        }
     }
 
     stopFiring(player) {
@@ -40,5 +44,9 @@ export class Item {
         player.state.currItem = null;
     }
 
-    update(player) {}
+    update(player) {
+        if (this.ammo === 0) {
+            this.destroy(player);
+        }
+    }
 }

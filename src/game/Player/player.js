@@ -677,7 +677,12 @@ export class Player extends SpriteObject {
     // Animations
 
     playIdle() {
-        this.animation = animations.STAND;
+        if (
+            this.sprite.animations.currentAnim.loop ||
+            this.sprite.animations.currentAnim.isFinished
+        ) {
+            this.animation = animations.STAND;
+        }
     }
 
     playRunning() {

@@ -1,6 +1,7 @@
 import { Item } from "./item";
 import { items } from "../../enums/items";
 import { ProjectilePuck } from "./projectilePuck";
+import { animations } from "../../enums/animations";
 
 export class ItemPuck extends Item {
     constructor(player) {
@@ -28,5 +29,7 @@ export class ItemPuck extends Item {
         puck.vx = puck.vx * (player.flippedh ? -1 : 1);
 
         itemManager.addProjectile(puck);
+
+        player.animation = animations.PUCK_TOSS;
     }
 }
