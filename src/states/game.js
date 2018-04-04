@@ -10,7 +10,6 @@ import { exceptIndex, debugRender, playEffect } from "../game/util";
 import { effects } from "../enums/effects";
 import { GameManager } from "../game/gameManager";
 
-const players = [];
 let itemManager;
 let gameManager;
 
@@ -22,11 +21,12 @@ function create() {
     game.physics.arcade.gravity.y = playerConfig.GRAVITY;
 
     const level = createNewLevel();
+    const players = [];
 
     // const player1 = new Player('player1', 100, 100);
-    // const player2 = new Player('player2', game.world.width - 100, 100);
+    const player2 = new Player("player2", game.world.width - 100, 100);
     const player1 = new Player("player1", 60, 300, 1);
-    const player2 = new Player("player2", 160, 300, 2);
+    //const player2 = new Player("player2", 160, 300, 2);
     // const player3 = new Player("player3", 400, 300, 3);
 
     players.push(player1);
@@ -45,11 +45,11 @@ function create() {
 
     players.forEach(p => playEffect(effects.PURPLE_PUFF, p.x, p.y));
 
-    gameManager = new GameManager(level);
+    gameManager = new GameManager(level, players);
 }
 
 function update() {
-    players.forEach((player, index) => {
+    gameManager.players.forEach((player, index) => {
         player.update(itemManager, gameManager);
 
         if (!player.state.climbingRope) {
@@ -62,7 +62,7 @@ function update() {
 
         player.handleInput(itemManager, gameManager);
 
-        const otherPlayers = exceptIndex(players, index);
+        const otherPlayers = exceptIndex(gameManager.players, index);
         handlePlayerCollisions(player, otherPlayers);
 
         handlePickupItemCollisions(
@@ -73,7 +73,7 @@ function update() {
         );
     });
 
-    itemManager.update(gameManager.level);
+    itemManager.update(gameManager);
 }
 
 function render() {
@@ -87,7 +87,7 @@ function render() {
     }
 
     if (gameConfig.SHOW_HITBOXES) {
-        players.forEach(p => game.debug.body(p.sprite));
+        gameManager.players.forEach(p => game.debug.body(p.sprite));
         gameManager.level.platforms.forEach(p => game.debug.body(p));
 
         gameManager.level.ropes.forEach(r => {
@@ -100,7 +100,8 @@ function render() {
         itemManager.activeProjectiles.forEach(p => game.debug.body(p.sprite));
     }
 
-    debugRender(players[0].state.currItem);
+    debugRender(gameManager.players[0].state.currItem);
+    //debugRender(itemManager.activeProjectiles.length);
 }
 
 export default { create: create, update: update, render: render };

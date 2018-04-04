@@ -2,8 +2,9 @@ import { playEffect } from "./util";
 import { effects } from "../enums/effects";
 
 export class GameManager {
-    constructor(level) {
+    constructor(level, players) {
         this.level = level;
+        this.players = players;
     }
 
     killPlayer(player, deathType) {

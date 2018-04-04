@@ -65,7 +65,7 @@ class ItemManager {
         return item;
     }
 
-    update(level) {
+    update(gameManager) {
         while (this.activeItems.countLiving() < itemConfig.MAX_ITEMS) {
             const item = this.spawnItem();
 
@@ -84,7 +84,7 @@ class ItemManager {
 
             const hitPlatform = game.physics.arcade.collide(
                 projectile.sprite,
-                level.platforms,
+                gameManager.level.platforms,
                 () => {}
             );
 
@@ -101,6 +101,33 @@ class ItemManager {
                             projectile.y
                         );
                         break;
+                }
+            } else {
+                for (let j = 0; j < gameManager.players.length; j++) {
+                    const player = gameManager.players[j];
+
+                    const hitPlayer = game.physics.arcade.overlap(
+                        projectile.sprite,
+                        player.sprite
+                    );
+
+                    if (hitPlayer) {
+                        console.log(projectile);
+
+                        switch (projectile.type) {
+                            case items.MINE:
+                                console.log("TODO: Mine collision");
+                                break;
+                            case items.PUCK:
+                                console.log("TODO: Puck collision");
+                                playEffect(
+                                    effects.MINE,
+                                    projectile.x,
+                                    projectile.y
+                                );
+                                break;
+                        }
+                    }
                 }
             }
         }

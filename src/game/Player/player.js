@@ -160,7 +160,7 @@ export class Player extends SpriteObject {
         this.state.wasTouchingRope = this.state.touchingRope;
 
         if (this.state.currItem) {
-            this.state.currItem.update(this);
+            this.state.currItem.update(this, itemManager);
         }
     }
 

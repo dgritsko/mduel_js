@@ -5,7 +5,9 @@ import { items } from "../../enums/items";
 
 export class ProjectilePuck extends SpriteObject {
     constructor() {
-        super(items.PUCK);
+        super();
+
+        this.type = items.PUCK;
 
         this.sprite = game.add.sprite(0, 0, "items", 24);
 
