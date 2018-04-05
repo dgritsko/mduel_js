@@ -41,6 +41,10 @@ export class ItemPuck extends Item {
         if (typeof this.fireAfter === "number" && this.fireAfter < now()) {
             this.fireAfter = null;
 
+            if (!this.canFire(player)) {
+                return;
+            }
+
             this.createProjectile(player, itemManager);
 
             super.fire(player);

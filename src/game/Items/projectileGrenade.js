@@ -11,6 +11,8 @@ export class ProjectileGrenade extends SpriteObject {
 
         this.sprite = game.add.sprite(0, 0, "items", 26);
 
+        this.sprite.anchor.setTo(0.5);
+
         this.sprite.animations.add("default", [26, 27], 4, true);
 
         this.sprite.animations.play("default");
