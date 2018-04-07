@@ -17,7 +17,7 @@ class ItemManager {
         this.activeProjectiles = [];
 
         // this.availableItems = Object.values(items);
-        this.availableItems = [items.BOOTS];
+        this.availableItems = [items.TNT];
 
         itemConfig.TEST_ITEMS.forEach(ti => {
             this.activeItems.add(new PickupItem(ti.x, ti.y, ti.type).sprite);
@@ -82,53 +82,41 @@ class ItemManager {
                 continue;
             }
 
-            const hitPlatform = game.physics.arcade.collide(
-                projectile.sprite,
-                gameManager.level.platforms,
-                () => {}
-            );
-
-            if (hitPlatform) {
-                switch (projectile.type) {
-                    case items.PUCK:
-                        break;
-                    case items.MINE:
-                        break;
-                    case items.GRENADE:
-                        playEffect(
-                            effects.GRAY_PUFF,
-                            projectile.x,
-                            projectile.y
-                        );
-                        break;
-                }
-            } else {
-                for (let j = 0; j < gameManager.players.length; j++) {
-                    const player = gameManager.players[j];
-
-                    const hitPlayer = game.physics.arcade.overlap(
-                        projectile.sprite,
-                        player.sprite
-                    );
-
-                    if (hitPlayer) {
-                        console.log(projectile);
-
-                        switch (projectile.type) {
-                            case items.MINE:
-                                console.log("TODO: Mine collision");
-                                break;
-                            case items.PUCK:
-                                console.log("TODO: Puck collision");
-                                playEffect(
-                                    effects.MINE,
-                                    projectile.x,
-                                    projectile.y
-                                );
-                                break;
-                        }
+            switch (projectile.type) {
+                case items.GRENADE:
+                    if (
+                        projectile.vy > 0 &&
+                        gameManager.collideWithPlatforms(
+                            projectile.sprite,
+                            true
+                        )
+                    ) {
+                        removeAtIndex(this.activeProjectiles, i);
+                        projectile.sprite.kill();
                     }
-                }
+                    break;
+                case items.PUCK:
+                    gameManager.collideWithPlatforms(projectile.sprite);
+
+                    if (gameManager.collideWithPlayers(projectile.sprite)) {
+                        console.log("hit player with puck");
+
+                        playEffect(effects.MINE, projectile.x, projectile.y);
+
+                        removeAtIndex(this.activeProjectiles, i);
+                        projectile.sprite.kill();
+                    }
+                    break;
+                case items.MINE:
+                    gameManager.collideWithPlatforms(projectile.sprite);
+
+                    if (gameManager.collideWithPlayers(projectile.sprite)) {
+                        console.log("hit player with mine");
+
+                        removeAtIndex(this.activeProjectiles, i);
+                        projectile.sprite.kill();
+                    }
+                    break;
             }
         }
     }
