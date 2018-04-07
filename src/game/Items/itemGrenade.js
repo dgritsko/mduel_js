@@ -12,7 +12,6 @@ export class ItemGrenade extends Item {
         super(items.GRENADE);
 
         this.canFireStanding = true;
-        this.canFireCrouching = false;
         this.ammo = -1;
     }
 

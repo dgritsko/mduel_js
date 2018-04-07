@@ -6,7 +6,6 @@ export class ItemBoots extends Item {
         super(items.BOOTS);
 
         this.canFireStanding = true;
-        this.canFireCrouching = false;
 
         this.ammo = -1;
     }
@@ -21,7 +20,5 @@ export class ItemBoots extends Item {
 
     destroy(player) {
         super.destroy(player);
-
-        player.sprite.alpha = 1.0;
     }
 }
