@@ -47,11 +47,9 @@ export class ItemGrenade extends Item {
 
     createProjectile(player, itemManager) {
         const grenade = new ProjectileGrenade();
-        grenade.x = player.flippedh
-            ? player.sprite.body.right
-            : player.sprite.body.left;
+        grenade.x = player.flippedh ? player.right : player.left;
 
-        grenade.y = player.sprite.body.top;
+        grenade.y = player.top;
 
         grenade.vx = grenade.vx * (player.flippedh ? -1 : 1);
 

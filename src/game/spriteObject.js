@@ -46,4 +46,20 @@ export class SpriteObject {
     get animation() {
         return this.sprite.animations.currentAnim.name;
     }
+
+    get top() {
+        return this.sprite.body.top;
+    }
+
+    get bottom() {
+        return this.sprite.body.bottom;
+    }
+
+    get left() {
+        return this.sprite.body.left;
+    }
+
+    get right() {
+        return this.sprite.body.right;
+    }
 }

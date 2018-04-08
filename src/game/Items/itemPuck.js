@@ -55,9 +55,9 @@ export class ItemPuck extends Item {
         const puck = new ProjectilePuck();
 
         const x = player.flippedh
-            ? player.sprite.body.left - PROJECT_X_OFFSET
-            : player.sprite.body.right + PROJECT_X_OFFSET;
-        const y = player.sprite.body.bottom - PROJECT_Y_OFFSET;
+            ? player.left - PROJECT_X_OFFSET
+            : player.right + PROJECT_X_OFFSET;
+        const y = player.bottom - PROJECT_Y_OFFSET;
 
         puck.x = x;
         puck.y = y;

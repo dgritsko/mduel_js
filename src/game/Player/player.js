@@ -203,11 +203,11 @@ export class Player extends SpriteObject {
         // 	return;
         // }
 
-        if (this.sprite.body.left <= 0) {
+        if (this.left <= 0) {
             // bouncing off the left wall
             this.flippedh = true;
             this.bounce();
-        } else if (this.sprite.body.right >= game.world.width) {
+        } else if (this.right >= game.world.width) {
             // bouncing off the right wall
             this.flippedh = false;
             this.bounce();
@@ -231,13 +231,13 @@ export class Player extends SpriteObject {
                         ];
 
                     if (
-                        bottomSegment.body.bottom < this.sprite.body.bottom &&
+                        bottomSegment.body.bottom < this.bottom &&
                         this.vy > 0
                     ) {
                         // TODO: maybe allow falling off the bottom segment if the platform immediately below it is gone?
                         this.vy = 0;
                     } else if (
-                        topSegment.body.top > this.sprite.body.top &&
+                        topSegment.body.top > this.top &&
                         this.vy < 0
                     ) {
                         this.vy = 0;

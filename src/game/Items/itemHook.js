@@ -51,8 +51,8 @@ export class ItemHook extends Item {
             player.vx = 0;
         } else {
             const xpos = player.flippedh
-                ? player.sprite.body.left
-                : player.sprite.body.right;
+                ? player.left
+                : player.right;
             const ypos = player.y;
 
             for (
