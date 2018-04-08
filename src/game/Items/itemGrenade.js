@@ -24,6 +24,11 @@ export class ItemGrenade extends Item {
             return;
         }
 
+        if (this.fireAfter > now()) {
+            // TODO: Also check for firing animation completion
+            return;
+        }
+
         player.animation = animations.GRENADE_TOSS;
 
         this.fireAfter = now() + PROJECTILE_FIRE_DELAY;

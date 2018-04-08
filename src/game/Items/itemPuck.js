@@ -30,6 +30,10 @@ export class ItemPuck extends Item {
             return;
         }
 
+        if (this.fireAfter > now()) {
+            return;
+        }
+
         player.animation = animations.PUCK_TOSS;
 
         this.fireAfter = now() + PROJECTILE_FIRE_DELAY;
