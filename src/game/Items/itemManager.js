@@ -101,7 +101,11 @@ class ItemManager {
                     if (gameManager.collideWithPlayers(projectile.sprite)) {
                         console.log("hit player with puck");
 
-                        playEffect(effects.MINE, projectile.x, projectile.y);
+                        playEffect(
+                            effects.MINE,
+                            projectile.x,
+                            projectile.bottom
+                        );
 
                         removeAtIndex(this.activeProjectiles, i);
                         projectile.sprite.kill();

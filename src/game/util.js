@@ -58,6 +58,9 @@ const removeAtIndex = (items, index) => {
 
 const playEffect = (id, x, y) => {
     let frames = [];
+    let anchorx = 0.5;
+    let anchory = 0.5;
+
     switch (id) {
         case effects.GRAY_PUFF:
             frames = [0, 1, 2, 3];
@@ -70,6 +73,7 @@ const playEffect = (id, x, y) => {
             break;
         case effects.MINE:
             frames = [10, 11, 12];
+            anchory = 1;
             break;
         case effects.BOOMERANG:
             frames = [13, 14, 15];
@@ -87,7 +91,7 @@ const playEffect = (id, x, y) => {
 
     const sprite = game.add.sprite(x, y, "effects", frames[0]);
 
-    sprite.anchor.setTo(0.5);
+    sprite.anchor.setTo(anchorx, anchory);
     sprite.scale.setTo(2, 2);
 
     const animation = sprite.animations.add(
