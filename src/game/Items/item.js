@@ -26,8 +26,6 @@ export class Item {
         return false;
     }
 
-    didFire(player) {}
-
     fire(player) {
         this.firing = true;
 
