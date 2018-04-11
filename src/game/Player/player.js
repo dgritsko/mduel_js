@@ -159,7 +159,7 @@ export class Player extends SpriteObject {
         this.state.wasGrounded = this.state.grounded;
         this.state.wasTouchingRope = this.state.touchingRope;
 
-        if (this.state.currItem) {
+        if (this.hasItem()) {
             this.state.currItem.update(this, itemManager);
         }
     }
@@ -236,10 +236,7 @@ export class Player extends SpriteObject {
                     ) {
                         // TODO: maybe allow falling off the bottom segment if the platform immediately below it is gone?
                         this.vy = 0;
-                    } else if (
-                        topSegment.body.top > this.top &&
-                        this.vy < 0
-                    ) {
+                    } else if (topSegment.body.top > this.top && this.vy < 0) {
                         this.vy = 0;
                     }
 
@@ -326,11 +323,7 @@ export class Player extends SpriteObject {
                 this.state.justJumped = false;
 
                 // parachut midair controls
-                if (
-                    this.state.currItem &&
-                    this.state.currItem.type === items.CHUTE &&
-                    this.state.currItem.firing
-                ) {
+                if (this.hasItem({ type: items.CHUTE, isFiring: true })) {
                     this.vx =
                         this.vx === 0 && !hr && !hl
                             ? 0
@@ -347,7 +340,7 @@ export class Player extends SpriteObject {
         }
 
         // item stuffs
-        if (this.state.currItem) {
+        if (this.hasItem()) {
             if (nf && !this.state.currItem.firing) {
                 this.state.currItem.fire(this, itemManager, gameManager);
             }
@@ -407,7 +400,7 @@ export class Player extends SpriteObject {
     }
 
     bounce(pushedForwards) {
-        if (this.state.currItem != null && this.state.currItem.firing) {
+        if (this.hasItem({ isFiring: true })) {
             this.state.currItem.stopFiring(this);
         }
 
@@ -516,14 +509,32 @@ export class Player extends SpriteObject {
         hd ? this.playClimbingDown() : this.playClimbingUp();
     }
 
+    hasItem(args) {
+        const { type, isFiring } = args || {};
+
+        const currItem = this.state.currItem;
+
+        if (!currItem) {
+            return false;
+        }
+
+        const typeCheck = typeof type !== "number" || currItem.type === type;
+
+        const firingCheck =
+            typeof isFiring !== "boolean" || currItem.firing === isFiring;
+
+        return typeCheck && firingCheck;
+    }
+
     // Collisions
     collideWithPlayer(otherPlayer) {
         // Stop current item stuff
-        if (this.state.currItem && this.state.currItem.firing) {
+
+        if (this.hasItem({ isFiring: true })) {
             this.state.currItem.stopFiring(this);
         }
 
-        if (otherPlayer.state.currItem && otherPlayer.state.currItem.firing) {
+        if (otherPlayer.hasItem({ isFiring: true })) {
             otherPlayer.state.currItem.stopFiring(this);
         }
 
@@ -594,6 +605,7 @@ export class Player extends SpriteObject {
                 if (dontMove) {
                     this.vx = 0;
                 }
+
                 this.vy = -playerConfig.JUMP_IMPULSE * 2 / 3;
                 // if (o->usingInvis())
                 // 	lastCollision = CS_INVISPLAYER;
@@ -668,7 +680,7 @@ export class Player extends SpriteObject {
     }
 
     clearItem() {
-        if (this.state.currItem) {
+        if (this.hasItem()) {
             this.state.currItem.destroy(this);
             this.state.currItem = null;
         }
