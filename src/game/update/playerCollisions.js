@@ -1,6 +1,6 @@
 import { removeAtIndex } from "../util";
 
-const handlePlayerCollisions = (player, otherPlayers) => {
+const handlePlayerCollisions = (player, otherPlayers, gameManager) => {
     otherPlayers.forEach(otherPlayer => {
         const hitPlayer = game.physics.arcade.overlap(
             player.sprite,
@@ -18,7 +18,7 @@ const handlePlayerCollisions = (player, otherPlayers) => {
 
                 player.recentCollisionIds.push(otherPlayer.id);
 
-                player.collideWithPlayer(otherPlayer);
+                player.collideWithPlayer(otherPlayer, gameManager);
             }
         );
 

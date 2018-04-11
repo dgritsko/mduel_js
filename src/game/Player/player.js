@@ -5,6 +5,7 @@ import { playerConfig } from "../config";
 import { addAnimations } from "./animations";
 import { SpriteObject } from "../spriteObject";
 import { items } from "../../enums/items";
+import { deaths } from "../../enums/deaths";
 
 export class Player extends SpriteObject {
     constructor(spriteName, x, y, id) {
@@ -531,7 +532,7 @@ export class Player extends SpriteObject {
     }
 
     // Collisions
-    collideWithPlayer(otherPlayer) {
+    collideWithPlayer(otherPlayer, gameManager) {
         // Stop current item stuff
 
         if (this.hasItem({ isFiring: true })) {
@@ -576,21 +577,28 @@ export class Player extends SpriteObject {
         // return;
         // }
         // //lightning handling
-        // if (o->has1000V() && !has1000V())	//we die
-        // {
-        // 	gm->playerLightningd(this);
-        // 	return;
-        // }
-        // else if (has1000V() && !o->has1000V())	//they die
-        // {
-        // 	gm->playerLightningd(o);
-        // 	return;
-        // }
-        // else if (has1000V() && o->has1000V())	//nobody dies, weapons destroyed
-        // {
-        // 	clearWeapon();
-        // 	o->clearWeapon();
-        // }
+        if (
+            otherPlayer.hasItem({ type: items.VOLTS }) &&
+            !this.hasItem({ type: items.VOLTS })
+        ) {
+            // we die
+            gameManager.killPlayer(this, deaths.VOLTS);
+            return;
+        } else if (
+            this.hasItem({ type: items.VOLTS }) &&
+            !otherPlayer.hasItem({ type: items.VOLTS })
+        ) {
+            // they die
+            gameManager.killPlayer(otherPlayer, deaths.VOLTS);
+            return;
+        } else if (
+            this.hasItem({ type: items.VOLTS }) &&
+            otherPlayer.hasItem({ type: items.VOLTS })
+        ) {
+            //nobody dies, weapons destroyed
+            this.clearItem();
+            otherPlayer.clearItem();
+        }
 
         if (
             !this.state.crouching ||

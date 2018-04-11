@@ -24,8 +24,8 @@ function create() {
     const players = [];
 
     // const player1 = new Player('player1', 100, 100);
-    const player2 = new Player("player2", game.world.width - 100, 100);
     const player1 = new Player("player1", 60, 300, 1);
+    const player2 = new Player("player2", game.world.width - 100, 100, 2);
     //const player2 = new Player("player2", 160, 300, 2);
     // const player3 = new Player("player3", 400, 300, 3);
 
@@ -63,7 +63,7 @@ function update() {
         player.handleInput(itemManager, gameManager);
 
         const otherPlayers = exceptIndex(gameManager.players, index);
-        handlePlayerCollisions(player, otherPlayers);
+        handlePlayerCollisions(player, otherPlayers, gameManager);
 
         handlePickupItemCollisions(
             player,
