@@ -8,6 +8,7 @@ import { now } from "../util";
 const PROJECT_X_OFFSET = 4;
 const PROJECT_Y_OFFSET = 16;
 const PROJECTILE_FIRE_DELAY = 100;
+const FIRE_DELAY = 400;
 
 export class ItemPuck extends Item {
     constructor(player) {
@@ -37,6 +38,8 @@ export class ItemPuck extends Item {
         player.animation = animations.PUCK_TOSS;
 
         this.fireAfter = now() + PROJECTILE_FIRE_DELAY;
+
+        player.state.inputInterrupt = now() + FIRE_DELAY;
     }
 
     update(player, itemManager) {

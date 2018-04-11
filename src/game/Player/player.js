@@ -203,6 +203,10 @@ export class Player extends SpriteObject {
         // 	return;
         // }
 
+        const canHandleInput =
+            this.state.inputInterrupt !== -1 &&
+            this.state.inputInterrupt < now();
+
         if (this.left <= 0) {
             // bouncing off the left wall
             this.flippedh = true;
@@ -211,7 +215,7 @@ export class Player extends SpriteObject {
             // bouncing off the right wall
             this.flippedh = false;
             this.bounce();
-        } else if (this.state.inputInterrupt < now()) {
+        } else if (canHandleInput) {
             // regular controls
             if (this.state.climbingRope) {
                 if (this.state.touchingRope === null) {
@@ -341,7 +345,7 @@ export class Player extends SpriteObject {
 
         // item stuffs
         if (this.hasItem()) {
-            if (nf && !this.state.currItem.firing) {
+            if (canHandleInput && nf && !this.state.currItem.firing) {
                 this.state.currItem.fire(this, itemManager, gameManager);
             }
 
