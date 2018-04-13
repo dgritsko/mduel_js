@@ -8,6 +8,7 @@ const gameConfig = {
 const playerConfig = {
     GRAVITY: 600,
     JUMP_IMPULSE: 240,
+    MINIMUM_JUMP_INTERVAL: 100,
     CLIMB_SPEED: 100,
     RUN_SPEED: 100,
     TERMINAL_VELOCITY: 600,

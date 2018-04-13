@@ -22,6 +22,7 @@ export class Player extends SpriteObject {
             rolling: false,
             unstable: false,
             justJumped: false,
+            lastLandedTime: 0,
             ignoreInput: false,
             x: x,
             y: y,
@@ -359,6 +360,8 @@ export class Player extends SpriteObject {
     justLanded(hr, hl) {
         const { unstable, vx, flippedh } = this.getState();
 
+        this.state.lastLandedTime = now();
+
         setBounds(this.sprite, playerConfig.STANDING_BOUNDS);
 
         if (unstable) {
@@ -379,6 +382,14 @@ export class Player extends SpriteObject {
 
     jump(bootsJump) {
         if (!this.state.grounded) {
+            return false;
+        }
+
+        if (
+            (this.state.lastLandedTime || 0) +
+                playerConfig.MINIMUM_JUMP_INTERVAL >
+            now()
+        ) {
             return false;
         }
 
