@@ -4,6 +4,7 @@ import { spawnOrientations } from "../../enums/spawnOrientations";
 import { itemConfig } from "../config";
 import { playEffect, debugRender, removeAtIndex } from "../util";
 import { effects } from "../../enums/effects";
+import { now } from "../util";
 
 class ItemManager {
     constructor(level) {
@@ -22,6 +23,8 @@ class ItemManager {
         itemConfig.TEST_ITEMS.forEach(ti => {
             this.activeItems.add(new PickupItem(ti.x, ti.y, ti.type).sprite);
         });
+
+        this.nextSpawnTime = now() + itemConfig.INITIAL_SPAWN_DELAY;
     }
 
     getVelocity(a, b) {
@@ -66,7 +69,20 @@ class ItemManager {
     }
 
     update(gameManager) {
-        while (this.activeItems.countLiving() < itemConfig.MAX_ITEMS) {
+        const shouldSpawn =
+            this.activeItems.countLiving() < itemConfig.MAX_ITEMS;
+
+        const canSpawn = this.nextSpawnTime < now();
+
+        if (shouldSpawn && canSpawn) {
+            const spawnDelay =
+                itemConfig.MINIMUM_SPAWN_DELAY +
+                Math.random() *
+                    (itemConfig.MAXIMUM_SPAWN_DELAY -
+                        itemConfig.MINIMUM_SPAWN_DELAY);
+
+            this.nextSpawnTime = now() + spawnDelay;
+
             const item = this.spawnItem();
 
             playEffect(effects.PURPLE_PUFF, item.x, item.y);

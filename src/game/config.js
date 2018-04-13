@@ -25,6 +25,9 @@ const itemConfig = {
     ITEM_BOUNDS: { top: -6, bottom: 6, left: -6, right: 6 },
     MAX_ITEMS: 0,
     ITEM_SPEED: 100,
+    INITIAL_SPAWN_DELAY: 1000,
+    MINIMUM_SPAWN_DELAY: 1000,
+    MAXIMUM_SPAWN_DELAY: 2000,
     TEST_ITEMS: [
         { x: 100, y: 300, type: 2 },
         { x: 200, y: 300, type: 11 },
