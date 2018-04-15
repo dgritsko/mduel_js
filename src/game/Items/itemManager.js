@@ -90,7 +90,7 @@ class ItemManager {
         for (let i = this.activeItems.children.length - 1; i >= 0; i--) {
             const item = this.activeItems.children[i];
 
-            if (item.data.despawnTime && item.data.despawnTime < now()) {
+            if (item.alive && item.data.despawnTime && item.data.despawnTime < now()) {
                 playEffect(effects.GRAY_PUFF, item.x, item.y)
                 item.destroy();
             }
@@ -134,7 +134,15 @@ class ItemManager {
                     }
                     break;
                 case items.MINE:
-                    gameManager.collideWithPlatforms(projectile.sprite);
+                    if (gameManager.collideWithPlatforms(projectile.sprite)) {
+                        projectile.wasPlanted = true;
+                    } else if (projectile.wasPlanted) {
+                        console.log("platform holding mine was destroyed")
+
+                        removeAtIndex(this.activeProjectiles, i);
+                        projectile.sprite.kill();
+                        break;
+                    }
 
                     if (gameManager.collideWithPlayers(projectile.sprite)) {
                         console.log("hit player with mine");

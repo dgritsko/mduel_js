@@ -9,7 +9,7 @@ export class ItemMine extends Item {
 
         this.canFireStanding = true;
         this.canFireCrouching = false;
-        this.ammo = 1;
+        this.ammo = -1;
     }
 
     destroy(player) {
@@ -23,9 +23,13 @@ export class ItemMine extends Item {
 
         super.fire(player);
 
+        const offset = 10;
+
         const mine = new ProjectileMine();
-        mine.x = player.x;
-        mine.y = player.y;
+        mine.x = player.flippedh
+            ? player.left - offset
+            : player.right + offset;
+        mine.y = player.bottom - offset;
 
         itemManager.addProjectile(mine);
 

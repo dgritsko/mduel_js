@@ -76,7 +76,7 @@ const handlePickupItemCollisions = (
         }
 
         if (gameManager.collideWithPlatforms(item, true)) {
-            item.kill();
+            item.destroy();
         }
     });
 };
