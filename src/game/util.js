@@ -106,6 +106,14 @@ const playEffect = (id, x, y) => {
     sprite.animations.play("default");
 };
 
+const randomBetween = (min, max) => {
+    if (min >= max) {
+        return min;
+    }
+
+    return min + Math.random() * (max - min);
+}
+
 const debugRender = obj => {
     //const text = JSON.stringify(obj);
     // const width = 66;
@@ -141,5 +149,6 @@ export {
     exceptIndex,
     removeAtIndex,
     playEffect,
+    randomBetween,
     debugRender
 };

@@ -1,6 +1,7 @@
 import { setBounds } from "../util";
 import { itemConfig } from "../config";
 import { SpriteObject } from "../spriteObject";
+import { now, randomBetween } from "../util";
 
 export class PickupItem extends SpriteObject {
     constructor(x, y, type) {
@@ -10,6 +11,15 @@ export class PickupItem extends SpriteObject {
         this.setupSprite(x, y);
 
         this.sprite.data.type = type;
+
+        // TODO: Move this elsewhere? Or refactor
+        // activeItems to not be a group?
+        const despawnDelay = randomBetween(itemConfig.MINIMUM_ITEM_LIFETIME,
+            itemConfig.MAXIMUM_ITEM_LIFETIME);
+        if (despawnDelay) {
+            const despawnTime = now() + despawnDelay;
+            this.sprite.data.despawnTime = despawnTime
+        }
     }
 
     setupSprite(x, y) {

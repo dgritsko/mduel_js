@@ -2,7 +2,7 @@ import { PickupItem } from "./pickupItem";
 import { items } from "../../enums/items";
 import { spawnOrientations } from "../../enums/spawnOrientations";
 import { itemConfig } from "../config";
-import { playEffect, debugRender, removeAtIndex } from "../util";
+import { playEffect, debugRender, removeAtIndex, randomBetween } from "../util";
 import { effects } from "../../enums/effects";
 import { now } from "../util";
 
@@ -33,7 +33,7 @@ class ItemManager {
 
         let θ = (Math.random() + a) * Math.PI * b;
 
-        const v = itemConfig.ITEM_SPEED;
+        const v = randomBetween(itemConfig.MINIMUM_ITEM_SPEED, itemConfig.MAXIMUM_ITEM_SPEED);
         return { x: Math.cos(θ) * v, y: Math.sin(θ) * v };
     }
 
@@ -76,10 +76,7 @@ class ItemManager {
 
         if (shouldSpawn && canSpawn) {
             const spawnDelay =
-                itemConfig.MINIMUM_SPAWN_DELAY +
-                Math.random() *
-                    (itemConfig.MAXIMUM_SPAWN_DELAY -
-                        itemConfig.MINIMUM_SPAWN_DELAY);
+                randomBetween(itemConfig.MINIMUM_SPAWN_DELAY, itemConfig.MAXIMUM_SPAWN_DELAY)
 
             this.nextSpawnTime = now() + spawnDelay;
 
@@ -88,6 +85,15 @@ class ItemManager {
             playEffect(effects.PURPLE_PUFF, item.x, item.y);
 
             this.activeItems.add(item.sprite);
+        }
+
+        for (let i = this.activeItems.children.length - 1; i >= 0; i--) {
+            const item = this.activeItems.children[i];
+
+            if (item.data.despawnTime && item.data.despawnTime < now()) {
+                playEffect(effects.GRAY_PUFF, item.x, item.y)
+                item.destroy();
+            }
         }
 
         for (let i = this.activeProjectiles.length - 1; i >= 0; i--) {

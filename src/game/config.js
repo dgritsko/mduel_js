@@ -23,8 +23,11 @@ const playerConfig = {
 
 const itemConfig = {
     ITEM_BOUNDS: { top: -6, bottom: 6, left: -6, right: 6 },
-    MAX_ITEMS: 0,
-    ITEM_SPEED: 100,
+    MAX_ITEMS: 1,
+    MINIMUM_ITEM_SPEED: 100,
+    MAXIMUM_ITEM_SPEED: 100,
+    MINIMUM_ITEM_LIFETIME: 10000,
+    MAXIMUM_ITEM_LIFETIME: 12000,
     INITIAL_SPAWN_DELAY: 1000,
     MINIMUM_SPAWN_DELAY: 1000,
     MAXIMUM_SPAWN_DELAY: 2000,
