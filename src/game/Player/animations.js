@@ -79,6 +79,31 @@ function addAnimations(sprite) {
     sprite.animations.add(animations.MINE_PLANT, [6, 35], FRAMERATE, false);
 
     sprite.animations.add(animations.SHOOT, [30, 31, 31, 30], FRAMERATE, false);
+
+    sprite.animations.add(
+        animations.SKULLED,
+        [50, 51, 52, 53, 66],
+        FRAMERATE,
+        false
+    );
+
+    sprite.animations.add(
+        animations.DISINTEGRATED,
+        [54, 55, 56, 57, 66],
+        FRAMERATE,
+        false
+    );
+
+    sprite.animations.add(
+        animations.VICTORY_DANCE,
+        [58, 59, 60, 61, 62, 63, 63, 63, 63, 63],
+        FRAMERATE,
+        false
+    );
+
+    sprite.animations.add(animations.ROPE_VICTORY, [46, 47], FRAMERATE, false);
+
+    sprite.animations.add(animations.VICTORY_FLEX, [44, 45], FRAMERATE, false);
 }
 
 export { addAnimations };

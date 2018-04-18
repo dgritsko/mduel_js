@@ -763,4 +763,24 @@ export class Player extends SpriteObject {
     playClimbingUp() {
         this.animation = animations.CLIMB_UP;
     }
+
+    playSkulled() {
+        this.animation = animations.SKULLED;
+    }
+
+    playDisintegrated() {
+        this.animation = animations.DISINTEGRATED;
+    }
+
+    playVictoryDance() {
+        this.animation = animations.VICTORY_DANCE;
+    }
+
+    playRopeVictory() {
+        this.animation = animations.ROPE_VICTORY;
+    }
+
+    playVictoryFlex() {
+        this.animation = animations.VICTORY_FLEX;
+    }
 }
