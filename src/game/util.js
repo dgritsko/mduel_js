@@ -31,8 +31,8 @@ const dist = (a, b) => {
 const setBounds = (sprite, bounds) => {
     const { top, right, bottom, left } = bounds;
 
-    const width = Math.abs(right) + Math.abs(left);
-    const height = Math.abs(top) + Math.abs(bottom);
+    const width = right - left;
+    const height = bottom - top;
 
     const spriteWidth = Math.abs(sprite.width);
     const spriteHeight = Math.abs(sprite.height);
@@ -112,7 +112,7 @@ const randomBetween = (min, max) => {
     }
 
     return min + Math.random() * (max - min);
-}
+};
 
 const debugRender = obj => {
     //const text = JSON.stringify(obj);

@@ -1,4 +1,10 @@
-import { now, isBool, isNumber, setBounds, debugRender } from "../util";
+import {
+    now,
+    isBool,
+    isNumber,
+    setBounds,
+    debugRender
+} from "../util";
 import { animations } from "../../enums/animations";
 import { collisions } from "../../enums/collisions";
 import { playerConfig } from "../config";

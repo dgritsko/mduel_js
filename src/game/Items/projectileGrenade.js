@@ -19,7 +19,7 @@ export class ProjectileGrenade extends SpriteObject {
 
         game.physics.enable(this.sprite);
 
-        setBounds(this.sprite, { top: 2, right: 2, bottom: 5, left: -1 });
+        setBounds(this.sprite, { top: 3, right: 6, bottom: 12, left: -2 });
 
         this.vy = -playerConfig.JUMP_IMPULSE;
         this.vx = playerConfig.RUN_SPEED;

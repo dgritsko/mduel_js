@@ -67,7 +67,7 @@ const levelConfig = {
     ROW_HEIGHT: 64,
     ROW_OFFSET: 88,
 
-    ROPE_ANCHOR_BOUNDS: { top: 6, bottom: 5, left: -5.5, right: 6.5 },
+    ROPE_ANCHOR_BOUNDS: { top: 5, bottom: 16, left: -5.5, right: 6.5 },
     ROPE_SEGMENT_BOUNDS: { top: -16, bottom: 16, left: -1, right: 3 },
 
     MARSHMALLOW_FRAMERATE: 0.25
