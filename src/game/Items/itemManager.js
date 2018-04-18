@@ -33,7 +33,10 @@ class ItemManager {
 
         let θ = (Math.random() + a) * Math.PI * b;
 
-        const v = randomBetween(itemConfig.MINIMUM_ITEM_SPEED, itemConfig.MAXIMUM_ITEM_SPEED);
+        const v = randomBetween(
+            itemConfig.MINIMUM_ITEM_SPEED,
+            itemConfig.MAXIMUM_ITEM_SPEED
+        );
         return { x: Math.cos(θ) * v, y: Math.sin(θ) * v };
     }
 
@@ -75,8 +78,10 @@ class ItemManager {
         const canSpawn = this.nextSpawnTime < now();
 
         if (shouldSpawn && canSpawn) {
-            const spawnDelay =
-                randomBetween(itemConfig.MINIMUM_SPAWN_DELAY, itemConfig.MAXIMUM_SPAWN_DELAY)
+            const spawnDelay = randomBetween(
+                itemConfig.MINIMUM_SPAWN_DELAY,
+                itemConfig.MAXIMUM_SPAWN_DELAY
+            );
 
             this.nextSpawnTime = now() + spawnDelay;
 
@@ -90,8 +95,12 @@ class ItemManager {
         for (let i = this.activeItems.children.length - 1; i >= 0; i--) {
             const item = this.activeItems.children[i];
 
-            if (item.alive && item.data.despawnTime && item.data.despawnTime < now()) {
-                playEffect(effects.GRAY_PUFF, item.x, item.y)
+            if (
+                item.alive &&
+                item.data.despawnTime &&
+                item.data.despawnTime < now()
+            ) {
+                playEffect(effects.GRAY_PUFF, item.x, item.y);
                 item.destroy();
             }
         }
@@ -137,7 +146,7 @@ class ItemManager {
                     if (gameManager.collideWithPlatforms(projectile.sprite)) {
                         projectile.wasPlanted = true;
                     } else if (projectile.wasPlanted) {
-                        console.log("platform holding mine was destroyed")
+                        console.log("platform holding mine was destroyed");
 
                         removeAtIndex(this.activeProjectiles, i);
                         projectile.sprite.kill();
@@ -146,6 +155,12 @@ class ItemManager {
 
                     if (gameManager.collideWithPlayers(projectile.sprite)) {
                         console.log("hit player with mine");
+
+                        playEffect(
+                            effects.MINE,
+                            projectile.x,
+                            projectile.bottom
+                        );
 
                         removeAtIndex(this.activeProjectiles, i);
                         projectile.sprite.kill();
