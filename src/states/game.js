@@ -49,7 +49,7 @@ function create() {
 }
 
 function update() {
-    gameManager.players.forEach((player, index) => {
+    gameManager.activePlayers.forEach((player, index) => {
         player.update(itemManager, gameManager);
 
         if (!player.state.climbingRope) {
@@ -62,7 +62,7 @@ function update() {
 
         player.handleInput(itemManager, gameManager);
 
-        const otherPlayers = exceptIndex(gameManager.players, index);
+        const otherPlayers = exceptIndex(gameManager.activePlayers, index);
         handlePlayerCollisions(player, otherPlayers, gameManager);
 
         handlePickupItemCollisions(
@@ -87,7 +87,7 @@ function render() {
     }
 
     if (gameConfig.SHOW_HITBOXES) {
-        gameManager.players.forEach(p => game.debug.body(p.sprite));
+        gameManager.activePlayers.forEach(p => game.debug.body(p.sprite));
         gameManager.level.platforms.forEach(p => game.debug.body(p));
 
         gameManager.level.ropes.forEach(r => {
@@ -100,7 +100,7 @@ function render() {
         itemManager.activeProjectiles.forEach(p => game.debug.body(p.sprite));
     }
 
-    debugRender(gameManager.players[0].state.currItem);
+    debugRender(gameManager.activePlayers[0].state.currItem);
     //debugRender(itemManager.activeProjectiles.length);
 }
 

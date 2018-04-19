@@ -1,14 +1,30 @@
 import { playEffect } from "./util";
 import { effects } from "../enums/effects";
+import { deaths } from "../enums/deaths";
+import { playerConfig } from "./config";
 
 export class GameManager {
     constructor(level, players) {
         this.level = level;
-        this.players = players;
+        this.activePlayers = players;
     }
 
     killPlayer(player, deathType) {
         console.log(`Player ${player.id} died with death type ${deathType}`);
+
+        this.activePlayers = this.activePlayers.filter(p => p !== player);
+
+        switch (deathType) {
+            case deaths.MINE:
+                break;
+            case deaths.PUCK:
+                player.allowGravity = false;
+                player.vx = 0;
+                // TODO: Constant
+                player.vy = -playerConfig.POWERHIT_SPEED;
+                player.playDisintegrated();
+                break;
+        }
     }
 
     warpPlayer(player) {
@@ -49,9 +65,9 @@ export class GameManager {
         }
     }
 
-    collideWithPlayers(sprite) {
-        for (let j = 0; j < this.players.length; j++) {
-            const player = this.players[j];
+    collideWithPlayer(sprite) {
+        for (let j = 0; j < this.activePlayers.length; j++) {
+            const player = this.activePlayers[j];
 
             const hitPlayer = game.physics.arcade.overlap(
                 sprite,
@@ -59,7 +75,7 @@ export class GameManager {
             );
 
             if (hitPlayer) {
-                return true;
+                return player;
             }
         }
 

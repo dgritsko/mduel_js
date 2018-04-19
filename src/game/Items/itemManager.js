@@ -5,6 +5,7 @@ import { itemConfig } from "../config";
 import { playEffect, debugRender, removeAtIndex, randomBetween } from "../util";
 import { effects } from "../../enums/effects";
 import { now } from "../util";
+import { deaths } from "../../enums/deaths";
 
 class ItemManager {
     constructor(level) {
@@ -113,59 +114,56 @@ class ItemManager {
                 continue;
             }
 
-            switch (projectile.type) {
-                case items.GRENADE:
-                    if (
-                        projectile.vy > 0 &&
-                        gameManager.collideWithPlatforms(
-                            projectile.sprite,
-                            true
-                        )
-                    ) {
-                        removeAtIndex(this.activeProjectiles, i);
-                        projectile.sprite.kill();
-                    }
+            if (projectile.type === items.GRENADE) {
+                if (
+                    projectile.vy > 0 &&
+                    gameManager.collideWithPlatforms(projectile.sprite, true)
+                ) {
+                    removeAtIndex(this.activeProjectiles, i);
+                    projectile.sprite.kill();
+                }
+            } else if (projectile.type === items.PUCK) {
+                gameManager.collideWithPlatforms(projectile.sprite);
+
+                const hitPlayer = gameManager.collideWithPlayer(
+                    projectile.sprite
+                );
+
+                if (hitPlayer) {
+                    console.log("hit player with puck");
+
+                    gameManager.killPlayer(hitPlayer, deaths.PUCK);
+
+                    playEffect(effects.MINE, projectile.x, projectile.bottom);
+
+                    removeAtIndex(this.activeProjectiles, i);
+                    projectile.sprite.kill();
+                }
+            } else if (projectile.type === items.MINE) {
+                if (gameManager.collideWithPlatforms(projectile.sprite)) {
+                    projectile.wasPlanted = true;
+                } else if (projectile.wasPlanted) {
+                    console.log("platform holding mine was destroyed");
+
+                    removeAtIndex(this.activeProjectiles, i);
+                    projectile.sprite.kill();
                     break;
-                case items.PUCK:
-                    gameManager.collideWithPlatforms(projectile.sprite);
+                }
 
-                    if (gameManager.collideWithPlayers(projectile.sprite)) {
-                        console.log("hit player with puck");
+                const hitPlayer = gameManager.collideWithPlayer(
+                    projectile.sprite
+                );
 
-                        playEffect(
-                            effects.MINE,
-                            projectile.x,
-                            projectile.bottom
-                        );
+                if (hitPlayer) {
+                    console.log("hit player with mine");
 
-                        removeAtIndex(this.activeProjectiles, i);
-                        projectile.sprite.kill();
-                    }
-                    break;
-                case items.MINE:
-                    if (gameManager.collideWithPlatforms(projectile.sprite)) {
-                        projectile.wasPlanted = true;
-                    } else if (projectile.wasPlanted) {
-                        console.log("platform holding mine was destroyed");
+                    gameManager.killPlayer(hitPlayer, deaths.MINE);
 
-                        removeAtIndex(this.activeProjectiles, i);
-                        projectile.sprite.kill();
-                        break;
-                    }
+                    playEffect(effects.MINE, projectile.x, projectile.bottom);
 
-                    if (gameManager.collideWithPlayers(projectile.sprite)) {
-                        console.log("hit player with mine");
-
-                        playEffect(
-                            effects.MINE,
-                            projectile.x,
-                            projectile.bottom
-                        );
-
-                        removeAtIndex(this.activeProjectiles, i);
-                        projectile.sprite.kill();
-                    }
-                    break;
+                    removeAtIndex(this.activeProjectiles, i);
+                    projectile.sprite.kill();
+                }
             }
         }
     }
