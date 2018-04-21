@@ -25,6 +25,16 @@ export class GameManager {
                 player.playDisintegrated();
                 break;
         }
+
+        const activeTeammates = this.activePlayers.filter(
+            p => p.teamId === player.teamId
+        );
+
+        if (activeTeammates.length === 0) {
+            console.log(
+                "round should end as long as all other players have stopped"
+            );
+        }
     }
 
     warpPlayer(player) {
