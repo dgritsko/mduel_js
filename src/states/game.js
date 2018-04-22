@@ -25,6 +25,13 @@ function create() {
     //const player2 = new Player("player2", 160, 300, 2);
     // const player3 = new Player("player3", 400, 300, 3);
 
+    player1.x = 500;
+    player1.y = 10;
+    player1.vy = -300;
+    player1.bounce();
+
+    player2.y = 300;
+
     players.push(player1);
     players.push(player2);
     // players.push(player3);
