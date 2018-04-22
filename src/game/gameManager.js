@@ -12,9 +12,14 @@ export class GameManager {
     constructor(level, players) {
         this.level = level;
         this.players = players;
+        this.roundEnding = false;
     }
 
     update(itemManager) {
+        if (this.roundEnding && this.canEndRound()) {
+            this.endRound();
+        }
+
         this.players.forEach((player, index) => {
             if (!player.state.alive) {
                 return;
@@ -50,7 +55,6 @@ export class GameManager {
             case deaths.PUCK:
                 player.allowGravity = false;
                 player.vx = 0;
-                // TODO: Constant
                 player.vy = -playerConfig.POWERHIT_SPEED;
                 player.playDisintegrated();
                 break;
@@ -61,8 +65,38 @@ export class GameManager {
         );
 
         if (activeTeammates.length === 0) {
-            this.endRound();
+            this.roundEnding = true;
+            this.players.forEach(p => p.state.inputEnabled = false);
         }
+    }
+
+    canEndRound() {
+        for (let i = 0; i < this.players.length; i++) {
+            const player = this.players[i];
+
+            if (player.state.alive) {
+                if (player.vx != 0) {
+                    return false;
+                }
+
+                if (!player.sprite.animations.currentAnim.isFinished) {
+                    return false;
+                }
+
+                if (!player.state.grounded && !player.state.climbingRope) {
+                    return false;
+                }
+            } else {
+                if (
+                    player.sprite.inCamera &&
+                    !player.sprite.animations.currentAnim.isFinished
+                ) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     endRound() {
