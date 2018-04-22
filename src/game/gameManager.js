@@ -66,6 +66,14 @@ export class GameManager {
     }
 
     endRound() {
+        // Once only one team has living members,
+        // all of those players should have their input disabled.
+        // Next, check every update to see whether all have stopped moving.
+        // Some players might have been in the air, and we need to account for
+        // them to finish their animations, etc. Once this happens, we
+        // can trigger the victory animations, kill all remaining items on the
+        // screen, and finally end the round.
+
         console.log(
             "round should end as long as all other players have stopped"
         );
