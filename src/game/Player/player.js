@@ -19,13 +19,13 @@ export class Player extends SpriteObject {
 
         this.state = {
             alive: true,
+            inputEnabled: false,
             lastCollision: collisions.NONE,
             crouching: false,
             rolling: false,
             unstable: false,
             justJumped: false,
             lastLandedTime: 0,
-            ignoreInput: false,
             x: x,
             y: y,
             flipped: false,
@@ -119,11 +119,13 @@ export class Player extends SpriteObject {
     }
 
     getInput() {
-        const hl = this.input.left.isDown;
-        const hr = this.input.right.isDown;
-        const hu = this.input.up.isDown;
-        const hd = this.input.down.isDown;
-        const hf = this.input.fire.isDown;
+        const inputEnabled = this.state.inputEnabled;
+
+        const hl = this.input.left.isDown && inputEnabled;
+        const hr = this.input.right.isDown && inputEnabled;
+        const hu = this.input.up.isDown && inputEnabled;
+        const hd = this.input.down.isDown && inputEnabled;
+        const hf = this.input.fire.isDown && inputEnabled;
 
         const i = x => (x ? 1 : 0);
 
