@@ -18,6 +18,7 @@ export class Player extends SpriteObject {
         this.configureSprite();
 
         this.state = {
+            alive: true,
             lastCollision: collisions.NONE,
             crouching: false,
             rolling: false,

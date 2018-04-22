@@ -2,11 +2,7 @@ import { gameConfig, playerConfig } from "../game/config";
 import { Player } from "../game/Player/player";
 import { ItemManager } from "../game/Items/itemManager";
 import { createNewLevel } from "../game/Level/level";
-import { handlePlatformCollisions } from "../game/update/platformCollisions";
-import { handlePlayerCollisions } from "../game/update/playerCollisions";
-import { handleRopeCollisions } from "../game/update/ropeCollisions";
-import { handlePickupItemCollisions } from "../game/update/pickupItemCollisions";
-import { exceptIndex, debugRender, playEffect } from "../game/util";
+import { debugRender, playEffect } from "../game/util";
 import { effects } from "../enums/effects";
 import { GameManager } from "../game/gameManager";
 
@@ -49,29 +45,7 @@ function create() {
 }
 
 function update() {
-    gameManager.players.forEach((player, index) => {
-        player.update(itemManager, gameManager);
-
-        if (!player.state.climbingRope) {
-            handlePlatformCollisions(player, gameManager.level);
-        } else {
-            player.state.grounded = false;
-        }
-
-        handleRopeCollisions(player, gameManager.level);
-
-        player.handleInput(itemManager, gameManager);
-
-        const otherPlayers = exceptIndex(gameManager.players, index);
-        handlePlayerCollisions(player, otherPlayers, gameManager);
-
-        handlePickupItemCollisions(
-            player,
-            gameManager.level,
-            itemManager,
-            gameManager
-        );
-    });
+    gameManager.update(itemManager);
 
     itemManager.update(gameManager);
 }
