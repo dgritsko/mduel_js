@@ -67,6 +67,14 @@ function generateRopes(platforms) {
     return result;
 }
 
+function expandFixedPlatform(info) {
+    const result = [];
+    for (let j = info.column; j < info.column + info.width; j++) {
+        result.push({ row: info.row, column: j, isSpawn: info.isSpawn });
+    }
+    return result;
+}
+
 function generatePlatforms() {
     let result = [];
 
@@ -79,11 +87,9 @@ function generatePlatforms() {
         MIN_GAP_WIDTH
     } = levelConfig;
 
-    levelConfig.FIXED_PLATFORMS.forEach(p => {
-        for (let j = p.column; j < p.column + p.width; j++) {
-            result.push({ row: p.row, column: j, isSpawn: p.isSpawn });
-        }
-    });
+    levelConfig.FIXED_PLATFORMS.forEach(p =>
+        result.push(...expandFixedPlatform(p))
+    );
 
     // Randomized platforms
     for (let i = 1; i < LEVEL_HEIGHT - 1; i++) {
@@ -156,14 +162,9 @@ function generateItemSpawns() {
 function generateTestPlatforms() {
     const result = [];
 
-    for (let j = -1; j < 18; j++) {
-        result.push({ row: 4, column: j + 0.5, isSpawn: true });
-    }
-
-    for (let j = 1; j < 4; j++) {
-        result.push({ row: 2, column: j, isSpawn: false });
-        result.push({ row: 3, column: j, isSpawn: false });
-    }
+    levelConfig.DEBUG_PLATFORMS.forEach(p =>
+        result.push(...expandFixedPlatform(p))
+    );
 
     return result;
 }

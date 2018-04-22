@@ -60,6 +60,13 @@ const levelConfig = {
         { column: 13.5, row: 0, length: 5 }
     ],
 
+    DEBUG_PLATFORMS: [
+        { row: 2, column: 1, width: 4, isSpawn: false },
+        { row: 3, column: 1, width: 4, isSpawn: false },
+        { row: 4, column: 0.5, width: 10, isSpawn: true },
+        { row: 4, column: 13.5, width: 2, isSpawn: true }
+    ],
+
     MIN_RANDOM_ROPES: 2,
     MAX_RANDOM_ROPES: 5,
 
