@@ -6,13 +6,13 @@ import { playerConfig } from "./config";
 export class GameManager {
     constructor(level, players) {
         this.level = level;
-        this.activePlayers = players;
+        this.players = players;
     }
 
     killPlayer(player, deathType) {
         console.log(`Player ${player.id} died with death type ${deathType}`);
 
-        this.activePlayers = this.activePlayers.filter(p => p !== player);
+        this.players = this.players.filter(p => p !== player);
 
         switch (deathType) {
             case deaths.MINE:
@@ -26,7 +26,7 @@ export class GameManager {
                 break;
         }
 
-        const activeTeammates = this.activePlayers.filter(
+        const activeTeammates = this.players.filter(
             p => p.teamId === player.teamId
         );
 
@@ -76,8 +76,8 @@ export class GameManager {
     }
 
     collideWithPlayer(sprite) {
-        for (let j = 0; j < this.activePlayers.length; j++) {
-            const player = this.activePlayers[j];
+        for (let j = 0; j < this.players.length; j++) {
+            const player = this.players[j];
 
             const hitPlayer = game.physics.arcade.overlap(
                 sprite,
