@@ -1,12 +1,10 @@
 import { gameConfig, playerConfig } from "../game/config";
 import { Player } from "../game/Player/player";
-import { ItemManager } from "../game/Items/itemManager";
 import { createNewLevel } from "../game/Level/level";
 import { debugRender, playEffect } from "../game/util";
 import { effects } from "../enums/effects";
 import { GameManager } from "../game/gameManager";
 
-let itemManager;
 let gameManager;
 
 function create() {
@@ -44,7 +42,6 @@ function create() {
     //     32
     // );
     // text.tint = 0xa439a4;
-    itemManager = new ItemManager(level);
 
     players.forEach(p => playEffect(effects.PURPLE_PUFF, p.x, p.y));
 
@@ -52,9 +49,7 @@ function create() {
 }
 
 function update() {
-    gameManager.update(itemManager);
-
-    itemManager.update(gameManager);
+    gameManager.update();
 }
 
 function render() {
@@ -76,9 +71,13 @@ function render() {
             r.segments.children.forEach(s => game.debug.body(s));
         });
 
-        itemManager.activeItems.children.forEach(i => game.debug.body(i));
+        gameManager.itemManager.activeItems.children.forEach(i =>
+            game.debug.body(i)
+        );
 
-        itemManager.activeProjectiles.forEach(p => game.debug.body(p.sprite));
+        gameManager.itemManager.activeProjectiles.forEach(p =>
+            game.debug.body(p.sprite)
+        );
     }
 
     debugRender(gameManager.players[0].state.currItem);

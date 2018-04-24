@@ -7,25 +7,29 @@ import { handlePlayerCollisions } from "../game/update/playerCollisions";
 import { handleRopeCollisions } from "../game/update/ropeCollisions";
 import { handlePickupItemCollisions } from "../game/update/pickupItemCollisions";
 import { exceptIndex, playEffect } from "../game/util";
+import { ItemManager } from "../game/Items/itemManager";
 
 export class GameManager {
     constructor(level, players) {
         this.level = level;
         this.players = players;
         this.roundEnding = false;
+        this.itemManager = new ItemManager(level);
     }
 
-    update(itemManager) {
+    update() {
         if (this.roundEnding && this.canEndRound()) {
             this.endRound();
         }
+
+        this.itemManager.update(this);
 
         this.players.forEach((player, index) => {
             if (!player.state.alive) {
                 return;
             }
 
-            player.update(itemManager, this);
+            player.update(this.itemManager, this);
 
             if (!player.state.climbingRope) {
                 handlePlatformCollisions(player, this.level);
@@ -35,12 +39,17 @@ export class GameManager {
 
             handleRopeCollisions(player, this.level);
 
-            player.handleInput(itemManager, this);
+            player.handleInput(this.itemManager, this);
 
             const otherPlayers = exceptIndex(this.players, index);
             handlePlayerCollisions(player, otherPlayers, this);
 
-            handlePickupItemCollisions(player, this.level, itemManager, this);
+            handlePickupItemCollisions(
+                player,
+                this.level,
+                this.itemManager,
+                this
+            );
         });
     }
 
@@ -66,7 +75,7 @@ export class GameManager {
 
         if (activeTeammates.length === 0) {
             this.roundEnding = true;
-            this.players.forEach(p => p.state.inputEnabled = false);
+            this.players.forEach(p => (p.state.inputEnabled = false));
         }
     }
 
