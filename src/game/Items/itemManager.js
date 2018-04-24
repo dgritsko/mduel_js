@@ -72,6 +72,15 @@ class ItemManager {
         return item;
     }
 
+    removeItems() {
+        for (let i = this.activeItems.children.length - 1; i >= 0; i--) {
+            const item = this.activeItems.children[i];
+
+            playEffect(effects.GRAY_PUFF, item.x, item.y);
+            item.destroy();
+        }
+    }
+
     update(gameManager) {
         const shouldSpawn =
             this.activeItems.countLiving() < itemConfig.MAX_ITEMS;
@@ -170,6 +179,10 @@ class ItemManager {
 
     addProjectile(projectile) {
         this.activeProjectiles.push(projectile);
+    }
+
+    get movingProjectilesCount() {
+        return this.activeProjectiles.filter(p => p.vx > 0).length;
     }
 }
 

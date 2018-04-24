@@ -9,20 +9,33 @@ import { handlePickupItemCollisions } from "../game/update/pickupItemCollisions"
 import { exceptIndex, playEffect } from "../game/util";
 import { ItemManager } from "../game/Items/itemManager";
 
+const phasesEnum = {
+    DEFAULT: 0,
+    VICTORY_REQUIRED: 1,
+    ENDING_REQUIRED: 2,
+    ENDING: 3
+};
+
 export class GameManager {
     constructor(level, players) {
         this.level = level;
         this.players = players;
-        this.roundEnding = false;
         this.itemManager = new ItemManager(level);
+        this.phase = phasesEnum.DEFAULT;
     }
 
     update() {
-        if (this.roundEnding && this.canEndRound()) {
+        if (this.phase === phasesEnum.VICTORY_REQUIRED && this.canEndRound()) {
+            this.beginVictory();
+        }
+
+        if (this.phase === phasesEnum.ENDING_REQUIRED && this.canEndRound()) {
             this.endRound();
         }
 
-        this.itemManager.update(this);
+        if (this.phase === phasesEnum.DEFAULT) {
+            this.itemManager.update(this);
+        }
 
         this.players.forEach((player, index) => {
             if (!player.state.alive) {
@@ -74,12 +87,16 @@ export class GameManager {
         );
 
         if (activeTeammates.length === 0) {
-            this.roundEnding = true;
+            this.phase = phasesEnum.VICTORY_REQUIRED;
             this.players.forEach(p => (p.state.inputEnabled = false));
         }
     }
 
     canEndRound() {
+        if (this.itemManager.movingProjectilesCount > 0) {
+            return false;
+        }
+
         for (let i = 0; i < this.players.length; i++) {
             const player = this.players[i];
 
@@ -108,7 +125,19 @@ export class GameManager {
         return true;
     }
 
+    beginVictory() {
+        this.itemManager.removeItems();
+
+        this.players.filter(p => p.state.alive).forEach(p => {
+            p.celebrate();
+        });
+
+        this.phase = phasesEnum.ENDING_REQUIRED;
+    }
+
     endRound() {
+        this.phase = phasesEnum.ENDING;
+
         // Once only one team has living members,
         // all of those players should have their input disabled.
         // Next, check every update to see whether all have stopped moving.

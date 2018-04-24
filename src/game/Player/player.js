@@ -550,6 +550,18 @@ export class Player extends SpriteObject {
         return typeCheck && firingCheck;
     }
 
+    celebrate() {
+        if (this.state.climbingRope) {
+            this.playRopeVictory();
+        } else {
+            if (Math.random() > 0.5) {
+                this.playVictoryDance();
+            } else {
+                this.playVictoryFlex();
+            }
+        }
+    }
+
     // Collisions
     collideWithPlayer(otherPlayer, gameManager) {
         // Stop current item stuff

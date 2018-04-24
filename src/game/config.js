@@ -24,7 +24,7 @@ const playerConfig = {
 
 const itemConfig = {
     ITEM_BOUNDS: { top: -6, bottom: 6, left: -6, right: 6 },
-    MAX_ITEMS: 1,
+    MAX_ITEMS: 5,
     MINIMUM_ITEM_SPEED: 100,
     MAXIMUM_ITEM_SPEED: 100,
     MINIMUM_ITEM_LIFETIME: 10000,
