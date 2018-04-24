@@ -161,12 +161,12 @@ export class Player extends SpriteObject {
         return Object.assign({}, this.state, position, velocity, { flippedh });
     }
 
-    update(itemManager, gameManager) {
+    update(gameManager) {
         this.state.wasGrounded = this.state.grounded;
         this.state.wasTouchingRope = this.state.touchingRope;
 
         if (this.hasItem()) {
-            this.state.currItem.update(this, itemManager);
+            this.state.currItem.update(this, gameManager.itemManager);
         }
 
         if (this.y >= game.world.height) {

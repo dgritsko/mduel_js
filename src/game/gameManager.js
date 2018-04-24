@@ -42,7 +42,7 @@ export class GameManager {
                 return;
             }
 
-            player.update(this.itemManager, this);
+            player.update(this);
 
             if (!player.state.climbingRope) {
                 handlePlatformCollisions(player, this.level);
@@ -52,7 +52,9 @@ export class GameManager {
 
             handleRopeCollisions(player, this.level);
 
-            player.handleInput(this.itemManager, this);
+            if (this.phase !== phasesEnum.ENDING) {
+                player.handleInput(this.itemManager, this);
+            }
 
             const otherPlayers = exceptIndex(this.players, index);
             handlePlayerCollisions(player, otherPlayers, this);
