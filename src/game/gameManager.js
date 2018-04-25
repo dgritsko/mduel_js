@@ -81,6 +81,10 @@ export class GameManager {
                 player.playSkulled();
                 break;
             case deaths.MINE:
+                player.allowGravity = false;
+                player.vx = 0;
+                player.vy = -playerConfig.POWERHIT_SPEED;
+                player.playDisintegrated();
                 break;
             case deaths.PUCK:
                 player.allowGravity = false;
