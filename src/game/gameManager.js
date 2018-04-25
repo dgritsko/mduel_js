@@ -74,6 +74,12 @@ export class GameManager {
         player.state.alive = false;
 
         switch (deathType) {
+            case deaths.SKULL:
+                player.allowGravity = false;
+                player.vx = 0;
+                player.vy = 0;
+                player.playSkulled();
+                break;
             case deaths.MINE:
                 break;
             case deaths.PUCK:

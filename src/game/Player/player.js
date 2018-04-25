@@ -19,7 +19,7 @@ export class Player extends SpriteObject {
 
         this.state = {
             alive: true,
-            inputEnabled: false,
+            inputEnabled: true,
             lastCollision: collisions.NONE,
             crouching: false,
             rolling: false,
