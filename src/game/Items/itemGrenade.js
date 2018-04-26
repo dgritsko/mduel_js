@@ -6,6 +6,7 @@ import { now } from "../util";
 
 // TODO: Move these constants somewhere?
 const PROJECTILE_FIRE_DELAY = 100;
+const FIRE_DELAY = 400;
 
 export class ItemGrenade extends Item {
     constructor(player) {
@@ -25,13 +26,16 @@ export class ItemGrenade extends Item {
         }
 
         if (this.fireAfter > now()) {
-            // TODO: Also check for firing animation completion
             return;
         }
 
         player.animation = animations.GRENADE_TOSS;
 
         this.fireAfter = now() + PROJECTILE_FIRE_DELAY;
+
+        player.state.inputInterrupt = now() + FIRE_DELAY;
+
+        player.vx = 0;
     }
 
     update(player, gameManager) {

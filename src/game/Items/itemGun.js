@@ -1,12 +1,13 @@
 import { Item } from "./item";
 import { items } from "../../enums/items";
 import { animations } from "../../enums/animations";
-import { now } from "../util";
+import { now, animationDuration } from "../util";
 
 import { sortBy } from "ramda";
 import { deaths } from "../../enums/deaths";
 
-const FIRE_DELAY = 100;
+const PROJECTILE_FIRE_DELAY = 100;
+const FIRE_DELAY = 400;
 
 export class ItemGun extends Item {
     constructor(player) {
@@ -31,7 +32,11 @@ export class ItemGun extends Item {
 
         player.animation = animations.SHOOT;
 
-        this.fireAfter = now() + FIRE_DELAY;
+        this.fireAfter = now() + PROJECTILE_FIRE_DELAY;
+
+        player.state.inputInterrupt = now() + FIRE_DELAY;
+
+        player.vx = 0;
     }
 
     update(player, gameManager) {
