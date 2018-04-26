@@ -42,7 +42,7 @@ export class ItemPuck extends Item {
         player.state.inputInterrupt = now() + FIRE_DELAY;
     }
 
-    update(player, itemManager) {
+    update(player, gameManager) {
         super.update(player);
 
         if (typeof this.fireAfter === "number" && this.fireAfter < now()) {
@@ -52,7 +52,7 @@ export class ItemPuck extends Item {
                 return;
             }
 
-            this.createProjectile(player, itemManager);
+            this.createProjectile(player, gameManager.itemManager);
 
             super.fire(player);
         }

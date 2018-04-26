@@ -31,7 +31,7 @@ export class ItemGun extends Item {
         this.fireAfter = now() + FIRE_DELAY;
     }
 
-    update(player, itemManager) {
+    update(player, gameManager) {
         super.update(player);
 
         if (typeof this.fireAfter === "number" && this.fireAfter < now()) {
@@ -41,13 +41,13 @@ export class ItemGun extends Item {
                 return;
             }
 
-            this.fireShot(player, itemManager);
+            this.fireShot(player, gameManager);
 
             super.fire(player);
         }
     }
 
-    fireShot(player, itemManager) {
+    fireShot(player, gameManager) {
         // TODO: Actually shoot
     }
 }

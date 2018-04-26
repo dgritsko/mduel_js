@@ -2,7 +2,7 @@ import { PickupItem } from "./pickupItem";
 import { items } from "../../enums/items";
 import { spawnOrientations } from "../../enums/spawnOrientations";
 import { itemConfig } from "../config";
-import { playEffect, debugRender, removeAtIndex, randomBetween } from "../util";
+import { playEffect, removeAtIndex, randomBetween } from "../util";
 import { effects } from "../../enums/effects";
 import { now } from "../util";
 import { deaths } from "../../enums/deaths";

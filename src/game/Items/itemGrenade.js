@@ -34,7 +34,7 @@ export class ItemGrenade extends Item {
         this.fireAfter = now() + PROJECTILE_FIRE_DELAY;
     }
 
-    update(player, itemManager) {
+    update(player, gameManager) {
         super.update(player);
 
         if (typeof this.fireAfter === "number" && this.fireAfter < now()) {
@@ -44,7 +44,7 @@ export class ItemGrenade extends Item {
                 return;
             }
 
-            this.createProjectile(player, itemManager);
+            this.createProjectile(player, gameManager.itemManager);
 
             super.fire(player);
         }

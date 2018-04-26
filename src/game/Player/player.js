@@ -166,7 +166,7 @@ export class Player extends SpriteObject {
         this.state.wasTouchingRope = this.state.touchingRope;
 
         if (this.hasItem()) {
-            this.state.currItem.update(this, gameManager.itemManager);
+            this.state.currItem.update(this, gameManager);
         }
 
         if (this.y >= game.world.height) {
