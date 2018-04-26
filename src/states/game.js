@@ -34,15 +34,6 @@ function create() {
     players.push(player2);
     // players.push(player3);
 
-    // const text = game.add.bitmapText(
-    //     game.world.centerX,
-    //     game.world.centerY,
-    //     "mduel",
-    //     "Percy vs. Clifford",
-    //     32
-    // );
-    // text.tint = 0xa439a4;
-
     players.forEach(p => playEffect(effects.PURPLE_PUFF, p.x, p.y));
 
     gameManager = new GameManager(level, players);

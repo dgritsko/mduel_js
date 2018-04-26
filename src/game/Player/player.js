@@ -214,6 +214,7 @@ export class Player extends SpriteObject {
         // }
 
         const canHandleInput =
+            this.state.inputEnabled &&
             this.state.inputInterrupt !== -1 &&
             this.state.inputInterrupt < now();
 
@@ -336,7 +337,7 @@ export class Player extends SpriteObject {
                 }
                 this.state.justJumped = false;
 
-                // parachut midair controls
+                // parachute midair controls
                 if (this.hasItem({ type: items.CHUTE, isFiring: true })) {
                     this.vx =
                         this.vx === 0 && !hr && !hl
@@ -613,14 +614,14 @@ export class Player extends SpriteObject {
             !this.hasItem({ type: items.VOLTS })
         ) {
             // we die
-            gameManager.killPlayer(this, deaths.VOLTS);
+            gameManager.killPlayer(this, deaths.VOLTS, otherPlayer);
             return;
         } else if (
             this.hasItem({ type: items.VOLTS }) &&
             !otherPlayer.hasItem({ type: items.VOLTS })
         ) {
             // they die
-            gameManager.killPlayer(otherPlayer, deaths.VOLTS);
+            gameManager.killPlayer(otherPlayer, deaths.VOLTS, this);
             return;
         } else if (
             this.hasItem({ type: items.VOLTS }) &&

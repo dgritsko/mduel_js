@@ -68,12 +68,27 @@ export class GameManager {
         });
     }
 
-    killPlayer(player, deathType) {
+    killPlayer(player, deathType, otherPlayer) {
         console.log(`Player ${player.id} died with death type ${deathType}`);
 
         player.state.alive = false;
 
         switch (deathType) {
+            case deaths.VOLTS:
+                playEffect(
+                    effects.VOLTS,
+                    (player.x + otherPlayer.x) / 2,
+                    (player.y + otherPlayer.y) / 2
+                );
+                player.allowGravity = false;
+                player.vx =
+                    player.x < otherPlayer.x ||
+                    (player.x === otherPlayer.x && player.flippedh)
+                        ? -playerConfig.POWERHIT_SPEED
+                        : playerConfig.POWERHIT_SPEED;
+                player.vy = -playerConfig.JUMP_IMPULSE;
+                player.playDisintegrated();
+                break;
             case deaths.SKULL:
                 player.allowGravity = false;
                 player.vx = 0;
