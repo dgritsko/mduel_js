@@ -24,6 +24,14 @@ const matchingProps = (state, test) => {
     };
 };
 
+const animationDuration = (frames, framerate) => {
+    const timePerFrame = 1000 / framerate;
+
+    const duration = frames * timePerFrame;
+
+    return duration;
+};
+
 const dist = (a, b) => {
     return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
 };
@@ -144,6 +152,7 @@ export {
     isBool,
     isString,
     matchingProps,
+    animationDuration,
     dist,
     setBounds,
     exceptIndex,
