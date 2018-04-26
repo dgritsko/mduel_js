@@ -1,5 +1,5 @@
 const gameConfig = {
-    SHOW_HITBOXES: false,
+    SHOW_HITBOXES: true,
     SHOW_FPS: false,
 
     ROPE_THRESHOLD: 8
@@ -24,7 +24,7 @@ const playerConfig = {
 
 const itemConfig = {
     ITEM_BOUNDS: { top: -6, bottom: 6, left: -6, right: 6 },
-    MAX_ITEMS: 5,
+    MAX_ITEMS: 0,
     MINIMUM_ITEM_SPEED: 100,
     MAXIMUM_ITEM_SPEED: 100,
     MINIMUM_ITEM_LIFETIME: 10000,
@@ -33,9 +33,9 @@ const itemConfig = {
     MINIMUM_SPAWN_DELAY: 1000,
     MAXIMUM_SPAWN_DELAY: 2000,
     TEST_ITEMS: [
-        { x: 100, y: 300, type: 8 },
-        { x: 200, y: 300, type: 11 },
-        { x: 300, y: 310, type: 11 }
+        { x: 70, y: 300, type: 4 }
+        // { x: 200, y: 300, type: 11 },
+        // { x: 300, y: 310, type: 11 }
     ]
 };
 
@@ -76,8 +76,8 @@ const levelConfig = {
     DEBUG_PLATFORMS: [
         { row: 2, column: 1, width: 4, isSpawn: false },
         { row: 3, column: 1, width: 4, isSpawn: false },
-        { row: 4, column: 0.5, width: 10, isSpawn: true },
-        { row: 4, column: 13.5, width: 2, isSpawn: true }
+        { row: 4, column: 0.5, width: 12, isSpawn: true },
+        { row: 4, column: 13.5, width: 4, isSpawn: true }
     ],
 
     MIN_RANDOM_ROPES: 2,

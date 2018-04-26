@@ -42,6 +42,11 @@ export class ItemGun extends Item {
     update(player, gameManager) {
         super.update(player);
 
+        game.debug.geom(
+            new Phaser.Rectangle(0, player.y - 8, game.camera.width, 1),
+            "#ff0000"
+        );
+
         if (typeof this.fireAfter === "number" && this.fireAfter < now()) {
             this.fireAfter = null;
 
@@ -56,12 +61,14 @@ export class ItemGun extends Item {
     }
 
     fireShot(player, gameManager) {
+        const beamY = player.y - 8;
+
         // TODO: Actually shoot
         const hitPlayers = gameManager.players.filter(p => {
             const isAlive = p.state.alive;
             const isFacing = player.flippedh ? player.x > p.x : player.x < p.x;
 
-            const inVerticalPlane = player.y >= p.top && player.y <= p.bottom;
+            const inVerticalPlane = beamY >= p.top && beamY <= p.bottom;
 
             return isAlive && isFacing && inVerticalPlane;
         });
