@@ -214,7 +214,6 @@ export class Player extends SpriteObject {
         // }
 
         const canHandleInput =
-            this.state.inputEnabled &&
             this.state.inputInterrupt !== -1 &&
             this.state.inputInterrupt < now();
 
@@ -255,7 +254,7 @@ export class Player extends SpriteObject {
                         this.vy = 0;
                     }
 
-                    if (!hd && !hu) {
+                    if (!hd && !hu && this.state.inputEnabled) {
                         this.animation = animations.NONE;
                     }
 

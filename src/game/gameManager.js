@@ -74,6 +74,10 @@ export class GameManager {
         player.state.alive = false;
 
         switch (deathType) {
+            case deaths.GUN:
+                player.playDisintegrated();
+                player.allowGravity = false;
+                break;
             case deaths.VOLTS:
                 playEffect(
                     effects.VOLTS,
