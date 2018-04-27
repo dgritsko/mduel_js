@@ -2,9 +2,9 @@ function create() {
     const text = game.add.bitmapText(
         game.world.centerX,
         game.world.centerY,
-        "mduel",
+        "mduel-menu",
         "Percy vs. Clifford",
-        32
+        16
     );
 
     text.anchor.setTo(0.5);

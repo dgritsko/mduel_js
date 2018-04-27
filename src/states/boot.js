@@ -23,7 +23,7 @@ function preload() {
     );
 
     game.load.bitmapFont(
-        "mduel",
+        "mduel-menu",
         "assets/fonts/pc-senior.png",
         "assets/fonts/pc-senior.fnt"
     );

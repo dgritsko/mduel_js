@@ -172,9 +172,9 @@ export class GameManager {
         // can trigger the victory animations, kill all remaining items on the
         // screen, and finally end the round.
 
-        console.log(
-            "round should end as long as all other players have stopped"
-        );
+        window.setTimeout(() => {
+            game.state.start("Scoreboard");
+        }, 1000);
     }
 
     warpPlayer(player) {

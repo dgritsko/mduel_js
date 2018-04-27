@@ -1,7 +1,7 @@
 import { gameConfig, playerConfig } from "../game/config";
 import { Player } from "../game/Player/player";
 import { createNewLevel } from "../game/Level/level";
-import { debugRender, playEffect } from "../game/util";
+import { playEffect } from "../game/util";
 import { effects } from "../enums/effects";
 import { GameManager } from "../game/gameManager";
 
@@ -70,9 +70,6 @@ function render() {
             game.debug.body(p.sprite)
         );
     }
-
-    debugRender(gameManager.players[0].state.currItem);
-    //debugRender(itemManager.activeProjectiles.length);
 }
 
 export default { create: create, update: update, render: render };
