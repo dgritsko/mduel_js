@@ -72,11 +72,13 @@ export class GameManager {
         console.log(`Player ${player.id} died with death type ${deathType}`);
 
         player.state.alive = false;
+        player.vx = 0;
+        player.vy = 0;
+        player.allowGravity = false;
 
         switch (deathType) {
             case deaths.GUN:
                 player.playDisintegrated();
-                player.allowGravity = false;
                 break;
             case deaths.VOLTS:
                 playEffect(
@@ -84,7 +86,6 @@ export class GameManager {
                     (player.x + otherPlayer.x) / 2,
                     (player.y + otherPlayer.y) / 2
                 );
-                player.allowGravity = false;
                 player.vx =
                     player.x < otherPlayer.x ||
                     (player.x === otherPlayer.x && player.flippedh)
@@ -95,19 +96,13 @@ export class GameManager {
                 break;
             case deaths.SKULL:
                 player.allowGravity = false;
-                player.vx = 0;
-                player.vy = 0;
                 player.playSkulled();
                 break;
             case deaths.MINE:
-                player.allowGravity = false;
-                player.vx = 0;
                 player.vy = -playerConfig.POWERHIT_SPEED;
                 player.playDisintegrated();
                 break;
             case deaths.PUCK:
-                player.allowGravity = false;
-                player.vx = 0;
                 player.vy = -playerConfig.POWERHIT_SPEED;
                 player.playDisintegrated();
                 break;
