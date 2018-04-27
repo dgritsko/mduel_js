@@ -37,7 +37,8 @@ const itemConfig = {
         { x: 70, y: 300, type: 4 }
         // { x: 200, y: 300, type: 11 },
         // { x: 300, y: 310, type: 11 }
-    ]
+    ],
+    ITEM_GUN_Y_OFFSET: -8
 };
 
 // DEATH: 0,
