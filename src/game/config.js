@@ -1,5 +1,5 @@
 const gameConfig = {
-    DEBUG_SHOW_HITBOXES: true,
+    DEBUG_SHOW_HITBOXES: false,
     DEBUG_SHOW_FPS: false,
     DEBUG_SHOW_GUN_PATH: true,
 

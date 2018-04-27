@@ -7,8 +7,6 @@ export class ItemChute extends Item {
     constructor(player) {
         super(items.CHUTE);
 
-        this.canFireStanding = false;
-        this.canFireCrouching = false;
         this.canFireInAir = true;
 
         this.ammo = -1;
@@ -24,6 +22,12 @@ export class ItemChute extends Item {
         }
 
         super.fire(player);
+    }
+
+    stopFiring(player) {
+        super.stopFiring(player);
+
+        player.requestAnimationUpdate();
     }
 
     update(player) {
