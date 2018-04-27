@@ -170,7 +170,7 @@ function generateTestPlatforms() {
 }
 
 function createNewLevel() {
-    const platformSpec = levelConfig.TEST_LEVEL
+    const platformSpec = levelConfig.DEBUG_LEVEL
         ? generateTestPlatforms()
         : generatePlatforms();
 

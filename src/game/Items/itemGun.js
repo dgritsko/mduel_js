@@ -5,6 +5,7 @@ import { now, animationDuration } from "../util";
 
 import { sortBy } from "ramda";
 import { deaths } from "../../enums/deaths";
+import { gameConfig } from "../config";
 
 const PROJECTILE_FIRE_DELAY = 100;
 const FIRE_DELAY = 400;
@@ -42,10 +43,12 @@ export class ItemGun extends Item {
     update(player, gameManager) {
         super.update(player);
 
-        game.debug.geom(
-            new Phaser.Rectangle(0, player.y - 8, game.camera.width, 1),
-            "#ff0000"
-        );
+        if (gameConfig.DEBUG_SHOW_GUN_PATH) {
+            game.debug.geom(
+                new Phaser.Rectangle(0, player.y - 8, game.camera.width, 1),
+                "#00ff00"
+            );
+        }
 
         if (typeof this.fireAfter === "number" && this.fireAfter < now()) {
             this.fireAfter = null;

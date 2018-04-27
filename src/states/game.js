@@ -44,7 +44,7 @@ function update() {
 }
 
 function render() {
-    if (gameConfig.SHOW_FPS) {
+    if (gameConfig.DEBUG_SHOW_FPS) {
         game.debug.text(
             "FPS: " + game.time.fps || "FPS: --",
             40,
@@ -53,7 +53,7 @@ function render() {
         );
     }
 
-    if (gameConfig.SHOW_HITBOXES) {
+    if (gameConfig.DEBUG_SHOW_HITBOXES) {
         gameManager.players.forEach(p => game.debug.body(p.sprite));
         gameManager.level.platforms.forEach(p => game.debug.body(p));
 

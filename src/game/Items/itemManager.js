@@ -21,7 +21,7 @@ class ItemManager {
         // this.availableItems = Object.values(items);
         this.availableItems = [items.TNT];
 
-        itemConfig.TEST_ITEMS.forEach(ti => {
+        itemConfig.DEBUG_ITEMS.forEach(ti => {
             this.activeItems.add(new PickupItem(ti.x, ti.y, ti.type).sprite);
         });
 

@@ -1,6 +1,7 @@
 const gameConfig = {
-    SHOW_HITBOXES: true,
-    SHOW_FPS: false,
+    DEBUG_SHOW_HITBOXES: true,
+    DEBUG_SHOW_FPS: false,
+    DEBUG_SHOW_GUN_PATH: true,
 
     ROPE_THRESHOLD: 8
 };
@@ -32,7 +33,7 @@ const itemConfig = {
     INITIAL_SPAWN_DELAY: 1000,
     MINIMUM_SPAWN_DELAY: 1000,
     MAXIMUM_SPAWN_DELAY: 2000,
-    TEST_ITEMS: [
+    DEBUG_ITEMS: [
         { x: 70, y: 300, type: 4 }
         // { x: 200, y: 300, type: 11 },
         // { x: 300, y: 310, type: 11 }
@@ -53,7 +54,7 @@ const itemConfig = {
 // WARP: 11
 
 const levelConfig = {
-    TEST_LEVEL: true,
+    DEBUG_LEVEL: true,
     LEVEL_HEIGHT: 5,
     LEVEL_WIDTH: 18,
     SPAWN_WIDTH: 4,
