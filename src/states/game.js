@@ -18,10 +18,10 @@ function create() {
     const players = [];
 
     // const player1 = new Player('player1', 100, 100);
-    const player1 = new Player("player1", 60, 300, 1, 1);
-    const player2 = new Player("player2", game.world.width - 100, 100, 2, 2);
+    const player1 = new Player("player1", 63, 300, 1, 1);
+    const player2 = new Player("player2", game.world.width - 63, 300, 2, 2);
     //const player2 = new Player("player2", 160, 300, 2);
-    const player3 = new Player("player3", 400, 300, 3, 2);
+    // const player3 = new Player("player3", 400, 300, 3, 2);
 
     // player1.x = 500;
     // player1.y = 10;
@@ -32,7 +32,7 @@ function create() {
 
     players.push(player1);
     players.push(player2);
-    players.push(player3);
+    // players.push(player3);
 
     players.forEach(p => playEffect(effects.PURPLE_PUFF, p.x, p.y));
 

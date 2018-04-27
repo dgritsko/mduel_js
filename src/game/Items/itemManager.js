@@ -18,8 +18,7 @@ class ItemManager {
 
         this.activeProjectiles = [];
 
-        // this.availableItems = Object.values(items);
-        this.availableItems = [items.TNT];
+        this.availableItems = Object.values(items);
 
         itemConfig.DEBUG_ITEMS.forEach(ti => {
             this.activeItems.add(new PickupItem(ti.x, ti.y, ti.type).sprite);

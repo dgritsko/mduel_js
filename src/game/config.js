@@ -1,7 +1,7 @@
 const gameConfig = {
     DEBUG_SHOW_HITBOXES: false,
     DEBUG_SHOW_FPS: false,
-    DEBUG_SHOW_GUN_PATH: true,
+    DEBUG_SHOW_GUN_PATH: false,
 
     ROPE_THRESHOLD: 8
 };
@@ -25,7 +25,7 @@ const playerConfig = {
 
 const itemConfig = {
     ITEM_BOUNDS: { top: -6, bottom: 6, left: -6, right: 6 },
-    MAX_ITEMS: 0,
+    MAX_ITEMS: 3,
     MINIMUM_ITEM_SPEED: 100,
     MAXIMUM_ITEM_SPEED: 100,
     MINIMUM_ITEM_LIFETIME: 10000,
@@ -34,7 +34,7 @@ const itemConfig = {
     MINIMUM_SPAWN_DELAY: 1000,
     MAXIMUM_SPAWN_DELAY: 2000,
     DEBUG_ITEMS: [
-        { x: 70, y: 300, type: 4 }
+        // { x: 70, y: 300, type: 7 }
         // { x: 200, y: 300, type: 11 },
         // { x: 300, y: 310, type: 11 }
     ],
@@ -55,7 +55,7 @@ const itemConfig = {
 // WARP: 11
 
 const levelConfig = {
-    DEBUG_LEVEL: true,
+    DEBUG_LEVEL: false,
     LEVEL_HEIGHT: 5,
     LEVEL_WIDTH: 18,
     SPAWN_WIDTH: 4,
