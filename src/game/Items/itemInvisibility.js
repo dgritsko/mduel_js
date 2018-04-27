@@ -6,7 +6,6 @@ export class ItemInvisibility extends Item {
         super(items.INVISIBILITY);
 
         this.canFireStanding = true;
-        this.canFireCrouching = false;
 
         this.ammo = 1;
     }

@@ -6,9 +6,6 @@ export class ItemVolts extends Item {
     constructor(player) {
         super(items.VOLTS);
 
-        this.canFireStanding = false;
-        this.canFireCrouching = false;
-
         this.ammo = -1;
 
         // TODO: Figure out what sprite to use

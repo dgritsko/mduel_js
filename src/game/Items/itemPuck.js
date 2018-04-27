@@ -12,14 +12,11 @@ const FIRE_DELAY = 400;
 
 export class ItemPuck extends Item {
     constructor(player) {
-        super();
-
-        this.type = items.PUCK;
+        super(items.PUCK);
 
         this.canFireStanding = true;
-
-        // TODO: Change this to 1 once development is complete
-        this.ammo = -1;
+        
+        this.ammo = 1;
     }
 
     destroy(player) {

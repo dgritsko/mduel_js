@@ -13,7 +13,8 @@ export class ItemGrenade extends Item {
         super(items.GRENADE);
 
         this.canFireStanding = true;
-        this.ammo = -1;
+        
+        this.ammo = 1;
     }
 
     destroy(player) {

@@ -6,10 +6,10 @@ export class ItemHook extends Item {
     constructor(player) {
         super(items.HOOK);
 
-        this.canFireStanding = false;
-        this.canFireCrouching = false;
         this.canFireInAir = true;
+        
         this.canMoveWhileFiring = true;
+
         this.ammo = -1;
 
         this.floorGrabTimer = 0;

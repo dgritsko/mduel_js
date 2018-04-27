@@ -11,8 +11,8 @@ export class ItemMine extends Item {
         super(items.MINE);
 
         this.canFireStanding = true;
-        this.canFireCrouching = false;
-        this.ammo = -1;
+        
+        this.ammo = 1;
     }
 
     destroy(player) {

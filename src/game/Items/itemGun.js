@@ -15,6 +15,7 @@ export class ItemGun extends Item {
         super(items.GUN);
 
         this.canFireStanding = true;
+        
         this.ammo = 5;
     }
 
