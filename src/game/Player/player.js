@@ -8,9 +8,10 @@ import { items } from "../../enums/items";
 import { deaths } from "../../enums/deaths";
 
 export class Player extends SpriteObject {
-    constructor(spriteName, x, y, id, teamId) {
+    constructor(playerName, spriteName, x, y, id, teamId) {
         super();
 
+        this.playerName = playerName;
         this.id = id;
         this.teamId = teamId;
 
@@ -169,7 +170,7 @@ export class Player extends SpriteObject {
             this.state.currItem.update(this, gameManager);
         }
 
-        if (this.y >= game.world.height) {
+        if (this.top >= game.world.height) {
             gameManager.killPlayer(this, deaths.PIT);
         }
     }

@@ -69,8 +69,6 @@ export class GameManager {
     }
 
     killPlayer(player, deathType, otherPlayer) {
-        console.log(`Player ${player.id} died with death type ${deathType}`);
-
         player.state.alive = false;
         player.vx = 0;
         player.vy = 0;
@@ -172,8 +170,14 @@ export class GameManager {
         // can trigger the victory animations, kill all remaining items on the
         // screen, and finally end the round.
 
+        // TODO: Figure out what this data structure should look like
+        const scores = {};
+        this.players.forEach(p => {
+            scores[p.playerName] = p.state.alive ? 1 : 0
+        });
+
         window.setTimeout(() => {
-            game.state.start("Scoreboard");
+            game.state.start("Scoreboard", true, false, scores);
         }, 1000);
     }
 
