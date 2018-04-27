@@ -8,6 +8,7 @@ export class ItemChute extends Item {
         super(items.CHUTE);
 
         this.canFireInAir = true;
+        this.hasOpened = false;
 
         this.ammo = -1;
     }
@@ -20,6 +21,12 @@ export class ItemChute extends Item {
         if (!this.canFire(player)) {
             return;
         }
+
+        if (this.hasOpened) {
+            return;
+        }
+
+        this.hasOpened = true;
 
         super.fire(player);
     }
@@ -43,6 +50,10 @@ export class ItemChute extends Item {
             } else {
                 this.stopFiring(player);
             }
+        }
+
+        if (player.state.grounded) {
+            this.hasOpened = false;
         }
     }
 }
