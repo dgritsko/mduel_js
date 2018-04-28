@@ -51,7 +51,20 @@ function render() {
 
     if (gameConfig.DEBUG_SHOW_HITBOXES) {
         gameManager.players.forEach(p => game.debug.body(p.sprite));
+
         gameManager.level.platforms.forEach(p => game.debug.body(p));
+
+        // gameManager.level.platforms.forEach(p => {
+        //     game.debug.geom(
+        //         new Phaser.Rectangle(
+        //             p.x - p.width / 2,
+        //             p.y - p.height / 2,
+        //             p.width,
+        //             p.height,
+        //             "#00ff00"
+        //         )
+        //     );
+        // });
 
         gameManager.level.ropes.forEach(r => {
             game.debug.body(r.anchor);

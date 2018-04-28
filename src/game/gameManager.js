@@ -8,6 +8,7 @@ import { handleRopeCollisions } from "../game/update/ropeCollisions";
 import { handlePickupItemCollisions } from "../game/update/pickupItemCollisions";
 import { exceptIndex, playEffect } from "../game/util";
 import { ItemManager } from "../game/Items/itemManager";
+import { gameStates } from "../enums/gameStates";
 
 const phasesEnum = {
     DEFAULT: 0,
@@ -181,7 +182,7 @@ export class GameManager {
         });
 
         window.setTimeout(() => {
-            game.state.start("Scoreboard", true, false, scores);
+            game.state.start(gameStates.SCOREBOARD, true, false, scores);
         }, 1000);
     }
 

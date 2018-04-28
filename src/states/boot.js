@@ -1,3 +1,5 @@
+import { gameStates } from "../enums/gameStates";
+
 function preload() {
     game.load.spritesheet("player1", "assets/player1.png", 64, 64);
     game.load.spritesheet("player2", "assets/player2.png", 64, 64);
@@ -33,7 +35,7 @@ function create() {
     game.scale.pageAlignHorizontally = true;
     game.scale.pageAlignVertically = true;
 
-    game.state.start("Game");
+    game.state.start(gameStates.GAME);
 }
 
 export default { preload: preload, create: create };
