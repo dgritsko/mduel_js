@@ -1,5 +1,5 @@
 import { SpriteObject } from "../spriteObject";
-import { playerConfig } from "../config";
+import { gameConfig } from "../config";
 import { setBounds } from "../util";
 import { items } from "../../enums/items";
 
@@ -21,6 +21,6 @@ export class ProjectilePuck extends SpriteObject {
 
         setBounds(this.sprite, { top: 11, bottom: 16, left: -4, right: 8 });
 
-        this.vx = playerConfig.RUN_SPEED * 2;
+        this.vx = gameConfig.RUN_SPEED * 2;
     }
 }

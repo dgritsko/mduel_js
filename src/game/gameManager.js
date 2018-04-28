@@ -1,6 +1,6 @@
 import { effects } from "../enums/effects";
 import { deaths } from "../enums/deaths";
-import { playerConfig } from "./config";
+import { gameConfig } from "./config";
 
 import { handlePlatformCollisions } from "../game/update/platformCollisions";
 import { handlePlayerCollisions } from "../game/update/playerCollisions";
@@ -87,9 +87,9 @@ export class GameManager {
                 player.vx =
                     player.x < otherPlayer.x ||
                     (player.x === otherPlayer.x && player.flippedh)
-                        ? -playerConfig.POWERHIT_SPEED
-                        : playerConfig.POWERHIT_SPEED;
-                player.vy = -playerConfig.JUMP_IMPULSE;
+                        ? -gameConfig.POWERHIT_SPEED
+                        : gameConfig.POWERHIT_SPEED;
+                player.vy = -gameConfig.PLAYER_JUMP_IMPULSE;
                 player.playDisintegrated();
                 break;
             case deaths.SKULL:
@@ -97,11 +97,11 @@ export class GameManager {
                 player.playSkulled();
                 break;
             case deaths.MINE:
-                player.vy = -playerConfig.POWERHIT_SPEED;
+                player.vy = -gameConfig.POWERHIT_SPEED;
                 player.playDisintegrated();
                 break;
             case deaths.PUCK:
-                player.vy = -playerConfig.POWERHIT_SPEED;
+                player.vy = -gameConfig.POWERHIT_SPEED;
                 player.playDisintegrated();
                 break;
         }
@@ -173,7 +173,7 @@ export class GameManager {
         // TODO: Figure out what this data structure should look like
         const scores = {};
         this.players.forEach(p => {
-            scores[p.playerName] = p.state.alive ? 1 : 0
+            scores[p.playerName] = p.state.alive ? 1 : 0;
         });
 
         window.setTimeout(() => {

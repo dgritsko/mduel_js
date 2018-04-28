@@ -1,8 +1,8 @@
 import { animations } from "../../enums/animations";
-import { playerConfig } from "../config";
+import { gameConfig } from "../config";
 
 function addAnimations(sprite) {
-    const { FRAMERATE } = playerConfig;
+    const { FRAMERATE } = gameConfig;
 
     sprite.animations.add(animations.STAND, [0], 0, false);
     sprite.animations.add(animations.RUN, [1, 2, 3, 4], FRAMERATE, true);

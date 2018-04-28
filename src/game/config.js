@@ -3,23 +3,23 @@ const gameConfig = {
     DEBUG_SHOW_FPS: false,
     DEBUG_SHOW_GUN_PATH: false,
 
-    ROPE_THRESHOLD: 8
-};
+    ROPE_THRESHOLD: 8,
 
-const playerConfig = {
     GRAVITY: 600,
-    JUMP_IMPULSE: 240,
+    PLAYER_SPRITE_WIDTH: 64,
+    PLAYER_SPRITE_HEIGHT: 64,
+
+    PLAYER_JUMP_IMPULSE: 240,
     MINIMUM_JUMP_INTERVAL: 100,
     CLIMB_SPEED: 100,
     RUN_SPEED: 100,
     TERMINAL_VELOCITY: 600,
     POWERHIT_SPEED: 1200,
     PARACHUTE_TERMINAL_VELOCITY: 75,
-    SPRITE_WIDTH: 64,
-    SPRITE_HEIGHT: 64,
-    STANDING_BOUNDS: { top: -22, right: 10, bottom: 24, left: -10 },
-    FALLING_BOUNDS: { top: -22, right: 10, bottom: 24, left: -10 },
-    CROUCHING_BOUNDS: { top: -4, right: 10, bottom: 24, left: -10 },
+
+    PLAYER_STANDING_BOUNDS: { top: -22, right: 10, bottom: 24, left: -10 },
+    PLAYER_FALLING_BOUNDS: { top: -22, right: 10, bottom: 24, left: -10 },
+    PLAYER_CROUCHING_BOUNDS: { top: -4, right: 10, bottom: 24, left: -10 },
     FRAMERATE: 10
 };
 
@@ -96,4 +96,4 @@ const levelConfig = {
     MARSHMALLOW_FRAMERATE: 0.25
 };
 
-export { gameConfig, playerConfig, itemConfig, levelConfig };
+export { gameConfig, itemConfig, levelConfig };

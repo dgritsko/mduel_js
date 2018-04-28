@@ -1,5 +1,5 @@
 import { SpriteObject } from "../spriteObject";
-import { playerConfig } from "../config";
+import { gameConfig } from "../config";
 import { setBounds } from "../util";
 import { items } from "../../enums/items";
 
@@ -21,7 +21,7 @@ export class ProjectileGrenade extends SpriteObject {
 
         setBounds(this.sprite, { top: 3, right: 7, bottom: 12, left: -3 });
 
-        this.vy = -playerConfig.JUMP_IMPULSE;
-        this.vx = playerConfig.RUN_SPEED;
+        this.vy = -gameConfig.PLAYER_JUMP_IMPULSE;
+        this.vx = gameConfig.RUN_SPEED;
     }
 }

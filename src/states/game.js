@@ -1,4 +1,4 @@
-import { gameConfig, playerConfig } from "../game/config";
+import { gameConfig } from "../game/config";
 import { Player } from "../game/Player/player";
 import { createNewLevel } from "../game/Level/level";
 import { playEffect } from "../game/util";
@@ -12,13 +12,20 @@ function create() {
 
     game.stage.disableVisibilityChange = true;
     game.physics.startSystem(Phaser.Physics.ARCADE);
-    game.physics.arcade.gravity.y = playerConfig.GRAVITY;
+    game.physics.arcade.gravity.y = gameConfig.GRAVITY;
 
     const level = createNewLevel();
     const players = [];
 
     const player1 = new Player("Percy", "player1", 63, 300, 1, 1);
-    const player2 = new Player("Clifford", "player2", game.world.width - 63, 300, 2, 2);
+    const player2 = new Player(
+        "Clifford",
+        "player2",
+        game.world.width - 63,
+        300,
+        2,
+        2
+    );
 
     players.push(player1);
     players.push(player2);

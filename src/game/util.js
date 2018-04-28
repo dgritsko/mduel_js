@@ -1,5 +1,5 @@
 import { effects } from "../enums/effects";
-import { playerConfig } from "./config";
+import { gameConfig } from "./config";
 
 const now = () => new Date().getTime();
 
@@ -105,7 +105,7 @@ const playEffect = (id, x, y) => {
     const animation = sprite.animations.add(
         "default",
         frames,
-        playerConfig.FRAMERATE,
+        gameConfig.FRAMERATE,
         false
     );
 

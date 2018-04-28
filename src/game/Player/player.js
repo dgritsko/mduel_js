@@ -1,7 +1,7 @@
 import { now, isBool, isNumber, setBounds } from "../util";
 import { animations } from "../../enums/animations";
 import { collisions } from "../../enums/collisions";
-import { playerConfig } from "../config";
+import { gameConfig } from "../config";
 import { addAnimations } from "./animations";
 import { SpriteObject } from "../spriteObject";
 import { items } from "../../enums/items";
@@ -87,11 +87,11 @@ export class Player extends SpriteObject {
 
         game.physics.enable(this.sprite);
 
-        setBounds(this.sprite, playerConfig.STANDING_BOUNDS);
+        setBounds(this.sprite, gameConfig.PLAYER_STANDING_BOUNDS);
 
         this.sprite.body.maxVelocity = new Phaser.Point(
-            playerConfig.RUN_SPEED,
-            playerConfig.TERMINAL_VELOCITY
+            gameConfig.RUN_SPEED,
+            gameConfig.TERMINAL_VELOCITY
         );
     }
 
@@ -231,12 +231,12 @@ export class Player extends SpriteObject {
             if (this.state.climbingRope) {
                 if (this.state.touchingRope === null) {
                     this.vy = 0;
-                    this.vx = (hr - hl) * playerConfig.RUN_SPEED;
+                    this.vx = (hr - hl) * gameConfig.RUN_SPEED;
 
                     this.state.climbingRope = false;
                     this.justfell();
                 } else {
-                    this.vy = (hd - hu) * playerConfig.CLIMB_SPEED;
+                    this.vy = (hd - hu) * gameConfig.CLIMB_SPEED;
                     // don't allow to climb off rope via up/down keys
                     const touchingRope = this.state.touchingRope;
                     const topSegment = touchingRope.segments.children[0];
@@ -267,7 +267,7 @@ export class Player extends SpriteObject {
                     // 			if (vy == 0) setFrame(frame);
                     if (hr || hl) {
                         //jump off!
-                        this.vx = (hr - hl) * playerConfig.RUN_SPEED;
+                        this.vx = (hr - hl) * gameConfig.RUN_SPEED;
                         this.vy = 0;
 
                         this.state.climbingRope = false;
@@ -307,7 +307,7 @@ export class Player extends SpriteObject {
                     }
                 } else {
                     if (!hr || !hl) {
-                        this.vx = (hr - hl) * playerConfig.RUN_SPEED;
+                        this.vx = (hr - hl) * gameConfig.RUN_SPEED;
 
                         if (hd) {
                             this.crouch();
@@ -343,8 +343,8 @@ export class Player extends SpriteObject {
                         this.vx === 0 && !hr && !hl
                             ? 0
                             : this.flippedh
-                                ? playerConfig.RUN_SPEED * -1
-                                : playerConfig.RUN_SPEED;
+                                ? gameConfig.RUN_SPEED * -1
+                                : gameConfig.RUN_SPEED;
                     if (nr) {
                         this.flippedh = false;
                     } else if (nl) {
@@ -371,7 +371,7 @@ export class Player extends SpriteObject {
 
         this.state.lastLandedTime = now();
 
-        setBounds(this.sprite, playerConfig.STANDING_BOUNDS);
+        setBounds(this.sprite, gameConfig.PLAYER_STANDING_BOUNDS);
 
         if (unstable) {
             this.roll((vx > 0 && flippedh) || (vx < 0 && !flippedh));
@@ -396,7 +396,7 @@ export class Player extends SpriteObject {
 
         if (
             (this.state.lastLandedTime || 0) +
-                playerConfig.MINIMUM_JUMP_INTERVAL >
+                gameConfig.MINIMUM_JUMP_INTERVAL >
             now()
         ) {
             return false;
@@ -407,7 +407,7 @@ export class Player extends SpriteObject {
         this.state.crouching = false;
         this.state.rolling = false;
 
-        let vy = -playerConfig.JUMP_IMPULSE;
+        let vy = -gameConfig.PLAYER_JUMP_IMPULSE;
         if (bootsJump) {
             vy = vy * 3 / 2;
         }
@@ -420,7 +420,7 @@ export class Player extends SpriteObject {
             this.playJumpedMoving();
         }
 
-        setBounds(this.sprite, playerConfig.FALLING_BOUNDS);
+        setBounds(this.sprite, gameConfig.PLAYER_FALLING_BOUNDS);
         return true;
     }
 
@@ -434,25 +434,21 @@ export class Player extends SpriteObject {
         this.state.crouching = false;
         this.state.rolling = false;
         this.state.climbingRope = false;
-        setBounds(this.sprite, playerConfig.FALLING_BOUNDS);
+        setBounds(this.sprite, gameConfig.PLAYER_FALLING_BOUNDS);
 
         let vx = null;
         let vy = null;
 
         if (pushedForwards) {
-            vx = this.flippedh
-                ? -playerConfig.RUN_SPEED
-                : playerConfig.RUN_SPEED;
+            vx = this.flippedh ? -gameConfig.RUN_SPEED : gameConfig.RUN_SPEED;
             this.playPushedForward();
         } else {
-            vx = this.flippedh
-                ? playerConfig.RUN_SPEED
-                : -playerConfig.RUN_SPEED;
+            vx = this.flippedh ? gameConfig.RUN_SPEED : -gameConfig.RUN_SPEED;
             this.playPushedBackward();
         }
 
         if (this.state.grounded) {
-            vy = playerConfig.JUMP_IMPULSE * 2 / 3;
+            vy = gameConfig.PLAYER_JUMP_IMPULSE * 2 / 3;
         }
 
         this.vx = vx;
@@ -471,7 +467,7 @@ export class Player extends SpriteObject {
         this.state.rolling = true;
         this.state.crouching = false;
         this.state.unstable = false;
-        setBounds(this.sprite, playerConfig.CROUCHING_BOUNDS);
+        setBounds(this.sprite, gameConfig.PLAYER_CROUCHING_BOUNDS);
         return true;
     }
 
@@ -487,7 +483,7 @@ export class Player extends SpriteObject {
         } else {
             this.roll();
         }
-        setBounds(this.sprite, playerConfig.CROUCHING_BOUNDS);
+        setBounds(this.sprite, gameConfig.PLAYER_CROUCHING_BOUNDS);
         return true;
     }
 
@@ -497,7 +493,7 @@ export class Player extends SpriteObject {
         // TODO: wtf is this
         //ignoreUntilUntouched = NULL; //stop the whole tripping thing
 
-        setBounds(this.sprite, playerConfig.STANDING_BOUNDS);
+        setBounds(this.sprite, gameConfig.PLAYER_STANDING_BOUNDS);
 
         this.flippedh = hr - hl == 0 ? null : hr - hl < 0;
         this.playRunning();
@@ -510,7 +506,7 @@ export class Player extends SpriteObject {
         this.state.crouching = false;
         //if (vx == 0)
         //	vx = (flippedh ? -WALKSPEED : WALKSPEED);
-        setBounds(this.sprite, playerConfig.FALLING_BOUNDS);
+        setBounds(this.sprite, gameConfig.PLAYER_FALLING_BOUNDS);
         if (!this.state.unstable) {
             this.playFalling();
         } else {
@@ -650,7 +646,7 @@ export class Player extends SpriteObject {
                     this.vx = 0;
                 }
 
-                this.vy = -playerConfig.JUMP_IMPULSE * 2 / 3;
+                this.vy = -gameConfig.PLAYER_JUMP_IMPULSE * 2 / 3;
                 // if (o->usingInvis())
                 // 	lastCollision = CS_INVISPLAYER;
                 // else if (o->bJustUnwarped)
@@ -671,7 +667,7 @@ export class Player extends SpriteObject {
                     otherPlayer.vx = 0;
                 }
                 // 		ignoreUntilUntouched = other;
-                otherPlayer.vy = -playerConfig.JUMP_IMPULSE * 2 / 3;
+                otherPlayer.vy = -gameConfig.PLAYER_JUMP_IMPULSE * 2 / 3;
                 // if (usingInvis())
                 // 	o->lastCollision = CS_INVISPLAYER;
                 // else if (bJustUnwarped)
@@ -714,7 +710,7 @@ export class Player extends SpriteObject {
                 ? this.bounce(this.flippedh)
                 : this.bounce(!this.flippedh);
         }
-        this.vy = -playerConfig.JUMP_IMPULSE * 2 / 3;
+        this.vy = -gameConfig.PLAYER_JUMP_IMPULSE * 2 / 3;
     }
 
     // Items
