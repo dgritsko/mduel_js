@@ -5,6 +5,7 @@ const gameConfig = {
 
     ROPE_THRESHOLD: 8,
 
+    // Player
     GRAVITY: 600,
     PLAYER_SPRITE_WIDTH: 64,
     PLAYER_SPRITE_HEIGHT: 64,
@@ -20,10 +21,9 @@ const gameConfig = {
     PLAYER_STANDING_BOUNDS: { top: -22, right: 10, bottom: 24, left: -10 },
     PLAYER_FALLING_BOUNDS: { top: -22, right: 10, bottom: 24, left: -10 },
     PLAYER_CROUCHING_BOUNDS: { top: -4, right: 10, bottom: 24, left: -10 },
-    FRAMERATE: 10
-};
+    FRAMERATE: 10,
 
-const itemConfig = {
+    // Item
     ITEM_BOUNDS: { top: -6, bottom: 6, left: -6, right: 6 },
     MAX_ITEMS: 3,
     MINIMUM_ITEM_SPEED: 100,
@@ -96,4 +96,4 @@ const levelConfig = {
     MARSHMALLOW_FRAMERATE: 0.25
 };
 
-export { gameConfig, itemConfig, levelConfig };
+export { gameConfig, levelConfig };

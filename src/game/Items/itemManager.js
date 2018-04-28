@@ -1,7 +1,7 @@
 import { PickupItem } from "./pickupItem";
 import { items } from "../../enums/items";
 import { spawnOrientations } from "../../enums/spawnOrientations";
-import { itemConfig } from "../config";
+import { gameConfig } from "../config";
 import { playEffect, removeAtIndex, randomBetween } from "../util";
 import { effects } from "../../enums/effects";
 import { now } from "../util";
@@ -20,11 +20,11 @@ class ItemManager {
 
         this.availableItems = Object.values(items);
 
-        itemConfig.DEBUG_ITEMS.forEach(ti => {
+        gameConfig.DEBUG_ITEMS.forEach(ti => {
             this.activeItems.add(new PickupItem(ti.x, ti.y, ti.type).sprite);
         });
 
-        this.nextSpawnTime = now() + itemConfig.INITIAL_SPAWN_DELAY;
+        this.nextSpawnTime = now() + gameConfig.INITIAL_SPAWN_DELAY;
     }
 
     getVelocity(a, b) {
@@ -34,8 +34,8 @@ class ItemManager {
         let θ = (Math.random() + a) * Math.PI * b;
 
         const v = randomBetween(
-            itemConfig.MINIMUM_ITEM_SPEED,
-            itemConfig.MAXIMUM_ITEM_SPEED
+            gameConfig.MINIMUM_ITEM_SPEED,
+            gameConfig.MAXIMUM_ITEM_SPEED
         );
         return { x: Math.cos(θ) * v, y: Math.sin(θ) * v };
     }
@@ -82,14 +82,14 @@ class ItemManager {
 
     update(gameManager) {
         const shouldSpawn =
-            this.activeItems.countLiving() < itemConfig.MAX_ITEMS;
+            this.activeItems.countLiving() < gameConfig.MAX_ITEMS;
 
         const canSpawn = this.nextSpawnTime < now();
 
         if (shouldSpawn && canSpawn) {
             const spawnDelay = randomBetween(
-                itemConfig.MINIMUM_SPAWN_DELAY,
-                itemConfig.MAXIMUM_SPAWN_DELAY
+                gameConfig.MINIMUM_SPAWN_DELAY,
+                gameConfig.MAXIMUM_SPAWN_DELAY
             );
 
             this.nextSpawnTime = now() + spawnDelay;

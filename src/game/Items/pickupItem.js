@@ -1,5 +1,5 @@
 import { setBounds } from "../util";
-import { itemConfig } from "../config";
+import { gameConfig } from "../config";
 import { SpriteObject } from "../spriteObject";
 import { now, randomBetween } from "../util";
 
@@ -14,11 +14,13 @@ export class PickupItem extends SpriteObject {
 
         // TODO: Move this elsewhere? Or refactor
         // activeItems to not be a group?
-        const despawnDelay = randomBetween(itemConfig.MINIMUM_ITEM_LIFETIME,
-            itemConfig.MAXIMUM_ITEM_LIFETIME);
+        const despawnDelay = randomBetween(
+            gameConfig.MINIMUM_ITEM_LIFETIME,
+            gameConfig.MAXIMUM_ITEM_LIFETIME
+        );
         if (despawnDelay) {
             const despawnTime = now() + despawnDelay;
-            this.sprite.data.despawnTime = despawnTime
+            this.sprite.data.despawnTime = despawnTime;
         }
     }
 
@@ -44,7 +46,7 @@ export class PickupItem extends SpriteObject {
         sprite.body.collideWorldBounds = true;
         sprite.body.bounce.setTo(1, 1);
 
-        setBounds(sprite, itemConfig.ITEM_BOUNDS);
+        setBounds(sprite, gameConfig.ITEM_BOUNDS);
 
         this.sprite = sprite;
     }
