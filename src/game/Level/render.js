@@ -1,4 +1,4 @@
-import { levelConfig } from "../config";
+import { gameConfig } from "../config";
 import { makePlatform } from "./platform";
 import { platformTypes } from "../../enums/platformTypes";
 import { spawnOrientations } from "../../enums/spawnOrientations";
@@ -24,7 +24,7 @@ function render(spec) {
 }
 
 function renderPlatforms(platformInfos) {
-    const { COLUMN_WIDTH, COLUMN_OFFSET, ROW_HEIGHT, ROW_OFFSET } = levelConfig;
+    const { COLUMN_WIDTH, COLUMN_OFFSET, ROW_HEIGHT, ROW_OFFSET } = gameConfig;
 
     const platforms = game.add.group();
     platformInfos.forEach(info => {
@@ -49,7 +49,7 @@ function renderRopes(ropeInfos) {
         ROW_HEIGHT,
         ROPE_ANCHOR_BOUNDS,
         ROPE_SEGMENT_BOUNDS
-    } = levelConfig;
+    } = gameConfig;
 
     const ropes = [];
 
@@ -138,7 +138,7 @@ function renderItemSpawns(spawnInfos) {
 }
 
 function renderMarshmallows() {
-    const { COLUMN_WIDTH, MARSHMALLOW_FRAMERATE } = levelConfig;
+    const { COLUMN_WIDTH, MARSHMALLOW_FRAMERATE } = gameConfig;
 
     const marshmallows = game.add.group();
     for (let j = 0; j < game.world.width / COLUMN_WIDTH; j++) {

@@ -2,6 +2,30 @@ const gameConfig = {
     DEBUG_SHOW_HITBOXES: false,
     DEBUG_SHOW_FPS: false,
     DEBUG_SHOW_GUN_PATH: false,
+    DEBUG_ITEMS: [
+        // { x: 70, y: 300, type: 7 }
+        // { x: 200, y: 300, type: 11 },
+        // { x: 300, y: 310, type: 11 }
+        // DEATH: 0,
+        // VOLTS: 1,
+        // INVISIBILITY: 2,
+        // MINE: 3,
+        // GUN: 4,
+        // TNT: 5,
+        // BOOTS: 6,
+        // GRENADE: 7,
+        // PUCK: 8,
+        // CHUTE: 9,
+        // HOOK: 10,
+        // WARP: 11
+    ],
+    DEBUG_LEVEL: false,
+    DEBUG_PLATFORMS: [
+        { row: 2, column: 1, width: 4, isSpawn: false },
+        { row: 3, column: 1, width: 4, isSpawn: false },
+        { row: 4, column: 0.5, width: 12, isSpawn: true },
+        { row: 4, column: 13.5, width: 4, isSpawn: true }
+    ],
 
     ROPE_THRESHOLD: 8,
 
@@ -33,29 +57,9 @@ const gameConfig = {
     INITIAL_SPAWN_DELAY: 1000,
     MINIMUM_SPAWN_DELAY: 1000,
     MAXIMUM_SPAWN_DELAY: 2000,
-    DEBUG_ITEMS: [
-        // { x: 70, y: 300, type: 7 }
-        // { x: 200, y: 300, type: 11 },
-        // { x: 300, y: 310, type: 11 }
-    ],
-    ITEM_GUN_Y_OFFSET: -8
-};
+    ITEM_GUN_Y_OFFSET: -8,
 
-// DEATH: 0,
-// VOLTS: 1,
-// INVISIBILITY: 2,
-// MINE: 3,
-// GUN: 4,
-// TNT: 5,
-// BOOTS: 6,
-// GRENADE: 7,
-// PUCK: 8,
-// CHUTE: 9,
-// HOOK: 10,
-// WARP: 11
-
-const levelConfig = {
-    DEBUG_LEVEL: false,
+    // Level
     LEVEL_HEIGHT: 5,
     LEVEL_WIDTH: 18,
     SPAWN_WIDTH: 4,
@@ -75,13 +79,6 @@ const levelConfig = {
         { column: 13.5, row: 0, length: 5 }
     ],
 
-    DEBUG_PLATFORMS: [
-        { row: 2, column: 1, width: 4, isSpawn: false },
-        { row: 3, column: 1, width: 4, isSpawn: false },
-        { row: 4, column: 0.5, width: 12, isSpawn: true },
-        { row: 4, column: 13.5, width: 4, isSpawn: true }
-    ],
-
     MIN_RANDOM_ROPES: 2,
     MAX_RANDOM_ROPES: 5,
 
@@ -96,4 +93,4 @@ const levelConfig = {
     MARSHMALLOW_FRAMERATE: 0.25
 };
 
-export { gameConfig, levelConfig };
+export { gameConfig };

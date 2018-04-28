@@ -1,4 +1,4 @@
-import { levelConfig } from "../config";
+import { gameConfig } from "../config";
 import { render } from "./render";
 import { spawnOrientations } from "../../enums/spawnOrientations";
 
@@ -9,7 +9,7 @@ function generateRopes(platforms) {
         MIN_RANDOM_ROPES,
         MAX_RANDOM_ROPES,
         FIXED_ROPES
-    } = levelConfig;
+    } = gameConfig;
 
     const result = [];
 
@@ -85,9 +85,9 @@ function generatePlatforms() {
         MIN_SECTION_WIDTH,
         MAX_GAP_WIDTH,
         MIN_GAP_WIDTH
-    } = levelConfig;
+    } = gameConfig;
 
-    levelConfig.FIXED_PLATFORMS.forEach(p =>
+    gameConfig.FIXED_PLATFORMS.forEach(p =>
         result.push(...expandFixedPlatform(p))
     );
 
@@ -162,7 +162,7 @@ function generateItemSpawns() {
 function generateTestPlatforms() {
     const result = [];
 
-    levelConfig.DEBUG_PLATFORMS.forEach(p =>
+    gameConfig.DEBUG_PLATFORMS.forEach(p =>
         result.push(...expandFixedPlatform(p))
     );
 
@@ -170,7 +170,7 @@ function generateTestPlatforms() {
 }
 
 function createNewLevel() {
-    const platformSpec = levelConfig.DEBUG_LEVEL
+    const platformSpec = gameConfig.DEBUG_LEVEL
         ? generateTestPlatforms()
         : generatePlatforms();
 
