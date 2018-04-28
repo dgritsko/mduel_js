@@ -1,13 +1,13 @@
 import { Item } from "./item";
 import { items } from "../../enums/items";
 import { gameConfig } from "../config";
+import { animations } from "../../enums/animations";
 
 export class ItemHook extends Item {
     constructor(player) {
         super(items.HOOK);
 
         this.canFireInAir = true;
-
         this.canMoveWhileFiring = true;
 
         this.ammo = -1;
@@ -45,9 +45,13 @@ export class ItemHook extends Item {
         // } else
         // 	pawn->setFrame(37);
 
+        player.animation = animations.HOOK;
+
         if (player.state.wasTouchingRope) {
             // rope grabbing first
             // pawn->climbRope(false);
+
+            player.climbRope(false);
             player.vx = 0;
         } else {
             const xpos = player.flippedh ? player.left : player.right;
@@ -59,6 +63,8 @@ export class ItemHook extends Item {
                 i++
             ) {
                 const platform = gameManager.level.platforms.children[i];
+
+                console.log(platform.getBounds());
 
                 if (platform.getBounds().contains(xpos, ypos)) {
                     player.vy = -gameConfig.PLAYER_JUMP_IMPULSE * (2 / 3);
