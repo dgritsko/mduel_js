@@ -21,6 +21,7 @@ export class Player extends SpriteObject {
         this.state = {
             alive: true,
             inputEnabled: true,
+            hasCelebrated: false,
             lastCollision: collisions.NONE,
             crouching: false,
             rolling: false,
@@ -46,6 +47,10 @@ export class Player extends SpriteObject {
     }
 
     set animation(value) {
+        if (this.state.hasCelebrated) {
+            return;
+        }
+
         if (value === animations.NONE) {
             this.sprite.animations.stop();
         } else if (
@@ -255,7 +260,7 @@ export class Player extends SpriteObject {
                         this.vy = 0;
                     }
 
-                    if (!hd && !hu && this.state.inputEnabled) {
+                    if (!hd && !hu) {
                         this.animation = animations.NONE;
                     }
 
@@ -569,6 +574,8 @@ export class Player extends SpriteObject {
                 this.playVictoryFlex();
             }
         }
+
+        this.state.hasCelebrated = true;
     }
 
     // Collisions
