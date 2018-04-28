@@ -547,6 +547,14 @@ export class Player extends SpriteObject {
         return typeCheck && firingCheck;
     }
 
+    prepareForVictory() {
+        this.state.inputEnabled = false;
+
+        if (this.state.climbingRope) {
+            this.animation = animations.NONE;
+        }
+    }
+
     celebrate() {
         if (this.state.climbingRope) {
             this.playRopeVictory();

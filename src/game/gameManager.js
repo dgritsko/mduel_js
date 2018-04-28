@@ -112,7 +112,7 @@ export class GameManager {
 
         if (activeTeammates.length === 0) {
             this.phase = phasesEnum.VICTORY_REQUIRED;
-            this.players.forEach(p => (p.state.inputEnabled = false));
+            this.players.forEach(p => p.prepareForVictory());
         }
     }
 
