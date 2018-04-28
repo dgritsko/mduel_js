@@ -73,6 +73,10 @@ export class GameManager {
         player.vx = 0;
         player.vy = 0;
         player.allowGravity = false;
+        player.sprite.body.maxVelocity = new Phaser.Point(
+            gameConfig.POWERHIT_SPEED,
+            gameConfig.POWERHIT_SPEED
+        );
 
         switch (deathType) {
             case deaths.GUN:

@@ -90,8 +90,8 @@ export class Player extends SpriteObject {
         setBounds(this.sprite, gameConfig.PLAYER_STANDING_BOUNDS);
 
         this.sprite.body.maxVelocity = new Phaser.Point(
-            gameConfig.RUN_SPEED,
-            gameConfig.TERMINAL_VELOCITY
+            gameConfig.PLAYER_RUN_SPEED,
+            gameConfig.PLAYER_TERMINAL_VELOCITY
         );
     }
 
@@ -231,12 +231,12 @@ export class Player extends SpriteObject {
             if (this.state.climbingRope) {
                 if (this.state.touchingRope === null) {
                     this.vy = 0;
-                    this.vx = (hr - hl) * gameConfig.RUN_SPEED;
+                    this.vx = (hr - hl) * gameConfig.PLAYER_RUN_SPEED;
 
                     this.state.climbingRope = false;
                     this.justfell();
                 } else {
-                    this.vy = (hd - hu) * gameConfig.CLIMB_SPEED;
+                    this.vy = (hd - hu) * gameConfig.PLAYER_CLIMB_SPEED;
                     // don't allow to climb off rope via up/down keys
                     const touchingRope = this.state.touchingRope;
                     const topSegment = touchingRope.segments.children[0];
@@ -267,7 +267,7 @@ export class Player extends SpriteObject {
                     // 			if (vy == 0) setFrame(frame);
                     if (hr || hl) {
                         //jump off!
-                        this.vx = (hr - hl) * gameConfig.RUN_SPEED;
+                        this.vx = (hr - hl) * gameConfig.PLAYER_RUN_SPEED;
                         this.vy = 0;
 
                         this.state.climbingRope = false;
@@ -307,7 +307,7 @@ export class Player extends SpriteObject {
                     }
                 } else {
                     if (!hr || !hl) {
-                        this.vx = (hr - hl) * gameConfig.RUN_SPEED;
+                        this.vx = (hr - hl) * gameConfig.PLAYER_RUN_SPEED;
 
                         if (hd) {
                             this.crouch();
@@ -343,8 +343,8 @@ export class Player extends SpriteObject {
                         this.vx === 0 && !hr && !hl
                             ? 0
                             : this.flippedh
-                                ? gameConfig.RUN_SPEED * -1
-                                : gameConfig.RUN_SPEED;
+                                ? gameConfig.PLAYER_RUN_SPEED * -1
+                                : gameConfig.PLAYER_RUN_SPEED;
                     if (nr) {
                         this.flippedh = false;
                     } else if (nl) {
@@ -440,10 +440,14 @@ export class Player extends SpriteObject {
         let vy = null;
 
         if (pushedForwards) {
-            vx = this.flippedh ? -gameConfig.RUN_SPEED : gameConfig.RUN_SPEED;
+            vx = this.flippedh
+                ? -gameConfig.PLAYER_RUN_SPEED
+                : gameConfig.PLAYER_RUN_SPEED;
             this.playPushedForward();
         } else {
-            vx = this.flippedh ? gameConfig.RUN_SPEED : -gameConfig.RUN_SPEED;
+            vx = this.flippedh
+                ? gameConfig.PLAYER_RUN_SPEED
+                : -gameConfig.PLAYER_RUN_SPEED;
             this.playPushedBackward();
         }
 
