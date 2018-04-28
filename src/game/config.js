@@ -2,6 +2,7 @@ const gameConfig = {
     DEBUG_SHOW_HITBOXES: false,
     DEBUG_SHOW_FPS: false,
     DEBUG_SHOW_GUN_PATH: false,
+    DEBUG_SHOW_PLATFORM_BOUNDS: false,
     DEBUG_ITEMS: [
         // { x: 70, y: 300, type: 7 }
         // { x: 200, y: 300, type: 11 },

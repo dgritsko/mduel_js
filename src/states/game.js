@@ -6,6 +6,11 @@ import { effects } from "../enums/effects";
 import { GameManager } from "../game/gameManager";
 
 let gameManager;
+let config;
+
+function init(data) {
+    config = data;
+}
 
 function create() {
     game.time.advancedTiming = true;
@@ -15,20 +20,18 @@ function create() {
     game.physics.arcade.gravity.y = gameConfig.GRAVITY;
 
     const level = createNewLevel();
-    const players = [];
 
-    const player1 = new Player("Percy", "player1", 63, 300, 1, 1);
-    const player2 = new Player(
-        "Clifford",
-        "player2",
-        game.world.width - 63,
-        300,
-        2,
-        2
+    const players = config.players.map(
+        p =>
+            new Player(
+                p.playerName,
+                p.spriteName,
+                p.x,
+                p.y,
+                p.playerId,
+                p.teamId
+            )
     );
-
-    players.push(player1);
-    players.push(player2);
 
     players.forEach(p => playEffect(effects.PURPLE_PUFF, p.x, p.y));
 
@@ -54,18 +57,6 @@ function render() {
 
         gameManager.level.platforms.forEach(p => game.debug.body(p));
 
-        // gameManager.level.platforms.forEach(p => {
-        //     game.debug.geom(
-        //         new Phaser.Rectangle(
-        //             p.x - p.width / 2,
-        //             p.y - p.height / 2,
-        //             p.width,
-        //             p.height,
-        //             "#00ff00"
-        //         )
-        //     );
-        // });
-
         gameManager.level.ropes.forEach(r => {
             game.debug.body(r.anchor);
             r.segments.children.forEach(s => game.debug.body(s));
@@ -79,6 +70,20 @@ function render() {
             game.debug.body(p.sprite)
         );
     }
+
+    if (gameConfig.DEBUG_SHOW_PLATFORM_BOUNDS) {
+        gameManager.level.platforms.forEach(p => {
+            game.debug.geom(
+                new Phaser.Rectangle(
+                    p.x - p.width / 2,
+                    p.y - p.height / 2,
+                    p.width,
+                    p.height,
+                    "#00ff00"
+                )
+            );
+        });
+    }
 }
 
-export default { create: create, update: update, render: render };
+export default { init, create, update, render };

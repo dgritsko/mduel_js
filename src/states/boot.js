@@ -35,7 +35,29 @@ function create() {
     game.scale.pageAlignHorizontally = true;
     game.scale.pageAlignVertically = true;
 
-    game.state.start(gameStates.GAME);
+    const config = {
+        players: [
+            {
+                playerName: "Percy",
+                spriteName: "player1",
+                x: 63,
+                y: 300,
+                playerId: 1,
+                teamId: 1
+            },
+
+            {
+                playerName: "Clifford",
+                spriteName: "player2",
+                x: game.world.width - 63,
+                y: 300,
+                playerId: 2,
+                teamId: 2
+            }
+        ]
+    };
+
+    game.state.start(gameStates.GAME, true, false, config);
 }
 
 export default { preload: preload, create: create };
