@@ -81,10 +81,10 @@ function generatePlatforms() {
     const {
         LEVEL_WIDTH,
         LEVEL_HEIGHT,
-        MAX_SECTION_WIDTH,
-        MIN_SECTION_WIDTH,
-        MAX_GAP_WIDTH,
-        MIN_GAP_WIDTH
+        LEVEL_MAX_SECTION_WIDTH,
+        LEVEL_MIN_SECTION_WIDTH,
+        LEVEL_MAX_GAP_WIDTH,
+        LEVEL_MIN_GAP_WIDTH
     } = gameConfig;
 
     gameConfig.FIXED_PLATFORMS.forEach(p =>
@@ -99,7 +99,7 @@ function generatePlatforms() {
             if (curr.length == 0 && game.rnd.integerInRange(0, 1) == 1) {
                 for (
                     var j = 0;
-                    j < game.rnd.integerInRange(0, MAX_GAP_WIDTH);
+                    j < game.rnd.integerInRange(0, LEVEL_MAX_GAP_WIDTH);
                     j++
                 ) {
                     curr.push(false);
@@ -109,8 +109,8 @@ function generatePlatforms() {
                     let j = 0;
                     j <
                     game.rnd.integerInRange(
-                        MIN_SECTION_WIDTH,
-                        MAX_SECTION_WIDTH
+                        LEVEL_MIN_SECTION_WIDTH,
+                        LEVEL_MAX_SECTION_WIDTH
                     );
                     j++
                 ) {
@@ -118,7 +118,11 @@ function generatePlatforms() {
                 }
                 for (
                     let j = 0;
-                    j < game.rnd.integerInRange(MIN_GAP_WIDTH, MAX_GAP_WIDTH);
+                    j <
+                    game.rnd.integerInRange(
+                        LEVEL_MIN_GAP_WIDTH,
+                        LEVEL_MAX_GAP_WIDTH
+                    );
                     j++
                 ) {
                     curr.push(false);

@@ -66,11 +66,10 @@ const gameConfig = {
     // Level
     LEVEL_HEIGHT: 5,
     LEVEL_WIDTH: 18,
-    SPAWN_WIDTH: 4,
-    MAX_SECTION_WIDTH: 7,
-    MIN_SECTION_WIDTH: 2,
-    MAX_GAP_WIDTH: 2,
-    MIN_GAP_WIDTH: 1,
+    LEVEL_MAX_SECTION_WIDTH: 7,
+    LEVEL_MIN_SECTION_WIDTH: 2,
+    LEVEL_MAX_GAP_WIDTH: 2,
+    LEVEL_MIN_GAP_WIDTH: 1,
     FIXED_PLATFORMS: [
         { row: 0, column: 2, width: 4, isSpawn: false },
         { row: 0, column: 12, width: 4, isSpawn: false },
