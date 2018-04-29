@@ -21,21 +21,17 @@ function create() {
 
     const level = createNewLevel();
 
-    const players = config.players.map(
-        p =>
-            new Player(
-                p.playerName,
-                p.spriteName,
-                p.x,
-                p.y,
-                p.playerId,
-                p.teamId
-            )
-    );
+    const players = config.players.map((p, i) => {
+        const team = config.teams.filter(t => t.id === p.teamId)[0];
+
+        const spawn = team.spawns[i % team.spawns.length];
+
+        return new Player(p.name, p.sprite, spawn.x, spawn.y, p.id, p.teamId);
+    });
 
     players.forEach(p => playEffect(effects.PURPLE_PUFF, p.x, p.y));
 
-    gameManager = new GameManager(level, players);
+    gameManager = new GameManager(level, players, config);
 }
 
 function update() {

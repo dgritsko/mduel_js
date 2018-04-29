@@ -2,7 +2,13 @@ import PIXI from "expose-loader?PIXI!phaser-ce/build/custom/pixi.js";
 import p2 from "expose-loader?p2!phaser-ce/build/custom/p2.js";
 import Phaser from "expose-loader?Phaser!phaser-ce/build/custom/phaser-split.js";
 
-import { bootState, gameState, sandboxState, scoreboardState } from "./states";
+import {
+    bootState,
+    gameState,
+    gameStartState,
+    sandboxState,
+    scoreboardState
+} from "./states";
 import { gameConfig } from "./game/config";
 import { gameStates } from "./enums/gameStates";
 
@@ -16,6 +22,7 @@ const game = new Phaser.Game(
 window.game = game;
 
 game.state.add(gameStates.BOOT, bootState);
+game.state.add(gameStates.GAME_START, gameStartState);
 game.state.add(gameStates.GAME, gameState);
 game.state.add(gameStates.SCOREBOARD, scoreboardState);
 game.state.add(gameStates.SANDBOX, sandboxState);

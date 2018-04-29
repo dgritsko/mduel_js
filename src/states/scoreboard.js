@@ -1,10 +1,14 @@
-let description = '';
+import { gameStates } from "../enums/gameStates";
 
-function init(args) {
-    description = describe(args);
+let config;
+
+function init(data) {
+    config = data;
 }
 
 function create() {
+    const description = describe(config);
+
     const text = game.add.bitmapText(
         game.world.centerX,
         game.world.centerY,
@@ -16,23 +20,39 @@ function create() {
     text.anchor.setTo(0.5);
 
     text.tint = 0xa439a4;
+
+    window.setTimeout(() => {
+        game.state.start(gameStates.GAME, true, false, config);
+    }, 5000);
 }
 
-function describe(scores) {
-    const keys = Object.keys(scores)
-
-    // TODO: "Percy vs. Clifford"
-
-    const firstScore = scores[keys[0]]
-    const secondScore = scores[keys[1]]
-
-    if (firstScore === secondScore) {
-        return `Series Tied, ${firstScore} - ${secondScore}`
+function describe(config) {
+    if (config.rounds === 0) {
+        return `${teamOne.name} vs. ${teamTwo.name}`;
     }
 
-    return firstScore > secondScore
-        ? `${keys[0]} leads series, ${firstScore} - ${secondScore}`
-        : `${keys[1]} leads series, ${secondScore} - ${firstScore}`
+    const teamOne = config.teams.filter(t => t.id === 1)[0];
+    const teamTwo = config.teams.filter(t => t.id === 2)[0];
+
+    if (teamOne.score === config.maxRounds) {
+        return `${teamOne.name} wins series, ${teamOne.score} - ${
+            teamTwo.score
+        }`;
+    }
+
+    if (teamTwo.score === config.maxRounds) {
+        return `${teamTwo.name} wins series, ${teamTwo.score} - ${
+            teamOne.score
+        }`;
+    }
+
+    if (teamOne.score === teamTwo.score) {
+        return `Series Tied, ${teamOne.score} - ${teamTwo.score}`;
+    }
+
+    return teamOne.score > teamTwo.score
+        ? `${teamOne.name} leads series, ${teamOne.score} - ${teamTwo.score}`
+        : `${teamTwo.name} leads series, ${teamTwo.score} - ${teamOne.score}`;
 }
 
 export default { init, create };

@@ -18,9 +18,10 @@ const phasesEnum = {
 };
 
 export class GameManager {
-    constructor(level, players) {
+    constructor(level, players, config) {
         this.level = level;
         this.players = players;
+        this.config = config;
         this.itemManager = new ItemManager(level);
         this.phase = phasesEnum.DEFAULT;
     }
@@ -176,13 +177,20 @@ export class GameManager {
         // screen, and finally end the round.
 
         // TODO: Figure out what this data structure should look like
-        const scores = {};
-        this.players.forEach(p => {
-            scores[p.playerName] = p.state.alive ? 1 : 0;
+        const winningTeamIds = new Set(
+            this.players.filter(p => p.state.alive).map(p => p.teamId)
+        );
+
+        winningTeamIds.forEach(teamId => {
+            const team = this.config.teams.filter(t => t.id === teamId)[0];
+
+            team.score += 1;
         });
 
+        this.config.rounds += 1;
+
         window.setTimeout(() => {
-            game.state.start(gameStates.SCOREBOARD, true, false, scores);
+            game.state.start(gameStates.SCOREBOARD, true, false, this.config);
         }, 1000);
     }
 
