@@ -2,10 +2,11 @@ import { PickupItem } from "./pickupItem";
 import { items } from "../../enums/items";
 import { spawnOrientations } from "../../enums/spawnOrientations";
 import { gameConfig } from "../config";
-import { playEffect, removeAtIndex, randomBetween } from "../util";
+import { playEffect, removeAtIndex, randomBetween, playSound } from "../util";
 import { effects } from "../../enums/effects";
 import { now } from "../util";
 import { deaths } from "../../enums/deaths";
+import { sounds } from "../../enums/sounds";
 
 class ItemManager {
     constructor(level) {
@@ -142,6 +143,8 @@ class ItemManager {
 
                     gameManager.killPlayer(hitPlayer, deaths.PUCK);
 
+                    playSound(sounds.BOOM);
+
                     playEffect(effects.MINE, projectile.x, projectile.bottom);
 
                     removeAtIndex(this.activeProjectiles, i);
@@ -166,6 +169,8 @@ class ItemManager {
                     console.log("hit player with mine");
 
                     gameManager.killPlayer(hitPlayer, deaths.MINE);
+
+                    playSound(sounds.BOOM);
 
                     playEffect(effects.MINE, projectile.x, projectile.bottom);
 

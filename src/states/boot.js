@@ -1,4 +1,5 @@
 import { gameStates } from "../enums/gameStates";
+import { sounds } from "../enums/sounds";
 
 function preload() {
     game.load.spritesheet("player1", "assets/player1.png", 64, 64);
@@ -29,6 +30,18 @@ function preload() {
         "assets/fonts/pc-senior.png",
         "assets/fonts/pc-senior.fnt"
     );
+
+    game.load.audio(sounds.BOOM, "assets/sounds/boom.wav");
+    game.load.audio(
+        sounds.INVISIBILITY_ON,
+        "assets/sounds/invisibility_on.wav"
+    );
+    game.load.audio(
+        sounds.INVISIBILITY_OFF,
+        "assets/sounds/invisibility_off.wav"
+    );
+    game.load.audio(sounds.SHOOT, "assets/sounds/shoot.wav");
+    game.load.audio(sounds.VOLTS, "assets/sounds/volts.wav");
 }
 
 function create() {

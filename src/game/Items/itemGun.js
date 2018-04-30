@@ -1,11 +1,12 @@
 import { Item } from "./item";
 import { items } from "../../enums/items";
 import { animations } from "../../enums/animations";
-import { now, animationDuration } from "../util";
+import { now, animationDuration, playSound } from "../util";
 
 import { sortBy } from "ramda";
 import { deaths } from "../../enums/deaths";
 import { gameConfig } from "../config";
+import { sounds } from "../../enums/sounds";
 
 const PROJECTILE_FIRE_DELAY = 100;
 const FIRE_DELAY = 400;
@@ -46,7 +47,12 @@ export class ItemGun extends Item {
 
         if (gameConfig.DEBUG_SHOW_GUN_PATH) {
             game.debug.geom(
-                new Phaser.Rectangle(0, player.y + gameConfig.ITEM_GUN_Y_OFFSET, game.camera.width, 1),
+                new Phaser.Rectangle(
+                    0,
+                    player.y + gameConfig.ITEM_GUN_Y_OFFSET,
+                    game.camera.width,
+                    1
+                ),
                 "#00ff00"
             );
         }
@@ -65,6 +71,8 @@ export class ItemGun extends Item {
     }
 
     fireShot(player, gameManager) {
+        playSound(sounds.SHOOT);
+
         const beamY = player.y + gameConfig.ITEM_GUN_Y_OFFSET;
 
         // TODO: Actually shoot

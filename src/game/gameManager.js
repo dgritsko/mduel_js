@@ -6,9 +6,10 @@ import { handlePlatformCollisions } from "../game/update/platformCollisions";
 import { handlePlayerCollisions } from "../game/update/playerCollisions";
 import { handleRopeCollisions } from "../game/update/ropeCollisions";
 import { handlePickupItemCollisions } from "../game/update/pickupItemCollisions";
-import { exceptIndex, playEffect } from "../game/util";
+import { exceptIndex, playEffect, playSound } from "../game/util";
 import { ItemManager } from "../game/Items/itemManager";
 import { gameStates } from "../enums/gameStates";
+import { sounds } from "../enums/sounds";
 
 const phasesEnum = {
     DEFAULT: 0,
@@ -85,6 +86,7 @@ export class GameManager {
                 player.playDisintegrated();
                 break;
             case deaths.VOLTS:
+                playSound(sounds.VOLTS);
                 playEffect(
                     effects.VOLTS,
                     (player.x + otherPlayer.x) / 2,
@@ -95,7 +97,7 @@ export class GameManager {
                     (player.x === otherPlayer.x && player.flippedh)
                         ? -gameConfig.POWERHIT_SPEED
                         : gameConfig.POWERHIT_SPEED;
-                player.vy = -gameConfig.PLAYER_JUMP_IMPULSE;
+                player.vy = -gameConfig.POWERHIT_SPEED;
                 player.playDisintegrated();
                 break;
             case deaths.SKULL:

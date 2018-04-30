@@ -64,6 +64,11 @@ const removeAtIndex = (items, index) => {
     items.splice(index, 1);
 };
 
+const playSound = id => {
+    const sound = game.add.sound(id);
+    sound.play();
+};
+
 const playEffect = (id, x, y) => {
     let frames = [];
     let anchorx = 0.5;
@@ -157,6 +162,7 @@ export {
     setBounds,
     exceptIndex,
     removeAtIndex,
+    playSound,
     playEffect,
     randomBetween,
     debugRender

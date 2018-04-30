@@ -1,9 +1,10 @@
 import { gameConfig } from "../game/config";
 import { Player } from "../game/Player/player";
 import { createNewLevel } from "../game/Level/level";
-import { playEffect } from "../game/util";
+import { playEffect, playSound } from "../game/util";
 import { effects } from "../enums/effects";
 import { GameManager } from "../game/gameManager";
+import { sounds } from "../enums/sounds";
 
 let gameManager;
 let config;
@@ -30,6 +31,8 @@ function create() {
     });
 
     players.forEach(p => playEffect(effects.PURPLE_PUFF, p.x, p.y));
+
+    playSound(sounds.BOOM);
 
     gameManager = new GameManager(level, players, config);
 }
