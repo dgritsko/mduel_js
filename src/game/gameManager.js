@@ -23,7 +23,7 @@ export class GameManager {
         this.level = level;
         this.players = players;
         this.config = config;
-        this.itemManager = new ItemManager(level);
+        this.itemManager = new ItemManager(level, config.items);
         this.phase = phasesEnum.DEFAULT;
     }
 

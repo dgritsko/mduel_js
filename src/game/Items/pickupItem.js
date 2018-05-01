@@ -4,7 +4,7 @@ import { SpriteObject } from "../spriteObject";
 import { now, randomBetween } from "../util";
 
 export class PickupItem extends SpriteObject {
-    constructor(x, y, type) {
+    constructor(x, y, type, itemManager) {
         super();
 
         this.type = type;
@@ -15,9 +15,10 @@ export class PickupItem extends SpriteObject {
         // TODO: Move this elsewhere? Or refactor
         // activeItems to not be a group?
         const despawnDelay = randomBetween(
-            gameConfig.MINIMUM_ITEM_LIFETIME,
-            gameConfig.MAXIMUM_ITEM_LIFETIME
+            itemManager.config.minItemLifetime,
+            itemManager.config.maxItemLifetime
         );
+
         if (despawnDelay) {
             const despawnTime = now() + despawnDelay;
             this.sprite.data.despawnTime = despawnTime;

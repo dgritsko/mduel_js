@@ -9,7 +9,9 @@ import { deaths } from "../../enums/deaths";
 import { sounds } from "../../enums/sounds";
 
 class ItemManager {
-    constructor(level) {
+    constructor(level, config) {
+        this.config = config;
+
         this.spawns = level.itemSpawns.map(i => ({
             spawnPoint: i.spawnPoint,
             orientation: i.orientation
@@ -19,13 +21,13 @@ class ItemManager {
 
         this.activeProjectiles = [];
 
-        this.availableItems = Object.values(items);
-
         gameConfig.DEBUG_ITEMS.forEach(ti => {
-            this.activeItems.add(new PickupItem(ti.x, ti.y, ti.type).sprite);
+            this.activeItems.add(
+                new PickupItem(ti.x, ti.y, ti.type, this).sprite
+            );
         });
 
-        this.nextSpawnTime = now() + gameConfig.INITIAL_SPAWN_DELAY;
+        this.nextSpawnTime = now() + this.config.initialSpawnDelay;
     }
 
     getVelocity(a, b) {
@@ -35,19 +37,22 @@ class ItemManager {
         let θ = (Math.random() + a) * Math.PI * b;
 
         const v = randomBetween(
-            gameConfig.MINIMUM_ITEM_SPEED,
-            gameConfig.MAXIMUM_ITEM_SPEED
+            this.config.minItemSpeed,
+            this.config.maxItemSpeed
         );
         return { x: Math.cos(θ) * v, y: Math.sin(θ) * v };
     }
 
     spawnItem() {
         const spawn = Phaser.ArrayUtils.getRandomItem(this.spawns);
-        const type = Phaser.ArrayUtils.getRandomItem(this.availableItems);
+        const type = Phaser.ArrayUtils.getRandomItem(
+            this.config.availableItems
+        );
         const item = new PickupItem(
             spawn.spawnPoint.x,
             spawn.spawnPoint.y,
-            type
+            type,
+            this
         );
 
         let vel;
@@ -83,14 +88,14 @@ class ItemManager {
 
     update(gameManager) {
         const shouldSpawn =
-            this.activeItems.countLiving() < gameConfig.MAX_ITEMS;
+            this.activeItems.countLiving() < this.config.maxItems;
 
         const canSpawn = this.nextSpawnTime < now();
 
         if (shouldSpawn && canSpawn) {
             const spawnDelay = randomBetween(
-                gameConfig.MINIMUM_SPAWN_DELAY,
-                gameConfig.MAXIMUM_SPAWN_DELAY
+                this.config.minSpawnDelay,
+                this.config.maxSpawnDelay
             );
 
             this.nextSpawnTime = now() + spawnDelay;

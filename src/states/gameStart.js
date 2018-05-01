@@ -1,4 +1,6 @@
 import { gameStates } from "../enums/gameStates";
+import { items } from "../enums/items";
+import { gameConfig } from "../game/config";
 
 function create() {
     const LEFT_SPAWNS = [{ x: 63, y: 300 }, { x: 128, y: 300 }];
@@ -46,7 +48,23 @@ function create() {
             }
         ],
         rounds: 0,
-        maxRounds: 3
+        maxRounds: 3,
+
+        items: {
+            availableItems: Object.values(items),
+            maxItems: gameConfig.MAX_ITEMS,
+
+            minItemSpeed: gameConfig.ITEM_MINIMUM_SPEED,
+            maxItemSpeed: gameConfig.ITEM_MAXIMUM_SPEED,
+
+            minItemLifetime: gameConfig.ITEM_MINIMUM_LIFETIME,
+            maxItemLifetime: gameConfig.ITEM_MAXIMUM_LIFETIME,
+
+            initialSpawnDelay: gameConfig.ITEM_INITIAL_SPAWN_DELAY,
+
+            minSpawnDelay: gameConfig.ITEM_MINIMUM_SPAWN_DELAY,
+            maxSpawnDelay: gameConfig.ITEM_MAXIMUM_SPAWN_DELAY
+        }
     };
 
     game.state.start(gameStates.GAME, true, false, config);
