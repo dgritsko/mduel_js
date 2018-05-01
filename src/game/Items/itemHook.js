@@ -13,6 +13,14 @@ export class ItemHook extends Item {
         this.ammo = -1;
 
         this.floorGrabTimer = 0;
+
+        // TODO: Figure out what sprite to use
+        this.hook = game.add.sprite(2, -16, "items");
+        this.hook.frame = 13;
+        this.hook.anchor.setTo(0.5);
+        this.hook.scale.setTo(-1, 1);
+
+        player.sprite.addChild(this.hook);
     }
 
     destroy(player) {
@@ -29,6 +37,20 @@ export class ItemHook extends Item {
 
         // if (!isFiring() && wasFiring())
         // 	pawn->updateAnimation();
+
+        if (player.sprite.frame === 37) {
+            this.hook.alpha = 1;
+            this.hook.x = 2;
+            this.hook.y = -16;
+            this.hook.scale.setTo(-1, 1);
+        } else if (player.sprite.frame === 38) {
+            this.hook.alpha = 1;
+            this.hook.x = 2;
+            this.hook.y = 6;
+            this.hook.scale.setTo(-1, -1);
+        } else {
+            this.hook.alpha = 0;
+        }
     }
 
     fire(player, itemManager, gameManager) {
@@ -64,11 +86,15 @@ export class ItemHook extends Item {
             ) {
                 const platform = gameManager.level.platforms.children[i];
 
-                console.log(platform.getBounds());
+                const bounds = new Phaser.Rectangle(
+                    platform.x - platform.width / 2,
+                    platform.y - platform.height * 1.5,
+                    platform.width,
+                    platform.height + platform.height
+                );
 
-                if (platform.getBounds().contains(xpos, ypos)) {
+                if (bounds.contains(xpos, ypos)) {
                     player.vy = -gameConfig.PLAYER_JUMP_IMPULSE * (2 / 3);
-                    // 			floorGrabTimer = spriteObject::TICKSPERFRAME*3;
                     break;
                 }
             }

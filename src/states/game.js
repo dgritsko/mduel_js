@@ -71,14 +71,13 @@ function render() {
     }
 
     if (gameConfig.DEBUG_SHOW_PLATFORM_BOUNDS) {
-        gameManager.level.platforms.forEach(p => {
+        gameManager.level.platforms.forEach(platform => {
             game.debug.geom(
                 new Phaser.Rectangle(
-                    p.x - p.width / 2,
-                    p.y - p.height / 2,
-                    p.width,
-                    p.height,
-                    "#00ff00"
+                    platform.x - platform.width / 2,
+                    platform.y - platform.height / 2,
+                    platform.width,
+                    platform.height
                 )
             );
         });

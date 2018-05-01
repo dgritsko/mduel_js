@@ -105,7 +105,7 @@ function addAnimations(sprite) {
 
     sprite.animations.add(animations.VICTORY_FLEX, [44, 45], FRAMERATE, false);
 
-    sprite.animations.add(animations.HOOK, [37, 38], FRAMERATE, true);
+    sprite.animations.add(animations.HOOK, [37, 38], FRAMERATE / 2, false);
 }
 
 export { addAnimations };
