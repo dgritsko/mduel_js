@@ -742,6 +742,7 @@ export class Player extends SpriteObject {
         if (this.hasItem()) {
             this.state.currItem.destroy(this);
             this.state.currItem = null;
+            this.requestAnimationUpdate();
         }
     }
 
