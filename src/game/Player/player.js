@@ -8,7 +8,7 @@ import { items } from "../../enums/items";
 import { deaths } from "../../enums/deaths";
 
 export class Player extends SpriteObject {
-    constructor(playerName, spriteName, x, y, id, teamId) {
+    constructor(playerName, spriteName, x, y, id, teamId, input) {
         super();
 
         this.playerName = playerName;
@@ -43,7 +43,7 @@ export class Player extends SpriteObject {
             recentCollisionIds: []
         };
 
-        this.input = this.configureInput(id);
+        this.input = input;
     }
 
     set animation(value) {
@@ -100,38 +100,16 @@ export class Player extends SpriteObject {
         );
     }
 
-    configureInput(id) {
-        if (id === 1) {
-            return {
-                fire: game.input.keyboard.addKey(Phaser.Keyboard.Q),
-                up: game.input.keyboard.addKey(Phaser.Keyboard.W),
-                down: game.input.keyboard.addKey(Phaser.Keyboard.S),
-                left: game.input.keyboard.addKey(Phaser.Keyboard.A),
-                right: game.input.keyboard.addKey(Phaser.Keyboard.D)
-            };
-        } else if (id === 2) {
-            return {
-                fire: game.input.keyboard.addKey(Phaser.Keyboard.U),
-                up: game.input.keyboard.addKey(Phaser.Keyboard.I),
-                down: game.input.keyboard.addKey(Phaser.Keyboard.K),
-                left: game.input.keyboard.addKey(Phaser.Keyboard.J),
-                right: game.input.keyboard.addKey(Phaser.Keyboard.L)
-            };
-        } else {
-            const input = game.input.keyboard.createCursorKeys();
-            input.fire = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-            return input;
-        }
-    }
-
     getInput() {
         const inputEnabled = this.state.inputEnabled;
 
-        const hl = this.input.left.isDown && inputEnabled;
-        const hr = this.input.right.isDown && inputEnabled;
-        const hu = this.input.up.isDown && inputEnabled;
-        const hd = this.input.down.isDown && inputEnabled;
-        const hf = this.input.fire.isDown && inputEnabled;
+        const rawInput = this.input.getRawInput();
+
+        const hl = rawInput.left && inputEnabled;
+        const hr = rawInput.right && inputEnabled;
+        const hu = rawInput.up && inputEnabled;
+        const hd = rawInput.down && inputEnabled;
+        const hf = rawInput.fire && inputEnabled;
 
         const i = x => (x ? 1 : 0);
 

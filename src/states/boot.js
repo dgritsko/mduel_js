@@ -48,6 +48,8 @@ function create() {
     game.scale.pageAlignHorizontally = true;
     game.scale.pageAlignVertically = true;
 
+    game.input.gamepad.start();
+
     game.state.start(gameStates.GAME_START);
 }
 

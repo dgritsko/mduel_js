@@ -6,6 +6,9 @@ import { effects } from "../enums/effects";
 import { GameManager } from "../game/gameManager";
 import { sounds } from "../enums/sounds";
 
+import Gamepad from "../game/Player/gamepad";
+import Keyboard from "../game/Player/keyboard";
+
 let gameManager;
 let config;
 
@@ -27,7 +30,23 @@ function create() {
 
         const spawn = team.spawns[i % team.spawns.length];
 
-        return new Player(p.name, p.sprite, spawn.x, spawn.y, p.id, p.teamId);
+        // TODO: Figure out a more robust system for assigning input
+        let input;
+        if (i == 0) {
+            input = new Keyboard(1);
+        } else {
+            input = new Gamepad(game.input.gamepad.pad1);
+        }
+
+        return new Player(
+            p.name,
+            p.sprite,
+            spawn.x,
+            spawn.y,
+            p.id,
+            p.teamId,
+            input
+        );
     });
 
     players.forEach(p => playEffect(effects.PURPLE_PUFF, p.x, p.y));
