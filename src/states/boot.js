@@ -1,5 +1,6 @@
 import { gameStates } from "../enums/gameStates";
 import { sounds } from "../enums/sounds";
+import { gameConfig } from "../game/config";
 
 function preload() {
     game.load.spritesheet("player1", "assets/player1.png", 64, 64);
@@ -49,6 +50,8 @@ function create() {
     game.scale.pageAlignVertically = true;
 
     game.input.gamepad.start();
+
+    game.world.setBounds(0, 0, gameConfig.GAME_WIDTH, gameConfig.GAME_HEIGHT);
 
     game.state.start(gameStates.GAME_START);
 }

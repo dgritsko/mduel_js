@@ -13,8 +13,8 @@ import { gameConfig } from "./game/config";
 import { gameStates } from "./enums/gameStates";
 
 const game = new Phaser.Game(
-    gameConfig.GAME_WIDTH,
-    gameConfig.GAME_HEIGHT,
+    gameConfig.GAME_CONTAINER_WIDTH,
+    gameConfig.GAME_CONTAINER_HEIGHT,
     Phaser.AUTO,
     "game"
 );

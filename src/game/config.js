@@ -28,6 +28,9 @@ const gameConfig = {
         { row: 4, column: 13.5, width: 4, isSpawn: true }
     ],
 
+    GAME_CONTAINER_WIDTH: 640,
+    GAME_CONTAINER_HEIGHT: 400,
+
     GAME_WIDTH: 640,
     GAME_HEIGHT: 400,
 

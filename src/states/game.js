@@ -54,6 +54,10 @@ function create() {
     playSound(sounds.BOOM);
 
     gameManager = new GameManager(level, players, config);
+
+    // NOTE: Experimental! Works great on big levels if there's only one local player, but not a great
+    // solution if there's more than one player. Splitscreen?
+    game.camera.follow(players[0].sprite);
 }
 
 function update() {
