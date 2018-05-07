@@ -3,5 +3,6 @@ export const gameStates = {
     GAME: "Game",
     GAME_START: "GameStart",
     SANDBOX: "Sandbox",
-    SCOREBOARD: "Scoreboard"
+    SCOREBOARD: "Scoreboard",
+    LOBBY: "Lobby"
 };

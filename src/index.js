@@ -7,7 +7,8 @@ import {
     gameState,
     gameStartState,
     sandboxState,
-    scoreboardState
+    scoreboardState,
+    lobbyState
 } from "./states";
 import { gameConfig } from "./game/config";
 import { gameStates } from "./enums/gameStates";
@@ -26,5 +27,6 @@ game.state.add(gameStates.GAME_START, gameStartState);
 game.state.add(gameStates.GAME, gameState);
 game.state.add(gameStates.SCOREBOARD, scoreboardState);
 game.state.add(gameStates.SANDBOX, sandboxState);
+game.state.add(gameStates.LOBBY, lobbyState);
 
 game.state.start(gameStates.BOOT);

@@ -16,10 +16,18 @@ export default class Keyboard {
                 left: game.input.keyboard.addKey(Phaser.Keyboard.J),
                 right: game.input.keyboard.addKey(Phaser.Keyboard.L)
             };
-        } else {
+        } else if (id === 3) {
             const keys = game.input.keyboard.createCursorKeys();
             keys.fire = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
             this.keys = keys;
+        } else if (id === 4) {
+            this.keys = {
+                fire: game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_7),
+                up: game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_8),
+                down: game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_5),
+                left: game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_4),
+                right: game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_6)
+            };
         }
     }
 

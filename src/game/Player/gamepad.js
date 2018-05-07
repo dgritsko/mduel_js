@@ -1,5 +1,22 @@
 export default class Gamepad {
-    constructor(pad) {
+    constructor(id) {
+        let pad;
+
+        switch (id) {
+            case 1:
+                pad = game.input.gamepad.pad1;
+                break;
+            case 2:
+                pad = game.input.gamepad.pad2;
+                break;
+            case 3:
+                pad = game.input.gamepad.pad3;
+                break;
+            case 4:
+                pad = game.input.gamepad.pad4;
+                break;
+        }
+
         this.pad = pad;
 
         this.isConnected = false;

@@ -35,7 +35,7 @@ function create() {
         if (i == 0) {
             input = new Keyboard(1);
         } else {
-            input = new Gamepad(game.input.gamepad.pad1);
+            input = new Gamepad(1);
         }
 
         return new Player(
