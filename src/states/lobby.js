@@ -4,6 +4,10 @@ import { removeAtIndex } from "../game/util";
 
 let inputs;
 
+const skins = ["player1", "player2", "player3"];
+
+const players = [];
+
 function init() {
     inputs = [
         new Keyboard(1),
@@ -34,8 +38,30 @@ function pollForNewPlayers() {
         if (input.getRawInput().fire) {
             removeAtIndex(inputs, i);
 
-            console.log("added new player!");
+            addPlayer(input);
         }
+    }
+}
+
+function addPlayer(input) {
+    const id = players.length;
+
+    const x = (id + 1) * 100;
+    const y = 100;
+
+    const player = new LobbyPlayer(id, skins[id], input, x, y);
+
+    players.push(player);
+}
+
+class LobbyPlayer {
+    constructor(id, skin, input, x, y) {
+        this.id = id;
+        this.skin = skin;
+        this.input = input;
+
+        this.sprite = game.add.sprite(x, y, skin);
+        this.sprite.anchor.setTo(0.5);
     }
 }
 
