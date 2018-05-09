@@ -1,6 +1,8 @@
 import Keyboard from "../game/Player/keyboard";
 import Gamepad from "../game/Player/gamepad";
 import { removeAtIndex } from "../game/util";
+import { addAnimations } from "../game/Player/animations";
+import { animations } from "../enums/animations";
 
 let inputs;
 
@@ -29,6 +31,14 @@ function render() {}
 
 function update() {
     pollForNewPlayers();
+
+    players.forEach(player => {
+        const input = player.input.getInput(true);
+
+        if (input.nf) {
+            player.sprite.animations.play(animations.VICTORY_FLEX);
+        }
+    });
 }
 
 function pollForNewPlayers() {
@@ -62,6 +72,8 @@ class LobbyPlayer {
 
         this.sprite = game.add.sprite(x, y, skin);
         this.sprite.anchor.setTo(0.5);
+
+        addAnimations(this.sprite);
     }
 }
 
