@@ -100,39 +100,6 @@ export class Player extends SpriteObject {
         );
     }
 
-    getInput() {
-        const inputEnabled = this.state.inputEnabled;
-
-        const rawInput = this.input.getRawInput();
-
-        const hl = rawInput.left && inputEnabled;
-        const hr = rawInput.right && inputEnabled;
-        const hu = rawInput.up && inputEnabled;
-        const hd = rawInput.down && inputEnabled;
-        const hf = rawInput.fire && inputEnabled;
-
-        const i = x => (x ? 1 : 0);
-
-        const current = {
-            hl: i(hl),
-            hr: i(hr),
-            hu: i(hu),
-            hd: i(hd),
-            hf: i(hf)
-        };
-
-        const newPresses = {};
-
-        const makeKey = k => `n${k.substring(1)}`;
-        Object.keys(this.prevInput || []).forEach(k => {
-            newPresses[makeKey(k)] = i(!this.prevInput[k] && current[k]);
-        });
-
-        this.prevInput = Object.assign({}, current);
-
-        return Object.assign({}, current, newPresses);
-    }
-
     getState() {
         const position = { x: this.x, y: this.y };
         const velocity = {
@@ -183,7 +150,9 @@ export class Player extends SpriteObject {
     }
 
     handleInput(itemManager, gameManager) {
-        const { hr, hl, hu, hd, nr, nl, nu, nd, hf, nf } = this.getInput();
+        const { hr, hl, hu, hd, nr, nl, nu, nd, hf, nf } = this.input.getInput(
+            this.state.inputEnabled
+        );
 
         if (this.animationUpdateRequested) {
             this.updateAnimation(hl, hr);

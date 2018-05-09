@@ -1,5 +1,9 @@
-export default class Keyboard {
+import Input from "./input";
+
+export default class Keyboard extends Input {
     constructor(id) {
+        super();
+
         if (id === 1) {
             this.keys = {
                 fire: game.input.keyboard.addKey(Phaser.Keyboard.Q),

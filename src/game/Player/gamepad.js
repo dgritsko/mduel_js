@@ -1,5 +1,9 @@
-export default class Gamepad {
-    constructor(id) {
+import Input from "./input";
+
+export default class Gamepad extends Input {
+constructor(id) {
+    super();
+
         let pad;
 
         switch (id) {
