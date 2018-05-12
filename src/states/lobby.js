@@ -1,6 +1,6 @@
 import Keyboard from "../game/Player/keyboard";
 import Gamepad from "../game/Player/gamepad";
-import { removeAtIndex } from "../game/util";
+import { removeAtIndex, debugRender } from "../game/util";
 import { addAnimations } from "../game/Player/animations";
 import { animations } from "../enums/animations";
 
@@ -30,22 +30,32 @@ function create() {
 function render() {}
 
 function update() {
-    pollForNewPlayers();
-
     players.forEach(player => {
         const input = player.input.getInput(true);
 
-        if (input.nf) {
+        if (input.nf && !player.ready) {
             player.sprite.animations.play(animations.VICTORY_FLEX);
+            player.ready = true;
+        }
+
+        if (input.nb) {
+            if (player.ready) {
+                player.sprite.animations.play(animations.STAND);
+                player.ready = false;
+            } else {
+                removePlayer(player);
+            }
         }
     });
+
+    pollForNewPlayers();
 }
 
 function pollForNewPlayers() {
     for (let i = inputs.length - 1; i >= 0; i--) {
         const input = inputs[i];
 
-        if (input.getRawInput().fire) {
+        if (input.getInput(true).nf) {
             removeAtIndex(inputs, i);
 
             addPlayer(input);
@@ -62,6 +72,19 @@ function addPlayer(input) {
     const player = new LobbyPlayer(id, skins[id], input, x, y);
 
     players.push(player);
+}
+
+function removePlayer(player) {
+    const index = players.indexOf(player);
+
+    inputs.push(player.input);
+    removeAtIndex(players, index);
+
+    player.sprite.kill();
+
+    for (let i = index; i < players.length; i++) {
+        players[i].sprite.x = (index + 1) * 100;
+    }
 }
 
 class LobbyPlayer {
