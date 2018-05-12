@@ -25,6 +25,12 @@ function init() {
 
 function create() {
     // TODO: Set up UI elements
+
+    for (let i = 0; i < 12; i++) {
+        const item = new LobbyItem(i, (i + 1) * 50, 200);
+
+        //item.enabled = i % 2 == 0;
+    }
 }
 
 function render() {}
@@ -97,6 +103,36 @@ class LobbyPlayer {
         this.sprite.anchor.setTo(0.5);
 
         addAnimations(this.sprite);
+    }
+}
+
+class LobbyItem {
+    constructor(type, x, y) {
+        this.sprite = game.add.sprite(x, y, "items");
+        // sprite.animations.add("default", [0, 1, 2], 4, true);
+        // sprite.animations.play("default");
+        this.sprite.anchor.setTo(0.5);
+
+        this.disabledSprite = game.add.sprite(0, 0, "items_grayscale");
+        this.disabledSprite.anchor.setTo(0.5);
+        this.sprite.addChild(this.disabledSprite);
+
+        this.icon = game.add.sprite(0, 0, "items");
+        this.icon.frame = type + 3;
+        this.icon.anchor.setTo(0.5);
+        this.sprite.addChild(this.icon);
+
+        this.disabledIcon = game.add.sprite(0, 0, "items_grayscale");
+        this.disabledIcon.frame = type + 3;
+        this.disabledIcon.anchor.setTo(0.5);
+        this.disabledSprite.addChild(this.disabledIcon);
+
+        this.enabled = true;
+    }
+
+    set enabled(value) {
+        this.icon.visible = value;
+        this.disabledSprite.visible = !value;
     }
 }
 

@@ -1,6 +1,7 @@
 import { gameStates } from "../enums/gameStates";
 import { sounds } from "../enums/sounds";
 import { gameConfig } from "../game/config";
+import { createModifiedSpritesheet, grayscale } from "../game/spriteUtil";
 
 function preload() {
     game.load.spritesheet("player1", "assets/player1.png", 64, 64);
@@ -46,6 +47,8 @@ function preload() {
 }
 
 function create() {
+    createModifiedSpritesheet("items", "items_grayscale", grayscale);
+
     game.scale.pageAlignHorizontally = true;
     game.scale.pageAlignVertically = true;
 
