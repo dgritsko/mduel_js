@@ -1,6 +1,5 @@
 export default class Input {
     getInput(inputEnabled) {
-        
         const rawInput = this.getRawInput();
 
         const hl = rawInput.left && inputEnabled;
@@ -8,6 +7,7 @@ export default class Input {
         const hu = rawInput.up && inputEnabled;
         const hd = rawInput.down && inputEnabled;
         const hf = rawInput.fire && inputEnabled;
+        const hb = rawInput.back && inputEnabled;
 
         const i = x => (x ? 1 : 0);
 
@@ -16,7 +16,8 @@ export default class Input {
             hr: i(hr),
             hu: i(hu),
             hd: i(hd),
-            hf: i(hf)
+            hf: i(hf),
+            hb: i(hb)
         };
 
         const newPresses = {};

@@ -1,8 +1,8 @@
 import Input from "./input";
 
 export default class Gamepad extends Input {
-constructor(id) {
-    super();
+    constructor(id) {
+        super();
 
         let pad;
 
@@ -53,6 +53,7 @@ constructor(id) {
 
     getRawInput() {
         const a = this.pad.isDown(Phaser.Gamepad.XBOX360_A);
+        const b = this.pad.isDown(Phaser.Gamepad.XBOX360_B);
         const rTrigger = this.pad.isDown(Phaser.Gamepad.XBOX360_RIGHT_TRIGGER);
 
         // X axis
@@ -72,7 +73,8 @@ constructor(id) {
             left,
             right,
             up,
-            down
+            down,
+            back: b
         };
     }
 }
