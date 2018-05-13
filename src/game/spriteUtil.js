@@ -1,4 +1,4 @@
-import { sortBy } from "ramda";
+import { all, sortBy } from "ramda";
 
 const expandBool = bool => {
     return _ => bool;
@@ -29,7 +29,17 @@ const expandStr = str => {
     return expandObj(parseColor(str));
 };
 
+const expandArray = arr => {
+    const matches = arr.map(expandMatch);
+
+    return (p, x, y) => all(m => m(p, x, y), matches);
+};
+
 const expandMatch = match => {
+    if (Array.isArray(match)) {
+        return expandArray(match);
+    }
+
     switch (typeof match) {
         case "boolean":
             return expandBool(match);
@@ -70,6 +80,7 @@ const expandApply = apply => {
 const buildPixelModificationFunction = rules => {
     const expanded = rules.map(rule => {
         const match = expandMatch(rule.match);
+
         const apply = expandApply(rule.apply);
 
         return { match, apply };

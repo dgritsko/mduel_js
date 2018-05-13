@@ -17,7 +17,7 @@ function create() {
     const quinaryColor = stats[4].color;
 
     const ruleSets = [
-        [{ match: primaryColor, apply: "0000ff" }],
+        [{ match: [primaryColor, (p, x, y) => y % 64 > 48], apply: "0000ff" }],
         [{ match: secondaryColor, apply: "0000ff" }],
         [{ match: tertiaryColor, apply: "#0000ff" }],
         [{ match: quaternaryColor, apply: "#0000ff" }],
