@@ -1,3 +1,5 @@
+import { sortBy } from "ramda";
+
 const expandBool = bool => {
     return _ => bool;
 };
@@ -14,6 +16,13 @@ const parseColor = str => {
     const g = parseInt(str.substring(2, 4), 16);
     const b = parseInt(str.substring(4, 6), 16);
     return { r, g, b };
+};
+
+const stringifyColor = color => {
+    const r = ("00" + color.r.toString(16)).substr(-2);
+    const g = ("00" + color.g.toString(16)).substr(-2);
+    const b = ("00" + color.b.toString(16)).substr(-2);
+    return `#${r}${g}${b}`;
 };
 
 const expandStr = str => {
@@ -102,6 +111,33 @@ const makeBitmap = (srcKey, processPixel) => {
     return bmd;
 };
 
+const analyzeSprite = srcKey => {
+    const stats = {};
+
+    const bmd = game.make.bitmapData();
+    bmd.load(srcKey);
+    bmd.processPixelRGB((pixel, x, y) => {
+        if (!pixel.a) {
+            return;
+        }
+
+        const key = stringifyColor(pixel);
+
+        if (!stats[key]) {
+            stats[key] = 0;
+        }
+        stats[key]++;
+    });
+
+    const statList = Object.keys(stats).map(key => {
+        return { color: key, count: stats[key] };
+    });
+
+    const sorted = sortBy(x => x.count, statList);
+
+    return sorted;
+};
+
 const grayscale = pixel => {
     const gray = (pixel.r + pixel.g + pixel.b) / 3; //average
     //const gray = (pixel.r * 0.2126  + pixel.g * 0.7152 + pixel.b * 0.0722); //luma
@@ -113,4 +149,9 @@ const grayscale = pixel => {
     return pixel;
 };
 
-export { createModifiedSpritesheet, buildPixelModificationFunction, grayscale };
+export {
+    createModifiedSpritesheet,
+    buildPixelModificationFunction,
+    analyzeSprite,
+    grayscale
+};
