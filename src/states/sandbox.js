@@ -1,5 +1,6 @@
 import {
     createModifiedSpritesheet,
+    combineSpriteSheets,
     buildPixelModificationFunction,
     analyzeSprite,
     grayscale
@@ -16,8 +17,13 @@ function create() {
     const quaternaryColor = stats[3].color;
     const quinaryColor = stats[4].color;
 
+    const firstQuartile = (p, x, y) => y % 64 < 16;
+    const secondQuartile = (p, x, y) => y % 64 >= 16 && y % 64 < 32;
+    const thirdQuartile = (p, x, y) => y % 64 >= 32 && y % 64 < 48;
+    const fourthQuartile = (p, x, y) => y % 64 >= 48;
+
     const ruleSets = [
-        [{ match: [primaryColor, (p, x, y) => y % 64 > 48], apply: "0000ff" }],
+        [{ match: [primaryColor, firstQuartile], apply: "0000ff" }],
         [{ match: secondaryColor, apply: "0000ff" }],
         [{ match: tertiaryColor, apply: "#0000ff" }],
         [{ match: quaternaryColor, apply: "#0000ff" }],
@@ -31,10 +37,16 @@ function create() {
 
         createModifiedSpritesheet("player1", sprite, fun);
 
-        for (let j = 0; j < 6; j++) {
-            game.add.sprite((i + 1) * 64, j * 64, sprite, j);
+        for (let j = 0; j < 1; j++) {
+            game.add.sprite((i + 1) * 64, j * 64, sprite, -1);
         }
     });
+
+    combineSpriteSheets(
+        ruleSets.map((r, i) => `player1_temp_${i}`),
+        "combinedSprite",
+        true
+    );
 }
 
 export default { create };

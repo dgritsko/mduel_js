@@ -96,19 +96,26 @@ const buildPixelModificationFunction = rules => {
     };
 };
 
-const createModifiedSpritesheet = (spriteName, newSpriteName, processPixel) => {
+const getSpritesheetInfo = spriteName => {
     const firstFrame = game.cache.getFrameData(spriteName).getFrame(0);
     const frameCount = game.cache.getFrameCount(spriteName);
 
     const frameWidth = firstFrame.width;
     const frameHeight = firstFrame.height;
+    return { frameWidth, frameHeight, frameCount };
+};
 
-    const grayData = makeBitmap(spriteName, processPixel);
+const createModifiedSpritesheet = (spriteName, newSpriteName, processPixel) => {
+    const { frameWidth, frameHeight, frameCount } = getSpritesheetInfo(
+        spriteName
+    );
+
+    const modifiedBitmap = makeBitmap(spriteName, processPixel);
 
     game.cache.addSpriteSheet(
         newSpriteName,
         null,
-        grayData.canvas,
+        modifiedBitmap.canvas,
         frameWidth,
         frameHeight,
         frameCount
@@ -116,7 +123,7 @@ const createModifiedSpritesheet = (spriteName, newSpriteName, processPixel) => {
 };
 
 const makeBitmap = (srcKey, processPixel) => {
-    var bmd = game.make.bitmapData();
+    const bmd = game.make.bitmapData();
     bmd.load(srcKey);
     bmd.processPixelRGB(processPixel);
     return bmd;
@@ -160,8 +167,59 @@ const grayscale = pixel => {
     return pixel;
 };
 
+const combineSpriteSheets = (spriteNames, newSpriteName, horizontal) => {
+    const bitmapDatas = spriteNames.map(spriteName => {
+        const bmd = game.make.bitmapData();
+        bmd.load(spriteName);
+        return bmd;
+    });
+
+    const widths = new Set(bitmapDatas.map(x => x.width));
+    const heights = new Set(bitmapDatas.map(x => x.height));
+
+    if (widths.size !== 1 || heights.size !== 1) {
+        console.error(
+            "Sprites must all be same dimensions in order to be combined"
+        );
+        return;
+    }
+
+    const width = widths.values().next().value;
+    const height = heights.values().next().value;
+
+    const destWidth = horizontal ? width * spriteNames.length : width;
+    const destHeight = horizontal ? height : height * spriteNames.length;
+    const destBmd = game.make.bitmapData(destWidth, destHeight);
+
+    bitmapDatas.forEach((bitmapData, i) => {
+        const destX = horizontal ? width * i : 0;
+        const destY = horizontal ? 0 : height * i;
+
+        destBmd.copyRect(
+            bitmapData,
+            new Phaser.Rectangle(0, 0, width, height),
+            destX,
+            destY
+        );
+    });
+
+    const { frameWidth, frameHeight, frameCount } = getSpritesheetInfo(
+        spriteNames[0]
+    );
+
+    game.cache.addSpriteSheet(
+        newSpriteName,
+        null,
+        destBmd.canvas,
+        frameWidth,
+        frameHeight,
+        frameCount * spriteNames.length
+    );
+};
+
 export {
     createModifiedSpritesheet,
+    combineSpriteSheets,
     buildPixelModificationFunction,
     analyzeSprite,
     grayscale
