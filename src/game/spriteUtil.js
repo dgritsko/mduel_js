@@ -75,9 +75,9 @@ const buildPixelModificationFunction = rules => {
         return { match, apply };
     });
 
-    return px => {
+    return (px, x, y) => {
         expanded.forEach(element => {
-            if (element.match(px)) {
+            if (element.match(px, x, y)) {
                 element.apply(px);
             }
         });
@@ -133,7 +133,7 @@ const analyzeSprite = srcKey => {
         return { color: key, count: stats[key] };
     });
 
-    const sorted = sortBy(x => x.count, statList);
+    const sorted = sortBy(x => -x.count, statList);
 
     return sorted;
 };

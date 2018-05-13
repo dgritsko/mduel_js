@@ -1,35 +1,40 @@
+import {
+    createModifiedSpritesheet,
+    buildPixelModificationFunction,
+    analyzeSprite,
+    grayscale
+} from "../game/spriteUtil";
+
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    // let manager = new ItemManager();
+    const stats = analyzeSprite("player1");
 
-    // shadow
-    //565656
+    const primaryColor = stats[0].color;
+    const secondaryColor = stats[1].color;
+    const tertiaryColor = stats[2].color;
+    const quaternaryColor = stats[3].color;
+    const quinaryColor = stats[4].color;
 
-    // primary
-    // AC4AAC
-    drawText("MARSHMALLOW DUEL", 100, 100);
+    const ruleSets = [
+        [{ match: primaryColor, apply: "0000ff" }],
+        [{ match: secondaryColor, apply: "0000ff" }],
+        [{ match: tertiaryColor, apply: "#0000ff" }],
+        [{ match: quaternaryColor, apply: "#0000ff" }],
+        [{ match: quinaryColor, apply: "#0000ff" }]
+    ];
+
+    ruleSets.forEach((rules, i) => {
+        const fun = buildPixelModificationFunction(rules);
+
+        const sprite = "player1_temp_" + i;
+
+        createModifiedSpritesheet("player1", sprite, fun);
+
+        for (let j = 0; j < 6; j++) {
+            game.add.sprite((i + 1) * 64, j * 64, sprite, j);
+        }
+    });
 }
 
-function render() {
-}
-
-function drawText(text, x, y) {
-    const offsetX = 2;
-    const offsetY = 2;
-    const shadowLabel = game.add.bitmapText(
-        x + offsetX,
-        y + offsetY,
-        "mduel",
-        text,
-        32
-    );
-    shadowLabel.tint = 0x565656;
-
-    const mainLabel = game.add.bitmapText(x, y, "mduel", text, 32);
-    mainLabel.tint = 0xac4aac;
-}
-
-function update() {}
-
-export default { create: create, update: update, render: render };
+export default { create };
