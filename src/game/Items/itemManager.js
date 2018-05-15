@@ -115,7 +115,7 @@ class ItemManager {
                 item.data.despawnTime &&
                 item.data.despawnTime < now()
             ) {
-                playEffect(effects.GRAY_PUFF, item.x, item.y);
+                playEffect(effects.DIE, item.x, item.y);
                 item.destroy();
             }
         }

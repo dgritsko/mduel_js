@@ -5,7 +5,7 @@ import { animations } from "../../enums/animations";
 import { now } from "../util";
 
 // TODO: Move these constants somewhere?
-const PROJECT_X_OFFSET = 4;
+const PROJECT_X_OFFSET = 8;
 const PROJECT_Y_OFFSET = 16;
 const PROJECTILE_FIRE_DELAY = 100;
 const FIRE_DELAY = 400;
@@ -15,7 +15,7 @@ export class ItemPuck extends Item {
         super(items.PUCK);
 
         this.canFireStanding = true;
-        
+
         this.ammo = 1;
     }
 
