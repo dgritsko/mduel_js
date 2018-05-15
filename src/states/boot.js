@@ -1,13 +1,17 @@
 import { gameStates } from "../enums/gameStates";
 import { sounds } from "../enums/sounds";
 import { gameConfig } from "../game/config";
-import { createModifiedSpritesheet, grayscale } from "../game/spriteUtil";
+import {
+    createModifiedSpritesheet,
+    grayscale,
+    setupVoltsSprite
+} from "../game/spriteUtil";
 
 function preload() {
     game.load.spritesheet("player1", "assets/player1.png", 64, 64);
     game.load.spritesheet("player2", "assets/player2.png", 64, 64);
     game.load.spritesheet("player3", "assets/player3.png", 64, 64);
-    game.load.spritesheet("player1_1000v", "assets/player_1000v.png", 32, 32);
+
     game.load.spritesheet("platform", "assets/platforms.png", 28, 16);
     game.load.image("powerup_spawn", "assets/powerup_spawn.png");
     game.load.spritesheet("rope", "assets/rope.png", 32, 32);
@@ -49,6 +53,10 @@ function preload() {
 function create() {
     createModifiedSpritesheet("items", "items_grayscale", grayscale);
 
+    setupVoltsSprite("player1");
+    setupVoltsSprite("player2");
+    setupVoltsSprite("player3");
+
     game.scale.pageAlignHorizontally = true;
     game.scale.pageAlignVertically = true;
 
@@ -56,7 +64,7 @@ function create() {
 
     game.world.setBounds(0, 0, gameConfig.GAME_WIDTH, gameConfig.GAME_HEIGHT);
 
-    game.state.start(gameStates.SANDBOX);
+    game.state.start(gameStates.GAME_START);
 }
 
 export default { preload, create };
