@@ -1,4 +1,4 @@
-import { all, sortBy } from "ramda";
+import { any, all, sortBy } from "ramda";
 
 const expandBool = bool => {
     return _ => bool;
@@ -29,11 +29,16 @@ const expandStr = str => {
     return expandObj(parseColor(str));
 };
 
-const expandArray = arr => {
+const expandArray = (arr, disjunction) => {
     const matches = arr.map(expandMatch);
 
-    return (p, x, y) => all(m => m(p, x, y), matches);
+    return disjunction
+        ? (p, x, y) => any(m => m(p, x, y), matches)
+        : (p, x, y) => all(m => m(p, x, y), matches);
 };
+
+const or = (...arr) => expandArray(arr, true);
+const and = (...arr) => expandArray(arr, false);
 
 const expandMatch = match => {
     if (Array.isArray(match)) {
@@ -167,7 +172,12 @@ const grayscale = pixel => {
     return pixel;
 };
 
-const combineSpriteSheets = (spriteNames, newSpriteName, horizontal) => {
+const combineSpriteSheets = (
+    spriteNames,
+    newSpriteName,
+    horizontal,
+    shouldExport
+) => {
     const bitmapDatas = spriteNames.map(spriteName => {
         const bmd = game.make.bitmapData();
         bmd.load(spriteName);
@@ -215,10 +225,29 @@ const combineSpriteSheets = (spriteNames, newSpriteName, horizontal) => {
         frameHeight,
         frameCount * spriteNames.length
     );
+
+    if (shouldExport) {
+        const url = destBmd.canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = newSpriteName + ".png";
+        link.click();
+    }
 };
 
 const setupVoltsSprite = spriteName => {
     const stats = analyzeSprite("player1");
+
+    let white = "#ffffff";
+    let gray = "#696969";
+    let orange = "#FF4500";
+    const fuchsia = "#ff00ff";
+
+    if (false) {
+        white = fuchsia;
+        gray = fuchsia;
+        orange = fuchsia;
+    }
 
     const primaryColor = stats[0].color;
     const secondaryColor = stats[1].color;
@@ -226,18 +255,38 @@ const setupVoltsSprite = spriteName => {
     const quaternaryColor = stats[3].color;
     const quinaryColor = stats[4].color;
 
-    const firstQuartile = (p, x, y) => y % 64 < 16;
-    const secondQuartile = (p, x, y) => y % 64 >= 16 && y % 64 < 32;
-    const thirdQuartile = (p, x, y) => y % 64 >= 32 && y % 64 < 48;
-    const fourthQuartile = (p, x, y) => y % 64 >= 48;
+    const verticalRegion = (ymin, ymax) => (p, x, y) =>
+        y % 64 >= ymin && y % 64 < ymax;
+
+    const firstQuartile = verticalRegion(0, 16);
+    const secondQuartile = verticalRegion(16, 32);
+    const thirdQuartile = verticalRegion(32, 48);
+    const fourthQuartile = verticalRegion(48, 64);
+
+    const regionSkull = verticalRegion(0, 24);
+
+    const skull = and(
+        or(primaryColor, secondaryColor, tertiaryColor),
+        regionSkull
+    );
+
+    const boots = and(or(primaryColor, secondaryColor), fourthQuartile);
 
     const ruleSets = [
-        [{ match: [primaryColor, firstQuartile], apply: "0000ff" }],
-        [{ match: secondaryColor, apply: "0000ff" }],
-        [{ match: tertiaryColor, apply: "#0000ff" }],
-        [{ match: quaternaryColor, apply: "#0000ff" }],
-        [{ match: quinaryColor, apply: "#0000ff" }]
+        [{ match: skull, apply: white }],
+        [{ match: skull, apply: orange }],
+        [{ match: skull, apply: gray }],
+        [{ match: boots, apply: gray }]
     ];
+
+    // DEBUG
+    // const ruleSets = [
+    //     [{ match: primaryColor, apply: fuchsia }], // border of body (including helmet)
+    //     [{ match: secondaryColor, apply: fuchsia }], // interior of body (including helmet)
+    //     [{ match: tertiaryColor, apply: fuchsia }], // helmet ridge, chestplate, top of boots
+    //     [{ match: quaternaryColor, apply: fuchsia }], // visor
+    //     [{ match: quinaryColor, apply: fuchsia }] // idk
+    // ];
 
     const getTempSpriteName = i => `${spriteName}_volts_temp_${i}`;
 
@@ -252,7 +301,8 @@ const setupVoltsSprite = spriteName => {
     combineSpriteSheets(
         ruleSets.map((r, i) => getTempSpriteName(i)),
         `${spriteName}_volts`,
-        true
+        true,
+        false
     );
 
     game.add.sprite(0, 0, `${spriteName}_volts`, -1);
