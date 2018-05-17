@@ -367,9 +367,9 @@ export class Player extends SpriteObject {
         this.vy = vy;
 
         if (this.vx === 0) {
-            this.playJumpedStanding();
+            this.playJumpedStanding(bootsJump);
         } else {
-            this.playJumpedMoving();
+            this.playJumpedMoving(bootsJump);
         }
 
         setBounds(this.sprite, gameConfig.PLAYER_FALLING_BOUNDS);
@@ -708,12 +708,16 @@ export class Player extends SpriteObject {
         this.animation = animations.RUN;
     }
 
-    playJumpedStanding() {
-        this.animation = animations.STAND_JUMP;
+    playJumpedStanding(bootsJump) {
+        this.animation = bootsJump
+            ? animations.STAND_BOOTS_JUMP
+            : animations.STAND_JUMP;
     }
 
-    playJumpedMoving() {
-        this.animation = animations.RUN_JUMP;
+    playJumpedMoving(bootsJump) {
+        this.animation = bootsJump
+            ? animations.RUN_BOOTS_JUMP
+            : animations.RUN_JUMP;
     }
 
     playPushedBackward() {

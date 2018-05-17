@@ -8,6 +8,8 @@ export const animations = {
     BACKWARD_ROLL: "backward_roll",
     STAND_JUMP: "stand_jump",
     RUN_JUMP: "run_jump",
+    STAND_BOOTS_JUMP: "stand_boots_jump",
+    RUN_BOOTS_JUMP: "run_boots_jump",
     STAND_FALL: "stand_fall",
     FORWARD_FALL: "forward_fall",
     BACKWARD_FALL: "backward_fall",

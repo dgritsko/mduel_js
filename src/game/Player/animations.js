@@ -12,17 +12,28 @@ function addAnimations(sprite) {
     sprite.animations.add(animations.CROUCHED, [5], 0, false);
 
     sprite.animations.add(animations.UNCROUCH, [5, 6], FRAMERATE, false);
+
+    const standJumpFrames = [6, 12, 13, 14, 15, 16, 17, 21];
     sprite.animations.add(
         animations.STAND_JUMP,
-        [6, 12, 13, 14, 15, 16, 17, 21],
+        standJumpFrames,
         FRAMERATE,
         false
     );
 
     sprite.animations.add(
-        animations.RUN_JUMP,
-        [17, 18, 19, 20, 20, 21],
-        FRAMERATE,
+        animations.STAND_BOOTS_JUMP,
+        standJumpFrames,
+        FRAMERATE / (3 / 2),
+        false
+    );
+
+    const runJumpFrames = [17, 18, 19, 20, 20, 21];
+    sprite.animations.add(animations.RUN_JUMP, runJumpFrames, FRAMERATE, false);
+    sprite.animations.add(
+        animations.RUN_BOOTS_JUMP,
+        runJumpFrames,
+        FRAMERATE / (3 / 2),
         false
     );
 
