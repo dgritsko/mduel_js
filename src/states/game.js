@@ -25,18 +25,17 @@ function create() {
 
     const level = createNewLevel();
 
+    const spawnIndexes = {};
+    config.teams.forEach(t => (spawnIndexes[t.id] = 0));
+
     const players = config.players.map((p, i) => {
         const team = config.teams.filter(t => t.id === p.teamId)[0];
 
-        const spawn = team.spawns[i % team.spawns.length];
+        const spawn = team.spawns[spawnIndexes[team.id]];
+        spawnIndexes[team.id]++;
 
         // TODO: Figure out a more robust system for assigning input
-        let input;
-        if (i == 0) {
-            input = new Keyboard(1);
-        } else {
-            input = new Gamepad(1);
-        }
+        const input = setupInput(p.inputId);
 
         return new Player(
             p.name,
@@ -58,6 +57,19 @@ function create() {
     // NOTE: Experimental! Works great on big levels if there's only one local player, but not a great
     // solution if there's more than one player. Splitscreen?
     game.camera.follow(players[0].sprite);
+}
+
+function setupInput(identifier) {
+    const type = identifier.substring(0, 1);
+    const id = parseInt(identifier.substring(1, 2), 10);
+
+    if (type === "k" && typeof id === "number") {
+        return new Keyboard(id);
+    } else if (type === "g" && typeof id === "number") {
+        return new Gamepad(id);
+    } else {
+        console.error(`Input not supported: ${identifier}`);
+    }
 }
 
 function update() {

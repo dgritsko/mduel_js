@@ -16,21 +16,24 @@ function create() {
                 name: "Percy",
                 sprite: "player1",
                 id: 1,
-                teamId: 1
+                teamId: 1,
+                inputId: "k1"
             },
 
             {
                 name: "Clifford",
                 sprite: "player2",
                 id: 2,
-                teamId: 2
+                teamId: 2,
+                inputId: "k2"
             }
 
             // {
             //     name: "Mowbray",
             //     sprite: "player3",
             //     id: 3,
-            //     teamId: 2
+            //     teamId: 2,
+            //     inputId: "k3"
             // }
         ],
         teams: [
