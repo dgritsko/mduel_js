@@ -5,8 +5,8 @@ const expandBool = bool => {
 };
 
 const expandObj = obj => {
-    const { r, g, b } = obj;
-    return px => px.r === r && px.g === g && px.b === b;
+    const { r, g, b, a } = obj;
+    return px => px.r === r && px.g === g && px.b === b && px.a === a;
 };
 
 const parseColor = str => {
@@ -15,14 +15,17 @@ const parseColor = str => {
     const r = parseInt(str.substring(0, 2), 16);
     const g = parseInt(str.substring(2, 4), 16);
     const b = parseInt(str.substring(4, 6), 16);
-    return { r, g, b };
+    const a = str.length === 8 ? parseInt(str.substring(6, 8), 16) : 255;
+
+    return { r, g, b, a };
 };
 
 const stringifyColor = color => {
     const r = ("00" + color.r.toString(16)).substr(-2);
     const g = ("00" + color.g.toString(16)).substr(-2);
     const b = ("00" + color.b.toString(16)).substr(-2);
-    return `#${r}${g}${b}`;
+    const a = ("00" + color.a.toString(16)).substr(-2);
+    return `#${r}${g}${b}${a}`;
 };
 
 const expandStr = str => {
