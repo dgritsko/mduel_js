@@ -238,13 +238,41 @@ const combineSpriteSheets = (
     }
 };
 
-const setupVoltsSprite = spriteName => {
-    const stats = analyzeSprite("player1");
+const alphaBlend = foreground => {
+    foreground =
+        typeof foreground === "string" ? parseColor(foreground) : foreground;
+
+    const fa = foreground.a / 255;
+
+    const blendChannel = (c, px) => {
+        px[c] = fa * foreground[c] + (1 - fa) * px[c];
+    };
+
+    return p => {
+        blendChannel("r", p);
+        blendChannel("g", p);
+        blendChannel("b", p);
+    };
+};
+
+const setupVoltsSprite = (spriteName, display) => {
+    const stats = analyzeSprite(spriteName);
 
     let white = "#ffffff";
     let gray = "#696969";
     let orange = "#FF4500";
     const fuchsia = "#ff00ff";
+
+    const _10percent = "19";
+    const _20percent = "33";
+    const _30percent = "4c";
+    const _40percent = "66";
+    const _50percent = "80";
+    const _60percent = "99";
+    const _70percent = "b3";
+    const _80percent = "cc";
+    const _90percent = "e6";
+    const _100percent = "ff";
 
     if (false) {
         white = fuchsia;
@@ -273,13 +301,28 @@ const setupVoltsSprite = spriteName => {
         regionSkull
     );
 
+    const helmet = verticalRegion(0, 22);
+
     const boots = and(or(primaryColor, secondaryColor), fourthQuartile);
 
+    const make = (match, apply) => ({
+        match,
+        apply
+    });
+
     const ruleSets = [
-        [{ match: skull, apply: white }],
-        [{ match: skull, apply: orange }],
-        [{ match: skull, apply: gray }],
-        [{ match: boots, apply: gray }]
+        [make(tertiaryColor, orange)],
+        [make(and(primaryColor, helmet), alphaBlend(white + _90percent))],
+        [make(and(primaryColor, helmet), orange)],
+        [make(and(primaryColor, helmet), gray)],
+        [make(or(primaryColor, secondaryColor), orange)],
+        [make(or(primaryColor, secondaryColor), gray)],
+        [make(or(primaryColor, secondaryColor), alphaBlend(white + _40percent))] // todo: should be faded
+
+        // [{ match: skull, apply: white }],
+        // [{ match: skull, apply: orange }],
+        // [{ match: skull, apply: gray }],
+        // [{ match: boots, apply: gray }]
     ];
 
     // DEBUG
@@ -308,10 +351,9 @@ const setupVoltsSprite = spriteName => {
         false
     );
 
-    game.add.sprite(0, 0, `${spriteName}_volts`, -1);
-    // for (let j = 0; j < 1; j++) {
-    //     game.add.sprite((i + 1) * 64, j * 64, sprite, -1);
-    // }
+    if (display) {
+        game.add.sprite(0, 0, `${spriteName}_volts`, -1);
+    }
 };
 
 export {

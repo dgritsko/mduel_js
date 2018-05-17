@@ -3,7 +3,7 @@ import { items } from "../../enums/items";
 import { now } from "../util";
 
 const INTERVAL = 100;
-const NUM_VARIATIONS = 5;
+const NUM_VARIATIONS = 7;
 
 export class ItemVolts extends Item {
     constructor(player) {
