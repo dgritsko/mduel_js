@@ -3,12 +3,7 @@ import { items } from "../../enums/items";
 import { ProjectilePuck } from "./projectilePuck";
 import { animations } from "../../enums/animations";
 import { now } from "../util";
-
-// TODO: Move these constants somewhere?
-const PROJECT_X_OFFSET = 8;
-const PROJECT_Y_OFFSET = 16;
-const PROJECTILE_FIRE_DELAY = 100;
-const FIRE_DELAY = 400;
+import { gameConfig } from "../config";
 
 export class ItemPuck extends Item {
     constructor(player) {
@@ -34,9 +29,9 @@ export class ItemPuck extends Item {
 
         player.animation = animations.PUCK_TOSS;
 
-        this.fireAfter = now() + PROJECTILE_FIRE_DELAY;
+        this.fireAfter = now() + gameConfig.ITEM_PUCK_PROJECT_FIRE_DELAY;
 
-        player.state.inputInterrupt = now() + FIRE_DELAY;
+        player.state.inputInterrupt = now() + gameConfig.ITEM_PUCK_FIRE_DELAY;
     }
 
     update(player, gameManager) {
@@ -59,9 +54,9 @@ export class ItemPuck extends Item {
         const puck = new ProjectilePuck();
 
         const x = player.flippedh
-            ? player.left - PROJECT_X_OFFSET
-            : player.right + PROJECT_X_OFFSET;
-        const y = player.bottom - PROJECT_Y_OFFSET;
+            ? player.left - gameConfig.ITEM_PUCK_PROJECT_X_OFFSET
+            : player.right + gameConfig.ITEM_PUCK_PROJECT_X_OFFSET;
+        const y = player.bottom - gameConfig.ITEM_PUCK_PROJECT_Y_OFFSET;
 
         puck.x = x;
         puck.y = y;
