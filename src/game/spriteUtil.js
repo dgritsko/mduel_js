@@ -63,19 +63,22 @@ const expandMatch = match => {
 };
 
 const applyColor = (px, color) => {
-    px.r = typeof color.r === "number" ? color.r : px.r;
-    px.g = typeof color.g === "number" ? color.g : px.g;
-    px.b = typeof color.b === "number" ? color.b : px.b;
-    px.a = typeof color.a === "number" ? color.a : px.a;
+    Object.assign(px, color)
+    // px.r = typeof color.r === "number" ? color.r : px.r;
+    // px.g = typeof color.g === "number" ? color.g : px.g;
+    // px.b = typeof color.b === "number" ? color.b : px.b;
+    // px.a = typeof color.a === "number" ? color.a : px.a;
 };
 
 const expandApply = apply => {
     switch (typeof apply) {
         case "string":
+        {
+            const color = parseColor(apply);
             return px => {
-                const color = parseColor(apply);
                 applyColor(px, color);
             };
+        }
         case "object":
             return px => {
                 applyColor(px, apply);
