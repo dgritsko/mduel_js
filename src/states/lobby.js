@@ -1,14 +1,24 @@
 import Keyboard from "../game/Player/keyboard";
 import Gamepad from "../game/Player/gamepad";
-import { removeAtIndex, debugRender } from "../game/util";
+import { removeAtIndex, debugRender, dist } from "../game/util";
 import { addAnimations } from "../game/Player/animations";
 import { animations } from "../enums/animations";
+import { sortBy } from "ramda";
 
 let inputs;
 
 const skins = ["player1", "player2", "player3"];
 
 const players = [];
+
+const items = [];
+
+let cursor;
+
+let cursorLocation = 0;
+const cursorLocations = [
+
+];
 
 function init() {
     inputs = [
@@ -21,16 +31,94 @@ function init() {
         new Gamepad(3),
         new Gamepad(4)
     ];
+
+    const keys = game.input.keyboard.createCursorKeys();
+    const space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
+    const esc = game.input.keyboard.addKey(Phaser.Keyboard.ESC)
+    keys.up.onDown.add(() => menuAction('up'))
+    keys.down.onDown.add(() => menuAction('down'))
+    keys.left.onDown.add(() => menuAction('left'))
+    keys.right.onDown.add(() => menuAction('right'))
+    space.onDown.add(() => menuAction('select'))
+    esc.onDown.add(() => menuAction('esc'))
+
+    cursor = game.add.sprite(50, 50, 'items');
+    cursor.anchor.setTo(0.5);
+}
+
+function moveCursor(location) {
+    cursorLocation = location
+    cursor.x = cursorLocations[location].x
+    cursor.y = cursorLocations[location].y
+}
+
+function menuAction(key) {
+    switch (key) {
+        case 'up':
+        {
+            const currX = cursorLocations[cursorLocation].x
+            const currY = cursorLocations[cursorLocation].y
+            const locations = cursorLocations.filter(l => l.x <= currX && l.y < currY)
+
+            const sorted = sortBy(other => dist([currX, currY], [other.x, other.y]), locations);
+            const index = sorted.length === 0 ? cursorLocations.length - 1 : cursorLocations.indexOf(sorted[0]);
+            moveCursor(index)
+            break;
+        }
+        case 'down':
+        {
+            const currX = cursorLocations[cursorLocation].x
+            const currY = cursorLocations[cursorLocation].y
+            const locations = cursorLocations.filter(l => l.x >= currX && l.y > currY)
+
+            const sorted = sortBy(other => dist([currX, currY], [other.x, other.y]), locations);
+            const index = sorted.length === 0 ? 0 : cursorLocations.indexOf(sorted[0]);
+            moveCursor(index)
+            break;
+        }
+        case 'left':
+        {
+            const index = cursorLocation - 1
+            moveCursor(index === -1 ? cursorLocations.length - 1 : index)
+            break;
+        }
+        case 'right':
+        {
+            const index = cursorLocation + 1
+            moveCursor(index === cursorLocations.length ? 0 : index)
+            break;
+        }
+        case 'select':
+        {
+            const location = cursorLocations[cursorLocation]
+            location.action();
+            break;
+        }
+        case 'esc':
+        {
+            const location = cursorLocations[cursorLocation]
+            location.cancel();
+            break;
+        }
+    }
 }
 
 function create() {
     // TODO: Set up UI elements
 
     for (let i = 0; i < 12; i++) {
-        const item = new LobbyItem(i, (i + 1) * 50, 200);
+        const x = 100 + (i % 4) * 110;
+        const y =  200 + Math.floor(i / 4) * 70;
+        const item = new LobbyItem(i, x, y);
 
-        //item.enabled = i % 2 == 0;
+        items.push(item);
+
+        cursorLocations.push({ x, y: y + 30, action: () => {
+            item.enabled = !item.enabled
+        }})
     }
+
+    moveCursor(0)
 }
 
 function render() {}
@@ -128,6 +216,51 @@ class LobbyItem {
         this.disabledSprite.addChild(this.disabledIcon);
 
         this.enabled = true;
+
+        const label = game.add.bitmapText(
+            x,
+            y + 24,
+            "mduel-menu",
+            this.describeItem(type),
+            16
+        );
+
+        label.anchor.setTo(0.5)
+    }
+
+    describeItem (type) {
+        switch (type) {
+            case 0:
+                return 'Skull';
+            case 1:
+                return 'Volts';
+            case 2:
+                return 'Cloak';
+            case 3:
+                return 'Mine';
+            case 4:
+                return 'Gun';
+            case 5:
+                return 'TNT';
+            case 6:
+                return 'Boots';
+            case 7:
+                return 'Grenade';
+            case 8:
+                return 'Puck';
+            case 9:
+                return 'Chute';
+            case 10:
+                return 'Hook';
+            case 11:
+                return 'Warp';
+            default:
+                return type + '';
+        }
+    }
+
+    get enabled() {
+        return this.icon.visible;
     }
 
     set enabled(value) {
