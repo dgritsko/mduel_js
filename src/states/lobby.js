@@ -4,6 +4,7 @@ import { removeAtIndex, debugRender, dist } from "../game/util";
 import { addAnimations } from "../game/Player/animations";
 import { animations } from "../enums/animations";
 import { sortBy } from "ramda";
+import { items as itemsEnum } from "../enums/items";
 
 let inputs;
 
@@ -16,9 +17,7 @@ const items = [];
 let cursor;
 
 let cursorLocation = 0;
-const cursorLocations = [
-
-];
+const cursorLocations = [];
 
 function init() {
     inputs = [
@@ -33,74 +32,93 @@ function init() {
     ];
 
     const keys = game.input.keyboard.createCursorKeys();
-    const space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
-    const esc = game.input.keyboard.addKey(Phaser.Keyboard.ESC)
-    keys.up.onDown.add(() => menuAction('up'))
-    keys.down.onDown.add(() => menuAction('down'))
-    keys.left.onDown.add(() => menuAction('left'))
-    keys.right.onDown.add(() => menuAction('right'))
-    space.onDown.add(() => menuAction('select'))
-    esc.onDown.add(() => menuAction('esc'))
+    const space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    const esc = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+    keys.up.onDown.add(() => menuAction("up"));
+    keys.down.onDown.add(() => menuAction("down"));
+    keys.left.onDown.add(() => menuAction("left"));
+    keys.right.onDown.add(() => menuAction("right"));
+    space.onDown.add(() => menuAction("select"));
+    esc.onDown.add(() => menuAction("esc"));
 
-    cursor = game.add.sprite(50, 50, 'items');
+    cursor = game.add.sprite(50, 50, "items");
     cursor.anchor.setTo(0.5);
 }
 
 function moveCursor(location) {
-    cursorLocation = location
-    cursor.x = cursorLocations[location].x
-    cursor.y = cursorLocations[location].y
+    cursorLocation = location;
+    cursor.x = cursorLocations[location].x;
+    cursor.y = cursorLocations[location].y;
 }
 
 function menuAction(key) {
     switch (key) {
-        case 'up':
-        {
-            const currX = cursorLocations[cursorLocation].x
-            const currY = cursorLocations[cursorLocation].y
-            const locations = cursorLocations.filter(l => l.x <= currX && l.y < currY)
+        case "up": {
+            const currX = cursorLocations[cursorLocation].x;
+            const currY = cursorLocations[cursorLocation].y;
+            const locations = cursorLocations.filter(
+                l => l.x <= currX && l.y < currY
+            );
 
-            const sorted = sortBy(other => dist([currX, currY], [other.x, other.y]), locations);
-            const index = sorted.length === 0 ? cursorLocations.length - 1 : cursorLocations.indexOf(sorted[0]);
-            moveCursor(index)
+            const sorted = sortBy(
+                other => dist([currX, currY], [other.x, other.y]),
+                locations
+            );
+            const index =
+                sorted.length === 0
+                    ? cursorLocations.length - 1
+                    : cursorLocations.indexOf(sorted[0]);
+            moveCursor(index);
             break;
         }
-        case 'down':
-        {
-            const currX = cursorLocations[cursorLocation].x
-            const currY = cursorLocations[cursorLocation].y
-            const locations = cursorLocations.filter(l => l.x >= currX && l.y > currY)
+        case "down": {
+            const currX = cursorLocations[cursorLocation].x;
+            const currY = cursorLocations[cursorLocation].y;
+            const locations = cursorLocations.filter(
+                l => l.x >= currX && l.y > currY
+            );
 
-            const sorted = sortBy(other => dist([currX, currY], [other.x, other.y]), locations);
-            const index = sorted.length === 0 ? 0 : cursorLocations.indexOf(sorted[0]);
-            moveCursor(index)
+            const sorted = sortBy(
+                other => dist([currX, currY], [other.x, other.y]),
+                locations
+            );
+            const index =
+                sorted.length === 0 ? 0 : cursorLocations.indexOf(sorted[0]);
+            moveCursor(index);
             break;
         }
-        case 'left':
-        {
-            const index = cursorLocation - 1
-            moveCursor(index === -1 ? cursorLocations.length - 1 : index)
+        case "left": {
+            const index = cursorLocation - 1;
+            moveCursor(index === -1 ? cursorLocations.length - 1 : index);
             break;
         }
-        case 'right':
-        {
-            const index = cursorLocation + 1
-            moveCursor(index === cursorLocations.length ? 0 : index)
+        case "right": {
+            const index = cursorLocation + 1;
+            moveCursor(index === cursorLocations.length ? 0 : index);
             break;
         }
-        case 'select':
-        {
-            const location = cursorLocations[cursorLocation]
+        case "select": {
+            const location = cursorLocations[cursorLocation];
             location.action();
             break;
         }
-        case 'esc':
-        {
-            const location = cursorLocations[cursorLocation]
+        case "esc": {
+            const location = cursorLocations[cursorLocation];
             location.cancel();
             break;
         }
     }
+}
+
+function setItems(activeItems) {
+    Object.values(itemsEnum).forEach(type => {
+        const enabled = activeItems.has(type);
+
+        const item = items.filter(i => i.type === type);
+        if (item.length === 1) {
+            item[0].enabled = enabled;
+        }
+    });
 }
 
 function create() {
@@ -108,17 +126,69 @@ function create() {
 
     for (let i = 0; i < 12; i++) {
         const x = 100 + (i % 4) * 110;
-        const y =  200 + Math.floor(i / 4) * 70;
+        const y = 160 + Math.floor(i / 4) * 70;
         const item = new LobbyItem(i, x, y);
 
         items.push(item);
 
-        cursorLocations.push({ x, y: y + 30, action: () => {
-            item.enabled = !item.enabled
-        }})
+        cursorLocations.push({
+            x,
+            y: y + 30,
+            action: () => {
+                item.enabled = !item.enabled;
+            }
+        });
     }
 
-    moveCursor(0)
+    const makeLabel = (x, y, text) =>
+        game.add.bitmapText(x, y, "mduel-menu", text, 16);
+
+    const basicLabel = makeLabel(game.world.width - 100, 160, "Basic");
+    const fullLabel = makeLabel(game.world.width - 100, 220, "Full");
+    const noneLabel = makeLabel(game.world.width - 100, 280, "None");
+
+    cursorLocations.push({
+        x: basicLabel.x,
+        y: basicLabel.y,
+        action: () =>
+            setItems(
+                new Set([
+                    itemsEnum.DEATH,
+                    itemsEnum.VOLTS,
+                    itemsEnum.INVISIBILITY,
+                    itemsEnum.MINE,
+                    itemsEnum.GUN,
+                    itemsEnum.TNT
+                ])
+            )
+    });
+
+    cursorLocations.push({
+        x: fullLabel.x,
+        y: fullLabel.y,
+        action: () => setItems(new Set(Object.values(itemsEnum)))
+    });
+
+    cursorLocations.push({
+        x: noneLabel.x,
+        y: noneLabel.y,
+        action: () => setItems(new Set())
+    });
+
+    const startLabel = makeLabel(game.world.centerX, 380, "Start Game");
+    startLabel.anchor.setTo(0.5);
+
+    cursorLocations.push({
+        x: startLabel.x,
+        y: startLabel.y,
+        action: () => startGame()
+    });
+
+    moveCursor(0);
+}
+
+function startGame() {
+    console.log("TODO: Start game");
 }
 
 function render() {}
@@ -196,6 +266,7 @@ class LobbyPlayer {
 
 class LobbyItem {
     constructor(type, x, y) {
+        this.type = type;
         this.sprite = game.add.sprite(x, y, "items");
         // sprite.animations.add("default", [0, 1, 2], 4, true);
         // sprite.animations.play("default");
@@ -225,37 +296,37 @@ class LobbyItem {
             16
         );
 
-        label.anchor.setTo(0.5)
+        label.anchor.setTo(0.5);
     }
 
-    describeItem (type) {
+    describeItem(type) {
         switch (type) {
             case 0:
-                return 'Skull';
+                return "Skull";
             case 1:
-                return 'Volts';
+                return "Volts";
             case 2:
-                return 'Cloak';
+                return "Cloak";
             case 3:
-                return 'Mine';
+                return "Mine";
             case 4:
-                return 'Gun';
+                return "Gun";
             case 5:
-                return 'TNT';
+                return "TNT";
             case 6:
-                return 'Boots';
+                return "Boots";
             case 7:
-                return 'Grenade';
+                return "Grenade";
             case 8:
-                return 'Puck';
+                return "Puck";
             case 9:
-                return 'Chute';
+                return "Chute";
             case 10:
-                return 'Hook';
+                return "Hook";
             case 11:
-                return 'Warp';
+                return "Warp";
             default:
-                return type + '';
+                return type + "";
         }
     }
 
