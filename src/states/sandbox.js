@@ -1,4 +1,5 @@
 import { setupVoltsSprite } from "../game/spriteUtil";
+import { colors } from "../enums/colors";
 
 class Control {
     constructor(x, y, width, height, params) {
@@ -8,8 +9,8 @@ class Control {
         cornerRadius = typeof cornerRadius === "number" ? cornerRadius : 4;
         borderWidth = typeof borderWidth === "number" ? borderWidth : 2;
 
-        borderColor = borderColor || 0xe7d296;
-        backgroundColor = backgroundColor || 0xf8efc8;
+        borderColor = borderColor || colors.DARK_PURPLE;
+        backgroundColor = backgroundColor || colors.BLACK;
 
         this.g = game.add.graphics(x, y);
 

@@ -1,4 +1,5 @@
 import { gameStates } from "../enums/gameStates";
+import { colors } from "../enums/colors";
 
 let config;
 
@@ -19,7 +20,7 @@ function create() {
 
     text.anchor.setTo(0.5);
 
-    text.tint = 0xa439a4;
+    text.tint = colors.DARK_PURPLE;
 
     window.setTimeout(() => {
         game.state.start(gameStates.GAME, true, false, config);

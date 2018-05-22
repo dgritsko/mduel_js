@@ -1,5 +1,6 @@
 import { effects } from "../enums/effects";
 import { gameConfig } from "./config";
+import { colors } from "../enums/colors";
 
 const now = () => new Date().getTime();
 
@@ -137,10 +138,10 @@ function drawStylizedText(text, x, y) {
         text,
         32
     );
-    shadowLabel.tint = 0x565656;
+    shadowLabel.tint = colors.GRAY;
 
     const mainLabel = game.add.bitmapText(x, y, "mduel", text, 32);
-    mainLabel.tint = 0xac4aac;
+    mainLabel.tint = colors.LIGHT_PURPLE;
 }
 
 const debugRender = obj => {
