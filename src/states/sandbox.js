@@ -150,6 +150,18 @@ class NameInput {
 
         this.popup.addChild(this.label1.g);
     }
+
+    destroy() {
+        this.popup.g.destroy();
+    }
+
+    set value(v) {
+        this.textInput.text = v;
+    }
+
+    get value() {
+        return this.textInput.text;
+    }
 }
 
 function create() {
@@ -157,6 +169,12 @@ function create() {
 
     const nameInput = new NameInput(100, 100);
     // setupVoltsSprite("player1");
+    nameInput.value = "Percy";
+
+    // window.setTimeout(() => {
+    //     console.log(nameInput.value);
+    //     nameInput.destroy();
+    // }, 3000);
 }
 
 export default { create };
