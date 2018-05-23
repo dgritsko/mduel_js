@@ -44,6 +44,10 @@ class Control {
             this.g.endFill();
         }
     }
+
+    addChild(child) {
+        this.g.addChild(child);
+    }
 }
 
 class TextInput extends Control {
@@ -55,7 +59,14 @@ class TextInput extends Control {
 
         fontSize = fontSize || 12;
 
-        this.label = game.add.bitmapText(0, 0, "mduel-menu", "", fontSize);
+        this.label = game.add.bitmapText(
+            6,
+            height / 2,
+            "mduel-menu",
+            "",
+            fontSize
+        );
+        this.label.anchor.setTo(0, 0.5);
         this.g.addChild(this.label);
 
         this.maxLength = maxLength || -1;
@@ -106,21 +117,45 @@ class Label {
 
         fontSize = fontSize || 14;
 
-        this.label = game.add.bitmapText(x, y, "mduel-menu", text, fontSize);
+        this.g = game.add.bitmapText(x, y, "mduel-menu", text, fontSize);
+
+        this.g.anchor.setTo(0.5);
+    }
+}
+
+class NameInput {
+    constructor(x, y) {
+        const popupWidth = 250;
+        const popupHeight = 130;
+
+        const textInputWidth = 180;
+
+        this.popup = new Popup(x, y, popupWidth, popupHeight);
+
+        this.textInput = new TextInput(
+            popupWidth / 2 - textInputWidth / 2,
+            popupHeight - 50,
+            textInputWidth,
+            24,
+            {
+                cornerRadius: 0,
+                borderColor: colors.LIGHT_PURPLE,
+                maxLength: 14
+            }
+        );
+
+        this.popup.addChild(this.textInput.g);
+
+        this.label1 = new Label(popupWidth / 2, 30, "Enter your name");
+
+        this.popup.addChild(this.label1.g);
     }
 }
 
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    const p1 = new Popup(100, 100, 200, 100);
-
-    const t1 = new TextInput(300, 100, 50, 20, {
-        cornerRadius: 0,
-        borderColor: 0xff0000
-    });
-
-    const l1 = new Label(100, 300, "Label");
+    const nameInput = new NameInput(100, 100);
     // setupVoltsSprite("player1");
 }
 
