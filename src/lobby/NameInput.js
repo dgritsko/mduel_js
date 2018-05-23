@@ -10,7 +10,12 @@ export default class NameInput {
 
         const textInputWidth = 180;
 
-        this.popup = new Popup(x, y, popupWidth, popupHeight);
+        this.popup = new Popup(
+            x - popupWidth / 2,
+            y - popupHeight / 2,
+            popupWidth,
+            popupHeight
+        );
 
         this.textInput = new TextInput(
             popupWidth / 2 - textInputWidth / 2,
