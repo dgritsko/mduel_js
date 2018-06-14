@@ -5,6 +5,7 @@ import { animations } from "../enums/animations";
 import { sortBy } from "ramda";
 import { items as itemsEnum } from "../enums/items";
 import { NameInput, LobbyItem, LobbyPlayer } from "../lobby";
+import { setupInput } from "../game/Player/inputUtil";
 
 let inputs;
 
@@ -37,17 +38,21 @@ const ITEM_START_Y = 160;
 const ITEM_DIST_Y = 70;
 
 function init() {
-    const createInput = i => ({ assigned: false, controls: i });
+    const createInput = i => ({
+        assigned: false,
+        controls: setupInput(i),
+        inputIdentifier: i
+    });
 
     inputs = [
-        createInput(new Keyboard(1)),
-        createInput(new Keyboard(2)),
-        createInput(new Keyboard(3)),
-        createInput(new Keyboard(4)),
-        createInput(new Gamepad(1)),
-        createInput(new Gamepad(2)),
-        createInput(new Gamepad(3)),
-        createInput(new Gamepad(4))
+        createInput("k1"),
+        createInput("k2"),
+        createInput("k3"),
+        createInput("k4"),
+        createInput("g1"),
+        createInput("g2"),
+        createInput("g3"),
+        createInput("g4")
     ];
 
     const keys = game.input.keyboard.createCursorKeys();
@@ -232,6 +237,10 @@ function create() {
 
 function startGame() {
     console.log("TODO: Start game");
+
+    players.forEach((player, i) => {
+        console.log(`Player ${i}: ${player.name}`);
+    });
 }
 
 function render() {}

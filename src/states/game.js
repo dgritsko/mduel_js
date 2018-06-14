@@ -8,6 +8,7 @@ import { sounds } from "../enums/sounds";
 
 import Gamepad from "../game/Player/gamepad";
 import Keyboard from "../game/Player/keyboard";
+import { setupInput } from "../game/Player/inputUtil";
 
 let gameManager;
 let config;
@@ -57,19 +58,6 @@ function create() {
     // NOTE: Experimental! Works great on big levels if there's only one local player, but not a great
     // solution if there's more than one player. Splitscreen?
     game.camera.follow(players[0].sprite);
-}
-
-function setupInput(identifier) {
-    const type = identifier.substring(0, 1);
-    const id = parseInt(identifier.substring(1, 2), 10);
-
-    if (type === "k" && typeof id === "number") {
-        return new Keyboard(id);
-    } else if (type === "g" && typeof id === "number") {
-        return new Gamepad(id);
-    } else {
-        console.error(`Input not supported: ${identifier}`);
-    }
 }
 
 function update() {
