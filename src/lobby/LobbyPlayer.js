@@ -11,7 +11,9 @@ export default class LobbyPlayer {
 
         this.nameLabel = game.add.bitmapText(
             0,
-            this.sprite.height / 2 + 4,
+            id % 2 == 0
+                ? this.sprite.height / 2 + 4
+                : -this.sprite.height / 2 - 4,
             "mduel-menu",
             "",
             12
