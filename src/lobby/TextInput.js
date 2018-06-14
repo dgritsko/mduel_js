@@ -23,8 +23,11 @@ export default class TextInput extends Control {
 
         game.input.keyboard.addCallbacks(
             this,
-            null,
             function(evt) {
+                if (!this.focused) {
+                    return;
+                }
+
                 // var char = String.fromCharCode(evt.keyCode).toString();
                 // var pattern = /[A-Za-z0-9 ]/;
                 // if (pattern.test(char)) {
@@ -42,8 +45,11 @@ export default class TextInput extends Control {
                             : "";
                 }
             },
+            null,
             null
         );
+
+        this.focused = false;
     }
 
     get text() {

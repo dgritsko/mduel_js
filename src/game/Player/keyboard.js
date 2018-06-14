@@ -24,10 +24,10 @@ export default class Keyboard extends Input {
             };
         } else if (id === 3) {
             const keys = game.input.keyboard.createCursorKeys();
-            keys.fire = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-            keys.back = game.input.keyboard.addKey(
-                Phaser.Keyboard.BACKWARD_SLASH
+            keys.fire = game.input.keyboard.addKey(
+                Phaser.Keyboard.QUESTION_MARK
             );
+            keys.back = game.input.keyboard.addKey(Phaser.Keyboard.PERIOD);
             this.keys = keys;
         } else if (id === 4) {
             this.keys = {

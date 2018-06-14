@@ -47,4 +47,12 @@ export default class NameInput {
     get value() {
         return this.textInput.text;
     }
+
+    get focused() {
+        return this.textInput.focused;
+    }
+
+    set focused(v) {
+        this.textInput.focused = v;
+    }
 }

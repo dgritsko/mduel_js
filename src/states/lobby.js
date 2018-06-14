@@ -16,29 +16,48 @@ const items = [];
 
 let cursor;
 
+const states = {
+    DEFAULT: "default",
+    NAME_INPUT: "name_input"
+};
+
+let state = states.DEFAULT;
+
 let cursorLocation = 0;
 const cursorLocations = [];
 
+let nameInput;
+
+const PLAYER_START_X = 100;
+const PLAYER_DIST_X = 100;
+const PLAYER_START_Y = 80;
+const ITEM_START_X = 100;
+const ITEM_DIST_X = 110;
+const ITEM_START_Y = 160;
+const ITEM_DIST_Y = 70;
+
 function init() {
+    const createInput = i => ({ assigned: false, controls: i });
+
     inputs = [
-        new Keyboard(1),
-        new Keyboard(2),
-        new Keyboard(3),
-        new Keyboard(4),
-        new Gamepad(1),
-        new Gamepad(2),
-        new Gamepad(3),
-        new Gamepad(4)
+        createInput(new Keyboard(1)),
+        createInput(new Keyboard(2)),
+        createInput(new Keyboard(3)),
+        createInput(new Keyboard(4)),
+        createInput(new Gamepad(1)),
+        createInput(new Gamepad(2)),
+        createInput(new Gamepad(3)),
+        createInput(new Gamepad(4))
     ];
 
     const keys = game.input.keyboard.createCursorKeys();
-    const space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     const esc = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+    const enter = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
     keys.up.onDown.add(() => menuAction("up"));
     keys.down.onDown.add(() => menuAction("down"));
     keys.left.onDown.add(() => menuAction("left"));
     keys.right.onDown.add(() => menuAction("right"));
-    space.onDown.add(() => menuAction("select"));
+    enter.onDown.add(() => menuAction("select"));
     esc.onDown.add(() => menuAction("esc"));
 
     cursor = game.add.sprite(50, 50, "items");
@@ -52,60 +71,81 @@ function moveCursor(location) {
 }
 
 function menuAction(key) {
-    switch (key) {
-        case "up": {
-            const currX = cursorLocations[cursorLocation].x;
-            const currY = cursorLocations[cursorLocation].y;
-            const locations = cursorLocations.filter(
-                l => l.x <= currX && l.y < currY
-            );
+    if (state === states.NAME_INPUT) {
+        switch (key) {
+            case "select": {
+                players[players.length - 1].name = nameInput.value;
+                nameInput.destroy();
+                state = states.DEFAULT;
+                break;
+            }
+            case "esc": {
+                nameInput.destroy();
+                removePlayer(players[players.length - 1]);
+                state = states.DEFAULT;
+                break;
+            }
+            default:
+                break;
+        }
+    } else if (state === states.DEFAULT) {
+        switch (key) {
+            case "up": {
+                const currX = cursorLocations[cursorLocation].x;
+                const currY = cursorLocations[cursorLocation].y;
+                const locations = cursorLocations.filter(
+                    l => l.x <= currX && l.y < currY
+                );
 
-            const sorted = sortBy(
-                other => dist([currX, currY], [other.x, other.y]),
-                locations
-            );
-            const index =
-                sorted.length === 0
-                    ? cursorLocations.length - 1
-                    : cursorLocations.indexOf(sorted[0]);
-            moveCursor(index);
-            break;
-        }
-        case "down": {
-            const currX = cursorLocations[cursorLocation].x;
-            const currY = cursorLocations[cursorLocation].y;
-            const locations = cursorLocations.filter(
-                l => l.x >= currX && l.y > currY
-            );
+                const sorted = sortBy(
+                    other => dist([currX, currY], [other.x, other.y]),
+                    locations
+                );
+                const index =
+                    sorted.length === 0
+                        ? cursorLocations.length - 1
+                        : cursorLocations.indexOf(sorted[0]);
+                moveCursor(index);
+                break;
+            }
+            case "down": {
+                const currX = cursorLocations[cursorLocation].x;
+                const currY = cursorLocations[cursorLocation].y;
+                const locations = cursorLocations.filter(
+                    l => l.x >= currX && l.y > currY
+                );
 
-            const sorted = sortBy(
-                other => dist([currX, currY], [other.x, other.y]),
-                locations
-            );
-            const index =
-                sorted.length === 0 ? 0 : cursorLocations.indexOf(sorted[0]);
-            moveCursor(index);
-            break;
-        }
-        case "left": {
-            const index = cursorLocation - 1;
-            moveCursor(index === -1 ? cursorLocations.length - 1 : index);
-            break;
-        }
-        case "right": {
-            const index = cursorLocation + 1;
-            moveCursor(index === cursorLocations.length ? 0 : index);
-            break;
-        }
-        case "select": {
-            const location = cursorLocations[cursorLocation];
-            location.action();
-            break;
-        }
-        case "esc": {
-            const location = cursorLocations[cursorLocation];
-            location.cancel();
-            break;
+                const sorted = sortBy(
+                    other => dist([currX, currY], [other.x, other.y]),
+                    locations
+                );
+                const index =
+                    sorted.length === 0
+                        ? 0
+                        : cursorLocations.indexOf(sorted[0]);
+                moveCursor(index);
+                break;
+            }
+            case "left": {
+                const index = cursorLocation - 1;
+                moveCursor(index === -1 ? cursorLocations.length - 1 : index);
+                break;
+            }
+            case "right": {
+                const index = cursorLocation + 1;
+                moveCursor(index === cursorLocations.length ? 0 : index);
+                break;
+            }
+            case "select": {
+                const location = cursorLocations[cursorLocation];
+                location.action();
+                break;
+            }
+            case "esc": {
+                const location = cursorLocations[cursorLocation];
+                location.cancel && location.cancel();
+                break;
+            }
         }
     }
 }
@@ -124,16 +164,19 @@ function setItems(activeItems) {
 function create() {
     // TODO: Set up UI elements
 
+    const CURSOR_LOCATION_X_OFFSET = 0;
+    const CURSOR_LOCATION_Y_OFFSET = 30;
+
     for (let i = 0; i < 12; i++) {
-        const x = 100 + (i % 4) * 110;
-        const y = 160 + Math.floor(i / 4) * 70;
+        const x = ITEM_START_X + (i % 4) * ITEM_DIST_X;
+        const y = ITEM_START_Y + Math.floor(i / 4) * ITEM_DIST_Y;
         const item = new LobbyItem(i, x, y);
 
         items.push(item);
 
         cursorLocations.push({
-            x,
-            y: y + 30,
+            x: x + CURSOR_LOCATION_X_OFFSET,
+            y: y + CURSOR_LOCATION_Y_OFFSET,
             action: () => {
                 item.enabled = !item.enabled;
             }
@@ -194,46 +237,58 @@ function startGame() {
 function render() {}
 
 function update() {
-    players.forEach(player => {
-        const input = player.input.getInput(true);
+    switch (state) {
+        case states.NAME_INPUT:
+            break;
+        default:
+            players.forEach(player => {
+                const input = player.input.controls.getInput(true);
 
-        if (input.nf && !player.ready) {
-            player.sprite.animations.play(animations.VICTORY_FLEX);
-            player.ready = true;
-        }
+                if (input.nf && !player.ready) {
+                    player.sprite.animations.play(animations.VICTORY_FLEX);
+                    player.ready = true;
+                }
 
-        if (input.nb) {
-            if (player.ready) {
-                player.sprite.animations.play(animations.STAND);
-                player.ready = false;
-            } else {
-                removePlayer(player);
-            }
-        }
-    });
+                if (input.nb) {
+                    if (player.ready) {
+                        player.sprite.animations.play(animations.STAND);
+                        player.ready = false;
+                    } else {
+                        removePlayer(player);
+                    }
+                }
+            });
 
-    pollForNewPlayers();
-}
-
-function pollForNewPlayers() {
-    for (let i = inputs.length - 1; i >= 0; i--) {
-        const input = inputs[i];
-
-        if (input.getInput(true).nf) {
-            removeAtIndex(inputs, i);
-
-            addPlayer(input);
-        }
+            pollForNewPlayers();
+            break;
     }
 }
 
+function pollForNewPlayers() {
+    const toAdd = inputs.filter(
+        input => !input.assigned && input.controls.getInput(true).nf
+    );
+
+    if (toAdd.length === 0) {
+        return;
+    }
+
+    state = states.NAME_INPUT;
+
+    const activeInput = toAdd[0];
+
+    activeInput.assigned = true;
+    addPlayer(activeInput);
+}
+
 function addPlayer(input) {
-    const nameInput = new NameInput(game.world.centerX, game.world.centerY);
+    nameInput = new NameInput(game.world.centerX, game.world.centerY);
+    nameInput.focused = true;
 
     const id = players.length;
 
-    const x = (id + 1) * 100;
-    const y = 100;
+    const x = PLAYER_START_X + id * PLAYER_DIST_X;
+    const y = PLAYER_START_Y;
 
     const player = new LobbyPlayer(id, skins[id], input, x, y);
 
@@ -243,13 +298,14 @@ function addPlayer(input) {
 function removePlayer(player) {
     const index = players.indexOf(player);
 
-    inputs.push(player.input);
+    player.input.assigned = false;
+
     removeAtIndex(players, index);
 
     player.sprite.kill();
 
     for (let i = index; i < players.length; i++) {
-        players[i].sprite.x = (index + 1) * 100;
+        players[i].sprite.x = (index + 1) * PLAYER_DIST_X;
     }
 }
 
