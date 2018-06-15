@@ -65,8 +65,8 @@ export default class Gamepad extends Input {
         const left = xInput && xInput < 0;
         const right = xInput && xInput > 0;
 
-        const up = yInput && yInput < 0;
-        const down = yInput && yInput > 0;
+        const up = yInput && yInput < -0.5;
+        const down = yInput && yInput > 0.5;
 
         return {
             fire: a || rTrigger,
