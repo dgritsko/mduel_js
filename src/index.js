@@ -5,7 +5,6 @@ import Phaser from "expose-loader?Phaser!phaser-ce/build/custom/phaser-split.js"
 import {
     bootState,
     gameState,
-    gameStartState,
     sandboxState,
     scoreboardState,
     lobbyState
@@ -23,7 +22,6 @@ const game = new Phaser.Game(
 window.game = game;
 
 game.state.add(gameStates.BOOT, bootState);
-game.state.add(gameStates.GAME_START, gameStartState);
 game.state.add(gameStates.GAME, gameState);
 game.state.add(gameStates.SCOREBOARD, scoreboardState);
 game.state.add(gameStates.SANDBOX, sandboxState);

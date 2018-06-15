@@ -1,8 +1,8 @@
-import { gameStates } from "../enums/gameStates";
-import { items } from "../enums/items";
+import { items as itemsEnum } from "../enums/items";
 import { gameConfig } from "../game/config";
+import { mergeDeepRight } from "ramda";
 
-function create() {
+const getSpawns = () => {
     const LEFT_SPAWNS = [{ x: 63, y: 300 }, { x: 128, y: 300 }];
 
     const RIGHT_SPAWNS = [
@@ -10,7 +10,13 @@ function create() {
         { x: game.world.width - 128, y: 300 }
     ];
 
-    const config = {
+    return { LEFT_SPAWNS, RIGHT_SPAWNS };
+};
+
+const getDefaultPlayers = () => {
+    const { LEFT_SPAWNS, RIGHT_SPAWNS } = getSpawns();
+
+    return {
         players: [
             {
                 name: "Percy",
@@ -19,7 +25,6 @@ function create() {
                 teamId: 1,
                 inputId: "k1"
             },
-
             {
                 name: "Clifford",
                 sprite: "player2",
@@ -27,7 +32,6 @@ function create() {
                 teamId: 2,
                 inputId: "k2"
             }
-
             // {
             //     name: "Mowbray",
             //     sprite: "player3",
@@ -49,12 +53,17 @@ function create() {
                 spawns: RIGHT_SPAWNS,
                 score: 0
             }
-        ],
+        ]
+    };
+};
+
+export const buildConfig = customConfig => {
+    const baseConfig = {
         rounds: 0,
         maxRounds: 3,
 
         items: {
-            availableItems: Object.values(items),
+            availableItems: Object.values(itemsEnum),
             maxItems: gameConfig.MAX_ITEMS,
 
             minItemSpeed: gameConfig.ITEM_MINIMUM_SPEED,
@@ -70,7 +79,29 @@ function create() {
         }
     };
 
-    game.state.start(gameStates.GAME, true, false, config);
-}
+    const { items, players } = customConfig;
 
-export default { create };
+    let config = Object.assign({}, baseConfig);
+
+    if (items) {
+        config = mergeDeepRight(config, { items });
+    }
+
+    if (players) {
+        // TODO: Build teams
+        const { LEFT_SPAWNS, RIGHT_SPAWNS } = getSpawns();
+
+        const teams = players.map((p, i) => ({
+            id: i + 1, // TODO
+            name: p.name,
+            spawns: i % 2 == 0 ? LEFT_SPAWNS : RIGHT_SPAWNS,
+            score: 0
+        }));
+
+        config = Object.assign(config, { players, teams });
+    } else {
+        config = Object.assign(config, getDefaultPlayers());
+    }
+
+    return config;
+};

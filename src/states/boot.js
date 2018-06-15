@@ -64,7 +64,7 @@ function create() {
 
     game.world.setBounds(0, 0, gameConfig.GAME_WIDTH, gameConfig.GAME_HEIGHT);
 
-    game.state.start(gameStates.GAME_START);
+    game.state.start(gameStates.LOBBY, true, false, { default: false });
 }
 
 export default { preload, create };

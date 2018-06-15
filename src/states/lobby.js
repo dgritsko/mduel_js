@@ -1,11 +1,12 @@
-import Keyboard from "../game/Player/keyboard";
-import Gamepad from "../game/Player/gamepad";
 import { removeAtIndex, dist } from "../game/util";
 import { animations } from "../enums/animations";
 import { sortBy } from "ramda";
 import { items as itemsEnum } from "../enums/items";
 import { NameInput, LobbyItem, LobbyPlayer } from "../lobby";
 import { setupInput } from "../game/Player/inputUtil";
+import { gameStates } from "../enums/gameStates";
+import { buildConfig } from "../lobby/buildConfig";
+import { prop } from "ramda";
 
 let inputs;
 
@@ -37,7 +38,12 @@ const ITEM_DIST_X = 110;
 const ITEM_START_Y = 160;
 const ITEM_DIST_Y = 70;
 
-function init() {
+function init(data) {
+    if (prop("default", data)) {
+        startGame(true);
+        return;
+    }
+
     const createInput = i => ({
         assigned: false,
         controls: setupInput(i),
@@ -235,12 +241,34 @@ function create() {
     moveCursor(0);
 }
 
-function startGame() {
-    console.log("TODO: Start game");
+function startGame(useDefaultConfig) {
+    const customConfig = {};
 
-    players.forEach((player, i) => {
-        console.log(`Player ${i}: ${player.name}`);
-    });
+    if (!useDefaultConfig) {
+        if (players.length === 0) {
+            return;
+        }
+
+        const availableItems = items
+            .filter(item => item.enabled)
+            .map(item => item.type);
+
+        customConfig.items = {
+            availableItems
+        };
+
+        const configPlayers = players.map((player, i) => ({
+            name: player.name,
+            sprite: player.sprite.key,
+            id: player.id,
+            teamId: i + 1, // TODO
+            inputId: player.input.inputIdentifier
+        }));
+
+        customConfig.players = configPlayers;
+    }
+
+    game.state.start(gameStates.GAME, true, false, buildConfig(customConfig));
 }
 
 function render() {}
