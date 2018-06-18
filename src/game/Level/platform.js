@@ -1,4 +1,6 @@
 import { platformTypes } from "../../enums/platformTypes";
+import { setBounds } from "../util";
+import { gameConfig } from "../config";
 
 const makePlatform = (x, y, type) => {
     const frame = type === platformTypes.DEFAULT ? 0 : 1;
@@ -12,7 +14,7 @@ const makePlatform = (x, y, type) => {
     sprite.body.moves = false;
     sprite.body.immovable = true;
 
-    sprite.body.setSize(16, 8, 6, 0);
+    setBounds(sprite, gameConfig.PLATFORM_BOUNDS)
 
     return sprite;
 };

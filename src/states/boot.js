@@ -64,7 +64,7 @@ function create() {
 
     game.world.setBounds(0, 0, gameConfig.GAME_WIDTH, gameConfig.GAME_HEIGHT);
 
-    game.state.start(gameStates.LOBBY, true, false, { default: false });
+    game.state.start(gameStates.LOBBY, true, false, { default: gameConfig.DEBUG_SKIP_LOBBY });
 }
 
 export default { preload, create };

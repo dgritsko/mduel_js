@@ -1,4 +1,5 @@
 const gameConfig = {
+    DEBUG_SKIP_LOBBY: false,
     DEBUG_SHOW_HITBOXES: false,
     DEBUG_SHOW_FPS: false,
     DEBUG_SHOW_GUN_PATH: false,
@@ -103,6 +104,9 @@ const gameConfig = {
 
     ROPE_ANCHOR_BOUNDS: { top: 5, bottom: 16, left: -5.5, right: 6.5 },
     ROPE_SEGMENT_BOUNDS: { top: -16, bottom: 16, left: -1, right: 3 },
+
+    // originally: -8 and 8 for left/right
+    PLATFORM_BOUNDS: { top: -8, bottom: 0, left: -14, right: 14 },
 
     MARSHMALLOW_FRAMERATE: 0.25
 };
