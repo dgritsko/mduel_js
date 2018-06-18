@@ -74,6 +74,13 @@ const gameConfig = {
     ITEM_PUCK_PROJECT_Y_OFFSET: 16,
     ITEM_PUCK_PROJECT_FIRE_DELAY: 100,
     ITEM_PUCK_FIRE_DELAY: 400,
+    ITEM_PUCK_PROJECT_BOUNDS: { top: 11, bottom: 16, left: -4, right: 8 },
+
+    // Mine
+    ITEM_MINE_PROJECT_BOUNDS: { top: -5, bottom: 5, left: -5, right: 5 },
+
+    // Grenade
+    ITEM_GRENADE_PROJECT_BOUNDS: { top: 3, right: 7, bottom: 12, left: -3 },
 
     // Level
     LEVEL_HEIGHT: 5,

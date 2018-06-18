@@ -19,7 +19,7 @@ export class ProjectilePuck extends SpriteObject {
 
         game.physics.enable(this.sprite);
 
-        setBounds(this.sprite, { top: 11, bottom: 16, left: -4, right: 8 });
+        setBounds(this.sprite, gameConfig.ITEM_PUCK_PROJECT_BOUNDS);
 
         this.vx = gameConfig.PLAYER_RUN_SPEED * 2;
     }
