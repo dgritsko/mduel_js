@@ -25,6 +25,8 @@ export class ItemHook extends Item {
 
     destroy(player) {
         super.destroy(player);
+
+        this.hook.destroy();
     }
 
     update(player) {
