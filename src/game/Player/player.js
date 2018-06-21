@@ -52,7 +52,9 @@ export class Player extends SpriteObject {
         }
 
         if (value === animations.NONE) {
+            if (this.state.alive) {
             this.sprite.animations.stop();
+            }
         } else if (
             this.sprite.animations.currentAnim.name !== value ||
             this.sprite.animations.currentAnim.loop
