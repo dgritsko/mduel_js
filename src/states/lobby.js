@@ -239,6 +239,20 @@ function create() {
     });
 
     moveCursor(0);
+
+    const makeF = (m, b) => x => m * x + b;
+    const makeB = (m, x, y) => y - m * x;
+    const make = (m, { x, y }) => makeF(m, makeB(m, x, y));
+    const draw = (f, { x }) =>
+        drawLine(x - 100, f(x - 100), x + 100, f(x + 100));
+
+    const everything = (m, i) => {
+        draw(make(m, cursorLocations[i]), cursorLocations[i]);
+        draw(make(-m, cursorLocations[i]), cursorLocations[i]);
+    };
+
+    everything(3, 0);
+    everything(2, 3);
 }
 
 function startGame(useDefaultConfig) {
@@ -272,6 +286,15 @@ function startGame(useDefaultConfig) {
 }
 
 function render() {}
+
+function drawLine(x1, y1, x2, y2) {
+    const line = new Phaser.Line(x1, y1, x2, y2);
+    const graphics = game.add.graphics(0, 0);
+    graphics.lineStyle(1, 0x00ff00, 1);
+    graphics.moveTo(line.start.x, line.start.y);
+    graphics.lineTo(line.end.x, line.end.y);
+    graphics.endFill();
+}
 
 function update() {
     switch (state) {
