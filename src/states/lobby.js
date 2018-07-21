@@ -100,51 +100,95 @@ function menuAction(key) {
                 break;
         }
     } else if (state === states.DEFAULT) {
+        const makeF = (m, b) => x => m * x + b;
+        const makeB = (m, x, y) => y - m * x;
+        const make = (m, { x, y }) => makeF(m, makeB(m, x, y));
+
+        // const drawLine = (x1, y1, x2, y2) => {
+        //     const line = new Phaser.Line(x1, y1, x2, y2);
+        //     const graphics = game.add.graphics(0, 0);
+        //     graphics.lineStyle(1, 0x00ff00, 1);
+        //     graphics.moveTo(line.start.x, line.start.y);
+        //     graphics.lineTo(line.end.x, line.end.y);
+        //     graphics.endFill();
+        // };
+        // const draw = (f, { x }) =>
+        //     drawLine(x - 100, f(x - 100), x + 100, f(x + 100));
+        // const everything = (m, i) => {
+        //     draw(make(m, cursorLocations[i]), cursorLocations[i]);
+        //     draw(make(-m, cursorLocations[i]), cursorLocations[i]);
+        // };
+
+        const pick = (pred, modified) => {
+            const { x, y } = cursorLocations[cursorLocation];
+
+            const filtered = cursorLocations.filter(l => pred(l, x, y));
+
+            return filtered.length === 0 ? modified(x, y) : { x, y };
+        };
+
+        const moveToNextLocation = (m, pred, loc) => {
+            const f1 = make(m, loc);
+            const f2 = make(-m, loc);
+
+            const locations = cursorLocations.filter(l => pred(l, f1, f2));
+
+            const sorted = sortBy(
+                other => dist([loc.x, loc.y], [other.x, other.y]),
+                locations
+            );
+            const index =
+                sorted.length === 0
+                    ? cursorLocations.length - 1
+                    : cursorLocations.indexOf(sorted[0]);
+            moveCursor(index);
+        };
+
         switch (key) {
             case "up": {
-                const currX = cursorLocations[cursorLocation].x;
-                const currY = cursorLocations[cursorLocation].y;
-                const locations = cursorLocations.filter(
-                    l => l.x <= currX && l.y < currY
+                const loc = pick(
+                    (l, x, y) => l.y < y,
+                    (x, y) => ({ x, y: game.world.height })
                 );
 
-                const sorted = sortBy(
-                    other => dist([currX, currY], [other.x, other.y]),
-                    locations
+                moveToNextLocation(
+                    2,
+                    (l, f1, f2) => l.y < f1(l.x) && l.y < f2(l.x),
+                    loc
                 );
-                const index =
-                    sorted.length === 0
-                        ? cursorLocations.length - 1
-                        : cursorLocations.indexOf(sorted[0]);
-                moveCursor(index);
                 break;
             }
             case "down": {
-                const currX = cursorLocations[cursorLocation].x;
-                const currY = cursorLocations[cursorLocation].y;
-                const locations = cursorLocations.filter(
-                    l => l.x >= currX && l.y > currY
-                );
+                const loc = pick((l, x, y) => l.y > y, (x, y) => ({ x, y: 0 }));
 
-                const sorted = sortBy(
-                    other => dist([currX, currY], [other.x, other.y]),
-                    locations
+                moveToNextLocation(
+                    -2,
+                    (l, f1, f2) => l.y > f1(l.x) && l.y > f2(l.x),
+                    loc
                 );
-                const index =
-                    sorted.length === 0
-                        ? 0
-                        : cursorLocations.indexOf(sorted[0]);
-                moveCursor(index);
                 break;
             }
             case "left": {
-                const index = cursorLocation - 1;
-                moveCursor(index === -1 ? cursorLocations.length - 1 : index);
+                const loc = pick(
+                    (l, x, y) => l.x < x,
+                    (x, y) => ({ x: game.world.width, y })
+                );
+
+                moveToNextLocation(
+                    -0.5,
+                    (l, f1, f2) => l.y < f1(l.x) && l.y > f2(l.x),
+                    loc
+                );
                 break;
             }
             case "right": {
-                const index = cursorLocation + 1;
-                moveCursor(index === cursorLocations.length ? 0 : index);
+                const loc = pick((l, x, y) => l.x > x, (x, y) => ({ x: 0, y }));
+
+                moveToNextLocation(
+                    0.5,
+                    (l, f1, f2) => l.y < f1(l.x) && l.y > f2(l.x),
+                    loc
+                );
                 break;
             }
             case "select": {
@@ -239,20 +283,6 @@ function create() {
     });
 
     moveCursor(0);
-
-    const makeF = (m, b) => x => m * x + b;
-    const makeB = (m, x, y) => y - m * x;
-    const make = (m, { x, y }) => makeF(m, makeB(m, x, y));
-    const draw = (f, { x }) =>
-        drawLine(x - 100, f(x - 100), x + 100, f(x + 100));
-
-    const everything = (m, i) => {
-        draw(make(m, cursorLocations[i]), cursorLocations[i]);
-        draw(make(-m, cursorLocations[i]), cursorLocations[i]);
-    };
-
-    everything(3, 0);
-    everything(2, 3);
 }
 
 function startGame(useDefaultConfig) {
@@ -286,15 +316,6 @@ function startGame(useDefaultConfig) {
 }
 
 function render() {}
-
-function drawLine(x1, y1, x2, y2) {
-    const line = new Phaser.Line(x1, y1, x2, y2);
-    const graphics = game.add.graphics(0, 0);
-    graphics.lineStyle(1, 0x00ff00, 1);
-    graphics.moveTo(line.start.x, line.start.y);
-    graphics.lineTo(line.end.x, line.end.y);
-    graphics.endFill();
-}
 
 function update() {
     switch (state) {
