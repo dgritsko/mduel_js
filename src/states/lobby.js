@@ -71,7 +71,7 @@ function init(data) {
     enter.onDown.add(() => menuAction("select"));
     esc.onDown.add(() => menuAction("esc"));
 
-    cursor = game.add.sprite(50, 50, "items");
+    cursor = game.add.sprite(50, 50, "arrow");
     cursor.anchor.setTo(0.5);
 }
 
