@@ -16,6 +16,7 @@ function preload() {
     game.load.image("powerup_spawn", "assets/powerup_spawn.png");
     game.load.spritesheet("rope", "assets/rope.png", 32, 32);
     game.load.image("mallow", "assets/mallow.png");
+    game.load.image("arrow", "assets/arrow.png");
     game.load.spritesheet(
         "mallow_surface",
         "assets/mallow_surface.png",
