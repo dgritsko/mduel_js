@@ -75,7 +75,15 @@ function init(data) {
     cursor.anchor.setTo(0.5);
 }
 
-function moveCursor(location) {
+function highlightLocation(location) {
+    if (cursorLocation && cursorLocations[cursorLocation].highlight) {
+        cursorLocation[cursorLocations.highlight(false)];
+    }
+
+    if (cursorLocations[location].highlight) {
+        cursorLocation[location].highlight(true);
+    }
+
     cursorLocation = location;
     cursor.x = cursorLocations[location].x;
     cursor.y = cursorLocations[location].y;
@@ -141,7 +149,7 @@ function menuAction(key) {
                 sorted.length === 0
                     ? cursorLocations.length - 1
                     : cursorLocations.indexOf(sorted[0]);
-            moveCursor(index);
+            highlightLocation(index);
         };
 
         switch (key) {
@@ -241,48 +249,50 @@ function create() {
     const makeLabel = (x, y, text) =>
         game.add.bitmapText(x, y, "mduel-menu", text, 16);
 
-    const basicLabel = makeLabel(game.world.width - 100, 160, "Basic");
-    const fullLabel = makeLabel(game.world.width - 100, 220, "Full");
-    const noneLabel = makeLabel(game.world.width - 100, 280, "None");
+    const createSelectableText = (x, y, text, action) => {
+        const label = makeLabel(x, y, text);
+        label.anchor.setTo(0.5);
+        cursorLocations.push({
+            x: label.x,
+            y: label.y,
+            action
+        });
+    };
 
-    cursorLocations.push({
-        x: basicLabel.x,
-        y: basicLabel.y,
-        action: () =>
-            setItems(
-                new Set([
-                    itemsEnum.DEATH,
-                    itemsEnum.VOLTS,
-                    itemsEnum.INVISIBILITY,
-                    itemsEnum.MINE,
-                    itemsEnum.GUN,
-                    itemsEnum.TNT
-                ])
-            )
+    createSelectableText(game.world.width - 100, 160, "Basic", () =>
+        setItems(
+            new Set([
+                itemsEnum.DEATH,
+                itemsEnum.VOLTS,
+                itemsEnum.INVISIBILITY,
+                itemsEnum.MINE,
+                itemsEnum.GUN,
+                itemsEnum.TNT
+            ])
+        )
+    );
+
+    createSelectableText(game.world.width - 100, 220, "Full", () =>
+        setItems(new Set(Object.values(itemsEnum)))
+    );
+
+    createSelectableText(game.world.width - 100, 280, "None", () =>
+        setItems(new Set())
+    );
+
+    createSelectableText(game.world.centerX, 380, "Start Game", () =>
+        startGame()
+    );
+
+    createSelectableText(100, 20, "FFA", () => {
+        console.log("TODO: Setup FFA mode");
     });
 
-    cursorLocations.push({
-        x: fullLabel.x,
-        y: fullLabel.y,
-        action: () => setItems(new Set(Object.values(itemsEnum)))
+    createSelectableText(200, 20, "Teams", () => {
+        console.log("TODO: Setup Teams mode");
     });
 
-    cursorLocations.push({
-        x: noneLabel.x,
-        y: noneLabel.y,
-        action: () => setItems(new Set())
-    });
-
-    const startLabel = makeLabel(game.world.centerX, 380, "Start Game");
-    startLabel.anchor.setTo(0.5);
-
-    cursorLocations.push({
-        x: startLabel.x,
-        y: startLabel.y,
-        action: () => startGame()
-    });
-
-    moveCursor(0);
+    highlightLocation(0);
 }
 
 function startGame(useDefaultConfig) {
